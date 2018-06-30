@@ -10,7 +10,7 @@ spring:
     include: amap
 
 server:
-  port: 80
+  port: 8082
   servlet:
     context-path:
   tomcat:
