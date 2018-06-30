@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.discount.mapper.WayDiscountMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.discount.model.WayDiscount">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="commodity_cate" jdbcType="VARCHAR" property="commodityCate"/>
+        <result column="commodity_price" jdbcType="DECIMAL" property="commodityPrice"/>
+        <result column="shop_position" jdbcType="VARCHAR" property="shopPosition"/>
+        <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
+        <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="commodity_real" jdbcType="INTEGER" property="commodityReal"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        
+        id, commodity_name, commodity_cate, commodity_price, shop_position, shop_lng, shop_lat,
+        user_login_id, commodity_real, create_time, update_time, is_deleted
+    </sql>
+    <sql id="condition_Column_List">
+        
+        discount.id, discount.commodity_name, discount.commodity_cate, discount.commodity_price, discount.shop_position,
+        discount.shop_lng, discount.shop_lat,
+        discount.user_login_id, discount.commodity_real, discount.create_time, discount.update_time, discount.is_deleted
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from way_discount
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        
+        delete from way_discount
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.discount.model.WayDiscount"
+            useGeneratedKeys="true">
+        
+        insert into way_discount (commodity_name, commodity_cate, commodity_price,
+        shop_position, shop_lng, shop_lat,
+        user_login_id, commodity_real, create_time,
+        update_time, is_deleted)
+        values (#{commodityName,jdbcType=VARCHAR}, #{commodityCate,jdbcType=VARCHAR},
+        #{commodityPrice,jdbcType=DECIMAL},
+        #{shopPosition,jdbcType=VARCHAR}, #{shopLng,jdbcType=DECIMAL}, #{shopLat,jdbcType=DECIMAL},
+        #{userLoginId,jdbcType=BIGINT}, #{commodityReal,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.discount.model.WayDiscount"
+            useGeneratedKeys="true">
+
+        insert into way_discount
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commodityName != null">
+                commodity_name,
+            </if>
+            <if test="commodityCate != null">
+                commodity_cate,
+            </if>
+            <if test="commodityPrice != null">
+                commodity_price,
+            </if>
+            <if test="shopPosition != null">
+                shop_position,
+            </if>
+            <if test="shopLng != null">
+                shop_lng,
+            </if>
+            <if test="shopLat != null">
+                shop_lat,
+            </if>
+            <if test="userLoginId != null">
+                user_login_id,
+            </if>
+            <if test="commodityReal != null">
+                commodity_real,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commodityName != null">
+                #{commodityName,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityCate != null">
+                #{commodityCate,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityPrice != null">
+                #{commodityPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shopPosition != null">
+                #{shopPosition,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLng != null">
+                #{shopLng,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLat != null">
+                #{shopLat,jdbcType=DECIMAL},
+            </if>
+            <if test="userLoginId != null">
+                #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="commodityReal != null">
+                #{commodityReal,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.discount.model.WayDiscount">
+
+        update way_discount
+        <set>
+            <if test="commodityName != null">
+                commodity_name = #{commodityName,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityCate != null">
+                commodity_cate = #{commodityCate,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityPrice != null">
+                commodity_price = #{commodityPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shopPosition != null">
+                shop_position = #{shopPosition,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLng != null">
+                shop_lng = #{shopLng,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLat != null">
+                shop_lat = #{shopLat,jdbcType=DECIMAL},
+            </if>
+            <if test="userLoginId != null">
+                user_login_id = #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="commodityReal != null">
+                commodity_real = #{commodityReal,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.discount.model.WayDiscount">
+        
+        update way_discount
+        set commodity_name = #{commodityName,jdbcType=VARCHAR},
+        commodity_cate = #{commodityCate,jdbcType=VARCHAR},
+        commodity_price = #{commodityPrice,jdbcType=DECIMAL},
+        shop_position = #{shopPosition,jdbcType=VARCHAR},
+        shop_lng = #{shopLng,jdbcType=DECIMAL},
+        shop_lat = #{shopLat,jdbcType=DECIMAL},
+        user_login_id = #{userLoginId,jdbcType=BIGINT},
+        commodity_real = #{commodityReal,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_deleted = #{isDeleted,jdbcType=TINYINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="condition_Column_List"/>
+        <trim prefix="," suffixOverrides=",">
+            <if test="condition.clientLng != null and condition.clientLat != null">
+                abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) as lng_distance,
+                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) as lat_distance,
+                SQRT(ABS(shop_lng - #{condition.clientLng, jdbcType=DECIMAL})*ABS(shop_lng -
+                #{condition.clientLng, jdbcType=DECIMAL}) +ABS(shop_lat -
+                #{condition.clientLat, jdbcType=DECIMAL})*ABS(shop_lat -
+                #{condition.clientLat, jdbcType=DECIMAL})) AS s_distance,
+            </if>
+        </trim>
+        from way_discount discount
+        left join user_login login on login.id = discount.user_login_id
+        where discount.is_deleted=0
+        <if test="condition.discountId != null">
+            and discount.id = #{condition.discountId,jdbcType=BIGINT}
+        </if>
+        <if test="condition.clientLng != null and condition.clientLat != null">
+            order by s_distance
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

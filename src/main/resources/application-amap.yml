@@ -1,0 +1,5 @@
+amap:
+  key: c24b6a839f4603525cc03b9862cf0b42
+  inputtipsUrl: http://restapi.amap.com/v3/assistant/inputtips
+  districtUrl: http://restapi.amap.com/v3/config/district
+  aroundUrl: http://restapi.amap.com/v3/place/around

@@ -1,0 +1,22 @@
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  profiles:
+    active: development
+    include: amap
+
+server:
+  port: 80
+  servlet:
+    context-path:
+  tomcat:
+    uri-encoding: UTF-8
+
+mybatis:
+  mapper-locations: classpath:mappers/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true

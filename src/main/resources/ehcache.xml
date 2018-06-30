@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+    <!-- 缓存存放目录(此目录为放入系统默认缓存目录) -->
+    <diskStore path="java.io.tmpdir"/>
+    <!-- <diskStore path="/usr/web/apache-tomcat-8.5.16/temp"/> -->
+    <!-- <diskStore path="D:/cache" /> -->
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+    <cache name="userCache"
+           maxElementsInMemory="3000"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+</ehcache>
