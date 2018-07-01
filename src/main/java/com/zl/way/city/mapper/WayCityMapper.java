@@ -23,5 +23,5 @@ public interface WayCityMapper {
 
     int updateByPrimaryKey(WayCity record);
 
-    List<WayCity> selectAllByCondition(byte isUsed);
+    List<WayCity> selectAllByCondition(Byte isUsed);
 }

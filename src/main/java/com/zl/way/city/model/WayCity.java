@@ -17,6 +17,9 @@ public class WayCity implements Serializable {
 
     private String citycode;
 
+    private String pinyinShort;
+
+    private String pinyinAll;
 
     private Byte isUsed;
 
@@ -66,6 +69,25 @@ public class WayCity implements Serializable {
         this.citycode = citycode == null ? null : citycode.trim();
     }
 
+
+    public String getPinyinShort() {
+        return pinyinShort;
+    }
+
+
+    public void setPinyinShort(String pinyinShort) {
+        this.pinyinShort = pinyinShort == null ? null : pinyinShort.trim();
+    }
+
+
+    public String getPinyinAll() {
+        return pinyinAll;
+    }
+
+
+    public void setPinyinAll(String pinyinAll) {
+        this.pinyinAll = pinyinAll == null ? null : pinyinAll.trim();
+    }
 
     public Byte getIsUsed() {
         return isUsed;

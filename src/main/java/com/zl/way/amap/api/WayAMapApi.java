@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/amap")
-public class WayAMapApiController {
+public class WayAMapApi {
 
     @Autowired
     private AMapInputTipsService aMapInputTipsService;

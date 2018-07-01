@@ -1,6 +1,5 @@
 package com.zl.way.discount.api;
 
-import com.zl.way.discount.api.model.WayDiscountCommodityCateResponse;
 import com.zl.way.discount.api.model.WayDiscountRequest;
 import com.zl.way.discount.api.model.WayDiscountResponse;
 import com.zl.way.discount.model.WayDiscountBo;
@@ -11,7 +10,6 @@ import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,37 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/discount")
 public class WayDiscountApi {
 
-    private static final String vegetablesName = "蔬菜";
-    private static final String vegetablesImgUrl = "";
-    private static final String clothesName = "服装";
-    private static final String clothesImgUrl = "";
-    private static final String toolsName = "工具";
-    private static final String toolsImgUrl = "";
-    private static final String snacksName = "零食";
-    private static final String snacksImgUrl = "";
-    private static final String drinksName = "饮料";
-    private static final String drinksImgUrl = "";
-    private static final String othersName = "其它";
-    private static final String othersImgUrl = "";
-    private static final String cateVersion = "1.0.0";
-    private static final Map<String, String> discountCateMap = new LinkedHashMap<>();
-
-    static {
-        discountCateMap.put(vegetablesName, vegetablesImgUrl);
-        discountCateMap.put(clothesName, clothesImgUrl);
-        discountCateMap.put(toolsName, toolsImgUrl);
-        discountCateMap.put(snacksName, snacksImgUrl);
-        discountCateMap.put(drinksName, drinksImgUrl);
-        discountCateMap.put(othersName, othersImgUrl);
-    }
 
     @Autowired
     private WayDiscountService wayDiscountService;
@@ -91,23 +64,6 @@ public class WayDiscountApi {
         WayDiscountBo wayDiscountBo = wayDiscountBoList.get(0);
         WayDiscountResponse wayDiscountResponse = BeanMapper.map(wayDiscountBo, WayDiscountResponse.class);
         return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponse);
-    }
-
-    @RequestMapping(value = "/cate/all", method = RequestMethod.GET)
-    public ResponseResult<WayDiscountCommodityCateResponse> getAllDiscountCate() {
-
-        WayDiscountCommodityCateResponse wayDiscountCommodityCateResponse = new WayDiscountCommodityCateResponse();
-        wayDiscountCommodityCateResponse.setCateVersion(cateVersion);
-        wayDiscountCommodityCateResponse.setCommodityCateMap(discountCateMap);
-        return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountCommodityCateResponse);
-    }
-
-    @RequestMapping(value = "/cate/get", method = RequestMethod.POST)
-    public ResponseResult<WayDiscountCommodityCateResponse> getDiscountCate(@RequestBody WayDiscountRequest wayDiscountRequest) {
-
-        WayDiscountCommodityCateResponse wayDiscountCommodityCateResponse = new WayDiscountCommodityCateResponse();
-        wayDiscountCommodityCateResponse.setImgUrl(discountCateMap.getOrDefault(wayDiscountRequest.getDiscountCate(), StringUtils.EMPTY));
-        return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountCommodityCateResponse);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)

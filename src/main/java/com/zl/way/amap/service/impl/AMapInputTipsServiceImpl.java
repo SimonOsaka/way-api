@@ -48,9 +48,24 @@ public class AMapInputTipsServiceImpl implements AMapInputTipsService {
                     JSONObject tipJsonObj = (JSONObject) obj;
                     AMapInputTipsModel inputTipsModel = new AMapInputTipsModel();
                     inputTipsModel.setName(tipJsonObj.getString("name"));
-                    inputTipsModel.setAddress(tipJsonObj.getString("address"));
-                    inputTipsModel.setDistrict(tipJsonObj.getString("district"));
-                    inputTipsModel.setLocation(tipJsonObj.getString("location"));
+
+                    String tipAddress = tipJsonObj.getString("address");
+                    if (StringUtils.isBlank(tipAddress) || tipAddress.contains("[]")) {
+                        tipAddress = "";
+                    }
+                    inputTipsModel.setAddress(tipAddress);
+
+                    String tipDistrict = tipJsonObj.getString("district");
+                    if (StringUtils.isBlank(tipDistrict) || tipDistrict.contains("[]")) {
+                        tipDistrict = "";
+                    }
+                    inputTipsModel.setDistrict(tipDistrict);
+
+                    String tipLocation = tipJsonObj.getString("location");
+                    if (StringUtils.isBlank(tipLocation) || tipLocation.contains("[]")) {
+                        continue;
+                    }
+                    inputTipsModel.setLocation(tipLocation);
                     aMapInputTipsModelList.add(inputTipsModel);
                 }
 

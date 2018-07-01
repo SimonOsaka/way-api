@@ -28,4 +28,15 @@ public class CityApi {
         List<WayCityResponse> wayCityResponseList = BeanMapper.mapAsList(wayCityList, WayCityResponse.class);
         return ResponseResultUtil.wrapSuccessResponseResult(wayCityResponseList);
     }
+
+//    @RequestMapping(value = "/pinyin", method = RequestMethod.GET)
+//    public ResponseResult<WayCityResponse> refreshPinyin() {
+//        try {
+//            wayCityService.updatePinyin();
+//        } catch (PinyinException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseResultUtil.wrapSuccessResponseResult(new WayCityResponse());
+//    }
 }
