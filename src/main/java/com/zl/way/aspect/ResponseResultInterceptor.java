@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class ResponseResultInterceptor {
     private Logger logger = LoggerFactory.getLogger(ResponseResultInterceptor.class);
 
-    @Around("execution(* com.zl.way.api.*.*(..))")
+    @Around("execution(* com.zl.way.*.api.*.*(..))")
     public Object aroundRequestAndResponse(ProceedingJoinPoint proceedingJoinPoint) {
 
         try {

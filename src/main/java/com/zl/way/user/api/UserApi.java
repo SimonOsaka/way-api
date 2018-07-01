@@ -10,7 +10,6 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +22,7 @@ public class UserApi {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
 
         UserLoginParam userLoginParam = new UserLoginParam();
@@ -61,7 +60,7 @@ public class UserApi {
         return ResponseResultUtil.wrapWrongParamResponseResult("退出登录异常");
     }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseResult<UserResponse> getUserDetail(UserRequest userRequest) {
 
         try {
@@ -72,16 +71,14 @@ public class UserApi {
             return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
         }
 
-    }
+    }*/
 
-    @RequestMapping(value = "/validCode", method = RequestMethod.GET)
-    public ResponseResult<UserResponse> getUserValidCode(UserRequest userRequest) {
+    @RequestMapping(value = "/validCode", method = RequestMethod.POST)
+    public ResponseResult<UserResponse> getUserValidCode(@RequestBody UserRequest userRequest) {
 
         try {
-            String userValidCode = userService.getUserValidCode(userRequest.getUserTel());
-            UserResponse userResponse = new UserResponse();
-            userResponse.setUserValidCode(userValidCode);
-            return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
+            userService.getUserValidCode(userRequest.getUserTel());
+            return ResponseResultUtil.wrapSuccessResponseResult(new UserResponse());
         } catch (RuntimeException re) {
             return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
         }

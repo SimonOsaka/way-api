@@ -9,6 +9,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import java.util.Date;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserLoginMapper userLoginMapper;
@@ -143,12 +147,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getUserValidCode(String userTel) {
-        String validCode = "";
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginTel(userTel);
         UserLogin userLogin = userLoginMapper.selectByPrimaryKey(condition);
         Date now = new DateTime().toDate();
 
+        String validCode;
         if (null == userLogin) {
             UserLogin userLoginRecord = new UserLogin();
             userLoginRecord.setLoginTel(userTel);
@@ -185,6 +189,11 @@ public class UserServiceImpl implements UserService {
 
         }
 
+        if (StringUtils.isBlank(validCode)) {
+            throw new RuntimeException("验证码生成失败");
+        }
+
+        LOGGER.debug("生成的验证码{}", validCode);
         return validCode;
     }
 
