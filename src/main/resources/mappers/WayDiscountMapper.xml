@@ -12,6 +12,7 @@
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
         <result column="commodity_real" jdbcType="INTEGER" property="commodityReal"/>
+        <result column="limit_time_expire" jdbcType="TIMESTAMP" property="limitTimeExpire"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
@@ -19,13 +20,13 @@
     <sql id="Base_Column_List">
         
         id, commodity_name, commodity_cate, commodity_price, shop_position, shop_lng, shop_lat,
-        user_login_id, commodity_real, create_time, update_time, is_deleted
+        user_login_id, commodity_real, limit_time_expire, create_time, update_time, is_deleted
     </sql>
     <sql id="condition_Column_List">
         
         discount.id, discount.commodity_name, discount.commodity_cate, discount.commodity_price, discount.shop_position,
         discount.shop_lng, discount.shop_lat,
-        discount.user_login_id, discount.commodity_real, discount.create_time, discount.update_time, discount.is_deleted
+        discount.user_login_id, discount.commodity_real, discount.limit_time_expire, discount.create_time, discount.update_time, discount.is_deleted
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
@@ -44,12 +45,13 @@
         
         insert into way_discount (commodity_name, commodity_cate, commodity_price,
         shop_position, shop_lng, shop_lat,
-        user_login_id, commodity_real, create_time,
+        user_login_id, commodity_real, limit_time_expire, create_time,
         update_time, is_deleted)
         values (#{commodityName,jdbcType=VARCHAR}, #{commodityCate,jdbcType=VARCHAR},
         #{commodityPrice,jdbcType=DECIMAL},
         #{shopPosition,jdbcType=VARCHAR}, #{shopLng,jdbcType=DECIMAL}, #{shopLat,jdbcType=DECIMAL},
-        #{userLoginId,jdbcType=BIGINT}, #{commodityReal,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{userLoginId,jdbcType=BIGINT}, #{commodityReal,jdbcType=INTEGER}, #{limitTimeExpire,jdbcType=TIMESTAMP},
+        #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.discount.model.WayDiscount"
@@ -80,6 +82,9 @@
             </if>
             <if test="commodityReal != null">
                 commodity_real,
+            </if>
+            <if test="limitTimeExpire != null">
+                limit_time_expire,
             </if>
             <if test="createTime != null">
                 create_time,
@@ -115,6 +120,9 @@
             </if>
             <if test="commodityReal != null">
                 #{commodityReal,jdbcType=INTEGER},
+            </if>
+            <if test="limitTimeExpire != null">
+                #{limitTimeExpire,jdbcType=TIMESTAMP},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
@@ -155,6 +163,9 @@
             <if test="commodityReal != null">
                 commodity_real = #{commodityReal,jdbcType=INTEGER},
             </if>
+            <if test="limitTimeExpire != null">
+                limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -178,6 +189,7 @@
         shop_lat = #{shopLat,jdbcType=DECIMAL},
         user_login_id = #{userLoginId,jdbcType=BIGINT},
         commodity_real = #{commodityReal,jdbcType=INTEGER},
+        limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         is_deleted = #{isDeleted,jdbcType=TINYINT}
@@ -199,6 +211,9 @@
         from way_discount discount
         left join user_login login on login.id = discount.user_login_id
         where discount.is_deleted=0
+        <if test="condition.limitTimeExpireEnable != null and condition.limitTimeExpireEnable == true">
+            and discount.limit_time_expire <![CDATA[ >= ]]> now()
+        </if>
         <if test="condition.discountId != null">
             and discount.id = #{condition.discountId,jdbcType=BIGINT}
         </if>

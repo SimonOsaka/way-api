@@ -6,158 +6,167 @@ import java.util.Date;
 
 public class WayDiscount {
 
-    private Long id;
+	private Long id;
 
 
-    private String commodityName;
+	private String commodityName;
 
 
-    private String commodityCate;
+	private String commodityCate;
 
 
-    private BigDecimal commodityPrice;
+	private BigDecimal commodityPrice;
 
 
-    private String shopPosition;
+	private String shopPosition;
 
 
-    private BigDecimal shopLng;
+	private BigDecimal shopLng;
 
 
-    private BigDecimal shopLat;
+	private BigDecimal shopLat;
 
 
-    private Long userLoginId;
+	private Long userLoginId;
 
 
-    private Integer commodityReal;
+	private Integer commodityReal;
 
+	private Date limitTimeExpire;
 
-    private Date createTime;
 
+	private Date createTime;
 
-    private Date updateTime;
 
+	private Date updateTime;
 
-    private Byte isDeleted;
 
+	private Byte isDeleted;
 
-    public Long getId() {
-        return id;
-    }
 
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getCommodityName() {
-        return commodityName;
-    }
 
+	public String getCommodityName() {
+		return commodityName;
+	}
 
-    public void setCommodityName(String commodityName) {
-        this.commodityName = commodityName == null ? null : commodityName.trim();
-    }
 
+	public void setCommodityName(String commodityName) {
+		this.commodityName = commodityName == null ? null : commodityName.trim();
+	}
 
-    public String getCommodityCate() {
-        return commodityCate;
-    }
 
+	public String getCommodityCate() {
+		return commodityCate;
+	}
 
-    public void setCommodityCate(String commodityCate) {
-        this.commodityCate = commodityCate == null ? null : commodityCate.trim();
-    }
 
+	public void setCommodityCate(String commodityCate) {
+		this.commodityCate = commodityCate == null ? null : commodityCate.trim();
+	}
 
-    public BigDecimal getCommodityPrice() {
-        return commodityPrice;
-    }
 
+	public BigDecimal getCommodityPrice() {
+		return commodityPrice;
+	}
 
-    public void setCommodityPrice(BigDecimal commodityPrice) {
-        this.commodityPrice = commodityPrice;
-    }
 
+	public void setCommodityPrice(BigDecimal commodityPrice) {
+		this.commodityPrice = commodityPrice;
+	}
 
-    public String getShopPosition() {
-        return shopPosition;
-    }
 
+	public String getShopPosition() {
+		return shopPosition;
+	}
 
-    public void setShopPosition(String shopPosition) {
-        this.shopPosition = shopPosition == null ? null : shopPosition.trim();
-    }
 
+	public void setShopPosition(String shopPosition) {
+		this.shopPosition = shopPosition == null ? null : shopPosition.trim();
+	}
 
-    public BigDecimal getShopLng() {
-        return shopLng;
-    }
 
+	public BigDecimal getShopLng() {
+		return shopLng;
+	}
 
-    public void setShopLng(BigDecimal shopLng) {
-        this.shopLng = shopLng;
-    }
 
+	public void setShopLng(BigDecimal shopLng) {
+		this.shopLng = shopLng;
+	}
 
-    public BigDecimal getShopLat() {
-        return shopLat;
-    }
 
+	public BigDecimal getShopLat() {
+		return shopLat;
+	}
 
-    public void setShopLat(BigDecimal shopLat) {
-        this.shopLat = shopLat;
-    }
 
+	public void setShopLat(BigDecimal shopLat) {
+		this.shopLat = shopLat;
+	}
 
-    public Long getUserLoginId() {
-        return userLoginId;
-    }
 
+	public Long getUserLoginId() {
+		return userLoginId;
+	}
 
-    public void setUserLoginId(Long userLoginId) {
-        this.userLoginId = userLoginId;
-    }
 
+	public void setUserLoginId(Long userLoginId) {
+		this.userLoginId = userLoginId;
+	}
 
-    public Integer getCommodityReal() {
-        return commodityReal;
-    }
 
+	public Integer getCommodityReal() {
+		return commodityReal;
+	}
 
-    public void setCommodityReal(Integer commodityReal) {
-        this.commodityReal = commodityReal;
-    }
 
+	public void setCommodityReal(Integer commodityReal) {
+		this.commodityReal = commodityReal;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getLimitTimeExpire() {
+		return limitTimeExpire;
+	}
 
+	public void setLimitTimeExpire(Date limitTimeExpire) {
+		this.limitTimeExpire = limitTimeExpire;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
 
-    public Byte getIsDeleted() {
-        return isDeleted;
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
 
-    public void setIsDeleted(Byte isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+	public Byte getIsDeleted() {
+		return isDeleted;
+	}
+
+
+	public void setIsDeleted(Byte isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 }

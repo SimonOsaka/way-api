@@ -4,73 +4,83 @@ import java.math.BigDecimal;
 
 public class WayDiscountResponse {
 
-    private Long id;
+	private Long id;
 
-    private String commodityName;
+	private String commodityName;
 
-    private String commodityCate;
+	private String commodityCate;
 
-    private BigDecimal commodityPrice;
+	private BigDecimal commodityPrice;
 
-    private String shopPosition;
+	private String shopPosition;
 
-    private Integer commodityReal;
+	private Integer commodityReal;
 
-    private String shopDistance;
+	private String shopDistance;
 
-    public Long getId() {
-        return id;
-    }
+	private Long limitTimeExpireMills;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getCommodityName() {
-        return commodityName;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setCommodityName(String commodityName) {
-        this.commodityName = commodityName == null ? null : commodityName.trim();
-    }
+	public String getCommodityName() {
+		return commodityName;
+	}
 
-    public String getCommodityCate() {
-        return commodityCate;
-    }
+	public void setCommodityName(String commodityName) {
+		this.commodityName = commodityName == null ? null : commodityName.trim();
+	}
 
-    public void setCommodityCate(String commodityCate) {
-        this.commodityCate = commodityCate == null ? null : commodityCate.trim();
-    }
+	public String getCommodityCate() {
+		return commodityCate;
+	}
 
-    public BigDecimal getCommodityPrice() {
-        return commodityPrice;
-    }
+	public void setCommodityCate(String commodityCate) {
+		this.commodityCate = commodityCate == null ? null : commodityCate.trim();
+	}
 
-    public void setCommodityPrice(BigDecimal commodityPrice) {
-        this.commodityPrice = commodityPrice;
-    }
+	public BigDecimal getCommodityPrice() {
+		return commodityPrice;
+	}
 
-    public String getShopPosition() {
-        return shopPosition;
-    }
+	public void setCommodityPrice(BigDecimal commodityPrice) {
+		this.commodityPrice = commodityPrice;
+	}
 
-    public void setShopPosition(String shopPosition) {
-        this.shopPosition = shopPosition == null ? null : shopPosition.trim();
-    }
+	public String getShopPosition() {
+		return shopPosition;
+	}
 
-    public Integer getCommodityReal() {
-        return commodityReal;
-    }
+	public void setShopPosition(String shopPosition) {
+		this.shopPosition = shopPosition == null ? null : shopPosition.trim();
+	}
 
-    public void setCommodityReal(Integer commodityReal) {
-        this.commodityReal = commodityReal;
-    }
+	public Integer getCommodityReal() {
+		return commodityReal;
+	}
 
-    public String getShopDistance() {
-        return shopDistance;
-    }
+	public void setCommodityReal(Integer commodityReal) {
+		this.commodityReal = commodityReal;
+	}
 
-    public void setShopDistance(String shopDistance) {
-        this.shopDistance = shopDistance;
-    }
+	public String getShopDistance() {
+		return shopDistance;
+	}
+
+	public void setShopDistance(String shopDistance) {
+		this.shopDistance = shopDistance;
+	}
+
+	public Long getLimitTimeExpireMills() {
+		return limitTimeExpireMills;
+	}
+
+	public void setLimitTimeExpireMills(Long limitTimeExpireMills) {
+		this.limitTimeExpireMills = limitTimeExpireMills;
+	}
 }
