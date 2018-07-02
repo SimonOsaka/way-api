@@ -200,8 +200,6 @@
         <include refid="condition_Column_List"/>
         <trim prefix="," suffixOverrides=",">
             <if test="condition.clientLng != null and condition.clientLat != null">
-                abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) as lng_distance,
-                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) as lat_distance,
                 SQRT(ABS(shop_lng - #{condition.clientLng, jdbcType=DECIMAL})*ABS(shop_lng -
                 #{condition.clientLng, jdbcType=DECIMAL}) +ABS(shop_lat -
                 #{condition.clientLat, jdbcType=DECIMAL})*ABS(shop_lat -
@@ -211,6 +209,12 @@
         from way_discount discount
         left join user_login login on login.id = discount.user_login_id
         where discount.is_deleted=0
+        <if test="condition.clientLng != null and condition.clientLat != null">
+            and SQRT(ABS(shop_lng - #{condition.clientLng, jdbcType=DECIMAL})*ABS(shop_lng -
+            #{condition.clientLng, jdbcType=DECIMAL}) +ABS(shop_lat -
+            #{condition.clientLat, jdbcType=DECIMAL})*ABS(shop_lat -
+            #{condition.clientLat, jdbcType=DECIMAL})) <![CDATA[ < ]]> 0.004935
+        </if>
         <if test="condition.limitTimeExpireEnable != null and condition.limitTimeExpireEnable == true">
             and discount.limit_time_expire <![CDATA[ >= ]]> now()
         </if>

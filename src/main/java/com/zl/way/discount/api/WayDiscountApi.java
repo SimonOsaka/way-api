@@ -10,6 +10,7 @@ import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +72,15 @@ public class WayDiscountApi {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseResult<WayDiscountResponse> createDiscount(@RequestBody WayDiscountRequest wayDiscountRequest) {
+
+		if (StringUtils.isBlank(wayDiscountRequest.getCommodityName())) {
+
+			return ResponseResultUtil.wrapWrongParamResponseResult("商品名称必填");
+		}
+
+		if (wayDiscountRequest.getCommodityName().length() > 100) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("商品名称超长[限制100字内]");
+		}
 
 		WayDiscountParam wayDiscountParam = BeanMapper.map(wayDiscountRequest, WayDiscountParam.class);
 		wayDiscountService.createDiscount(wayDiscountParam);
