@@ -1,5 +1,6 @@
 package com.zl.way.aspect;
 
+import com.alibaba.fastjson.JSON;
 import com.zl.way.util.ResponseResultUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,16 +12,24 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class ResponseResultInterceptor {
-    private Logger logger = LoggerFactory.getLogger(ResponseResultInterceptor.class);
+	private final Logger logger = LoggerFactory.getLogger(ResponseResultInterceptor.class);
 
-    @Around("execution(* com.zl.way.*.api.*.*(..))")
-    public Object aroundRequestAndResponse(ProceedingJoinPoint proceedingJoinPoint) {
+	@Around("execution(* com.zl.way.*.api.*.*(..))")
+	public Object aroundRequestAndResponse(ProceedingJoinPoint proceedingJoinPoint) {
 
-        try {
-            return proceedingJoinPoint.proceed();
-        } catch (Throwable throwable) {//捕捉未知异常
-            logger.error("系统异常", throwable);
-            return ResponseResultUtil.wrapResponseResult(500, "业务繁忙，稍后再试", null);
-        }
-    }
+		try {
+			long start = System.currentTimeMillis();
+			logger.info("api入参", null != proceedingJoinPoint.getArgs() ? proceedingJoinPoint.getArgs() : null);
+
+			Object proceed = proceedingJoinPoint.proceed();
+
+			long end = System.currentTimeMillis();
+			logger.info("api返回{}，耗时{}ms", null != proceed ? JSON.toJSONString(proceed) : proceed, end - start);
+
+			return proceed;
+		} catch (Throwable throwable) {//捕捉未知异常
+			logger.error("系统异常", throwable);
+			return ResponseResultUtil.wrapResponseResult(500, "业务繁忙，稍后再试", null);
+		}
+	}
 }

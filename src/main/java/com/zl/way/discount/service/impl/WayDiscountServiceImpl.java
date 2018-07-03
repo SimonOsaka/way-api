@@ -1,5 +1,6 @@
 package com.zl.way.discount.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.zl.way.discount.mapper.WayDiscountMapper;
 import com.zl.way.discount.model.WayDiscount;
 import com.zl.way.discount.model.WayDiscountBo;
@@ -13,6 +14,8 @@ import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ import java.util.List;
 
 @Service
 public class WayDiscountServiceImpl implements WayDiscountService {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
 
@@ -42,6 +47,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		condition.setLimitTimeExpireEnable(wayDiscountParam.getLimitTimeExpireEnable());
 
 		Pageable pageable = WayPageRequest.of(pageParam);
+		logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
+
 		List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, pageable);
 		if (CollectionUtils.isEmpty(wayDiscountList)) {
 			return Collections.emptyList();
@@ -68,6 +75,10 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 				}
 			}
 		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠条件查询列表组装结果={}", JSON.toJSONString(wayDiscountBoList, true));
+		}
 		return wayDiscountBoList;
 	}
 
@@ -76,7 +87,15 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	public WayDiscount selectOne(Long discountId) {
 		WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
 		condition.setDiscountId(discountId);
-		List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, null);
+
+		Pageable pageable = WayPageRequest.of(1, 1);
+		logger.info("优惠条件查询sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
+
+		List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, pageable);
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠条件sql查询结果={}", JSON.toJSONString(wayDiscountList, true));
+		}
+
 		if (CollectionUtils.isNotEmpty(wayDiscountList)) {
 			return wayDiscountList.get(0);
 		}
@@ -93,6 +112,11 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			Date limitTimeExpire = DateUtils.addDays(DateTime.now().toDate(), wayDiscountParam.getExpireDays());
 			wayDiscount.setLimitTimeExpire(limitTimeExpire);
 		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount));
+		}
+
 		wayDiscountMapper.insertSelective(wayDiscount);
 
 	}
@@ -101,11 +125,21 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	@Transactional(rollbackFor = Exception.class, readOnly = false)
 	public void increateReal(Long discountId) {
 		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
+		if (null == wayDiscount) {
+			logger.info("赞优惠信息discountId={}", discountId);
+			return;
+		}
+
 		int commodityReal = wayDiscount.getCommodityReal();
 		commodityReal = commodityReal + 1;
 		WayDiscount upWayDiscount = new WayDiscount();
 		upWayDiscount.setId(discountId);
 		upWayDiscount.setCommodityReal(commodityReal);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("赞优惠信息sql条件={}", JSON.toJSONString(upWayDiscount));
+		}
+
 		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
 	}
 }
