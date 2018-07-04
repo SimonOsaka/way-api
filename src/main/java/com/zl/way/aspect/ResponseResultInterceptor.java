@@ -19,12 +19,12 @@ public class ResponseResultInterceptor {
 
 		try {
 			long start = System.currentTimeMillis();
-			logger.info("api入参", null != proceedingJoinPoint.getArgs() ? proceedingJoinPoint.getArgs() : null);
+			logger.info("api开始");
 
 			Object proceed = proceedingJoinPoint.proceed();
 
 			long end = System.currentTimeMillis();
-			logger.info("api返回{}，耗时{}ms", null != proceed ? JSON.toJSONString(proceed) : proceed, end - start);
+			logger.info("api返回{}，耗时{}ms", JSON.toJSONString(proceed), end - start);
 
 			return proceed;
 		} catch (Throwable throwable) {//捕捉未知异常
