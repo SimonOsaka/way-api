@@ -5,10 +5,7 @@ import com.zl.way.discount.api.model.WayDiscountResponse;
 import com.zl.way.discount.model.WayDiscountBo;
 import com.zl.way.discount.model.WayDiscountParam;
 import com.zl.way.discount.service.WayDiscountService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.PageParam;
-import com.zl.way.util.ResponseResult;
-import com.zl.way.util.ResponseResultUtil;
+import com.zl.way.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +76,10 @@ public class WayDiscountApi {
 
 		if (wayDiscountRequest.getCommodityName().length() > 100) {
 			return ResponseResultUtil.wrapWrongParamResponseResult("商品名称超长[限制100字内]");
+		}
+
+		if (SensiWordsUtil.isSensiWords(wayDiscountRequest.getCommodityName())) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("商品名称包含敏感字");
 		}
 
 		WayDiscountParam wayDiscountParam = BeanMapper

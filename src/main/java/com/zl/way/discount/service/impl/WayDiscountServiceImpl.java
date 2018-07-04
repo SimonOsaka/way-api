@@ -35,7 +35,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
+	//	private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
 
 	@Autowired
 	private WayDiscountMapper wayDiscountMapper;
@@ -81,15 +81,14 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			wayDiscountBo.setCommodityImageUrl(String.format("http://h5.way.com/images/%s.jpg",
 					wayDiscountBo.getCommodityCate()));
 
-			if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
-					.after(now)) {
-				long expireMills = wayDiscountBo.getLimitTimeExpire().getTime();
-				long subMills = expireMills - nowMills;
-				if (subMills <= ONE_HOUR_MILLS) {
-					wayDiscountBo
-							.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
-				}
-			}
+			//			if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
+			//					.after(now)) {
+			//				long expireMills = wayDiscountBo.getLimitTimeExpire().getTime();
+			//				long subMills = expireMills - nowMills;
+			//				if (subMills <= ONE_HOUR_MILLS) {
+			wayDiscountBo.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
+			//				}
+			//			}
 		}
 
 		if (logger.isDebugEnabled()) {
