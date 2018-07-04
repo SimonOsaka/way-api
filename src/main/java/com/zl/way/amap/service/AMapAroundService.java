@@ -1,8 +1,8 @@
 package com.zl.way.amap.service;
 
-import com.zl.way.amap.api.model.AMapAroundRequest;
-import com.zl.way.amap.api.model.AMapAroundResponse;
 import com.zl.way.amap.exception.AMapException;
+import com.zl.way.amap.model.AMapAroundRequest;
+import com.zl.way.amap.model.AMapAroundResponse;
 
 /**
  * 周边搜索
@@ -10,5 +10,5 @@ import com.zl.way.amap.exception.AMapException;
  */
 public interface AMapAroundService {
 
-    AMapAroundResponse searchAround(AMapAroundRequest aMapAroundRequest) throws AMapException;
+	AMapAroundResponse searchAround(AMapAroundRequest aMapAroundRequest) throws AMapException;
 }

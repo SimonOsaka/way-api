@@ -3,3 +3,4 @@ amap:
   inputtipsUrl: http://restapi.amap.com/v3/assistant/inputtips
   districtUrl: http://restapi.amap.com/v3/config/district
   aroundUrl: http://restapi.amap.com/v3/place/around
+  staticMapUrl: http://restapi.amap.com/v3/staticmap

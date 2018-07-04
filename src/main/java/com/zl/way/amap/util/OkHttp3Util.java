@@ -43,7 +43,7 @@ public class OkHttp3Util {
 		return okHttpClient;
 	}
 
-	public static String doGet(String url, Map<String, String> parametersMap) {
+	public static String getUrlComplete(String url, Map<String, String> parametersMap) {
 		Iterator<String> it = parametersMap.keySet().iterator();
 		StringBuilder urlSb = new StringBuilder(url);
 		urlSb.append("?");
@@ -54,7 +54,12 @@ public class OkHttp3Util {
 			urlSb.append("&");
 		}
 		urlSb.deleteCharAt(urlSb.lastIndexOf("&"));
-		return doGet(urlSb.toString());
+		return urlSb.toString();
+	}
+
+	public static String doGet(String url, Map<String, String> parametersMap) {
+
+		return doGet(getUrlComplete(url, parametersMap));
 	}
 
 	/**

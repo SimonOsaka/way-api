@@ -20,6 +20,10 @@ public class WayDiscountResponse {
 
 	private Long limitTimeExpireMills;
 
+	private String staticMapUrl;
+
+	private String commodityImageUrl;
+
 	public Long getId() {
 		return id;
 	}
@@ -82,5 +86,21 @@ public class WayDiscountResponse {
 
 	public void setLimitTimeExpireMills(Long limitTimeExpireMills) {
 		this.limitTimeExpireMills = limitTimeExpireMills;
+	}
+
+	public String getStaticMapUrl() {
+		return staticMapUrl;
+	}
+
+	public void setStaticMapUrl(String staticMapUrl) {
+		this.staticMapUrl = staticMapUrl;
+	}
+
+	public String getCommodityImageUrl() {
+		return commodityImageUrl;
+	}
+
+	public void setCommodityImageUrl(String commodityImageUrl) {
+		this.commodityImageUrl = commodityImageUrl;
 	}
 }

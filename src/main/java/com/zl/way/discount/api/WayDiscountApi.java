@@ -41,7 +41,8 @@ public class WayDiscountApi {
 		pageParam.setPageNum(wayDiscountRequest.getPageNum());
 		pageParam.setPageSize(wayDiscountRequest.getPageSize());
 
-		List<WayDiscountBo> wayDiscountBoList = wayDiscountService.selectByCondition(wayDiscountParam, pageParam);
+		List<WayDiscountBo> wayDiscountBoList = wayDiscountService
+				.selectByCondition(wayDiscountParam, pageParam);
 		if (CollectionUtils.isEmpty(wayDiscountBoList)) {
 			return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
 		}
@@ -51,27 +52,25 @@ public class WayDiscountApi {
 	}
 
 	@RequestMapping(value = "/getDetail", method = RequestMethod.GET)
-	public ResponseResult<WayDiscountResponse> getDiscountDetail(WayDiscountRequest wayDiscountRequest) {
+	public ResponseResult<WayDiscountResponse> getDiscountDetail(
+			WayDiscountRequest wayDiscountRequest) {
 
 		WayDiscountParam wayDiscountParam = new WayDiscountParam();
 		wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
 
-		PageParam pageParam = new PageParam();
-		pageParam.setPageNum(1);
-		pageParam.setPageSize(1);
-
-		List<WayDiscountBo> wayDiscountBoList = wayDiscountService.selectByCondition(wayDiscountParam, pageParam);
-		if (CollectionUtils.isEmpty(wayDiscountBoList)) {
+		WayDiscountBo wayDiscountBo = wayDiscountService.selectOne(wayDiscountParam);
+		if (null == wayDiscountBo) {
 			return ResponseResultUtil.wrapSuccessResponseResult(null);
 		}
 
-		WayDiscountBo wayDiscountBo = wayDiscountBoList.get(0);
-		WayDiscountResponse wayDiscountResponse = BeanMapper.map(wayDiscountBo, WayDiscountResponse.class);
+		WayDiscountResponse wayDiscountResponse = BeanMapper
+				.map(wayDiscountBo, WayDiscountResponse.class);
 		return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponse);
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseResult<WayDiscountResponse> createDiscount(@RequestBody WayDiscountRequest wayDiscountRequest) {
+	public ResponseResult<WayDiscountResponse> createDiscount(
+			@RequestBody WayDiscountRequest wayDiscountRequest) {
 
 		if (StringUtils.isBlank(wayDiscountRequest.getCommodityName())) {
 
@@ -82,7 +81,8 @@ public class WayDiscountApi {
 			return ResponseResultUtil.wrapWrongParamResponseResult("商品名称超长[限制100字内]");
 		}
 
-		WayDiscountParam wayDiscountParam = BeanMapper.map(wayDiscountRequest, WayDiscountParam.class);
+		WayDiscountParam wayDiscountParam = BeanMapper
+				.map(wayDiscountRequest, WayDiscountParam.class);
 		wayDiscountService.createDiscount(wayDiscountParam);
 
 		return ResponseResultUtil.wrapSuccessResponseResult(null);
@@ -92,7 +92,8 @@ public class WayDiscountApi {
 	public ResponseResult<WayDiscountResponse> increateDiscountReal(
 			@RequestBody WayDiscountRequest wayDiscountRequest) {
 
-		WayDiscountParam wayDiscountParam = BeanMapper.map(wayDiscountRequest, WayDiscountParam.class);
+		WayDiscountParam wayDiscountParam = BeanMapper
+				.map(wayDiscountRequest, WayDiscountParam.class);
 		wayDiscountService.increateReal(wayDiscountParam.getDiscountId());
 
 		return ResponseResultUtil.wrapSuccessResponseResult(null);

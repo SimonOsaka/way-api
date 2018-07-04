@@ -5,6 +5,10 @@ public class WayDiscountBo extends WayDiscount {
 
 	private Long limitTimeExpireMills;
 
+	private String staticMapUrl;
+
+	private String commodityImageUrl;
+
 	public String getShopDistance() {
 		return shopDistance;
 	}
@@ -19,5 +23,21 @@ public class WayDiscountBo extends WayDiscount {
 
 	public void setLimitTimeExpireMills(Long limitTimeExpireMills) {
 		this.limitTimeExpireMills = limitTimeExpireMills;
+	}
+
+	public String getStaticMapUrl() {
+		return staticMapUrl;
+	}
+
+	public void setStaticMapUrl(String staticMapUrl) {
+		this.staticMapUrl = staticMapUrl;
+	}
+
+	public String getCommodityImageUrl() {
+		return commodityImageUrl;
+	}
+
+	public void setCommodityImageUrl(String commodityImageUrl) {
+		this.commodityImageUrl = commodityImageUrl;
 	}
 }
