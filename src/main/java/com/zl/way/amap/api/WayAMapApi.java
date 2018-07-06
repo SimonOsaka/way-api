@@ -3,10 +3,7 @@ package com.zl.way.amap.api;
 import com.zl.way.amap.api.model.*;
 import com.zl.way.amap.exception.AMapException;
 import com.zl.way.amap.model.*;
-import com.zl.way.amap.service.AMapAroundService;
-import com.zl.way.amap.service.AMapDistrictService;
-import com.zl.way.amap.service.AMapInputTipsService;
-import com.zl.way.amap.service.AMapStaticMapService;
+import com.zl.way.amap.service.*;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
@@ -35,6 +32,9 @@ public class WayAMapApi {
 
 	@Autowired
 	private AMapStaticMapService aMapStaticMapService;
+
+	@Autowired
+	private AMapRegeoService aMapRegeoService;
 
 	@RequestMapping(method = RequestMethod.POST, path = "/inputtips")
 	public ResponseResult<List<WayAMapInputTipsResponse>> requestInputTips(
@@ -131,6 +131,27 @@ public class WayAMapApi {
 					aMapStaticMapResponse.getaMapStaticMapModel().getStaticMapUrl());
 
 			return ResponseResultUtil.wrapSuccessResponseResult(wayAMapStaticMapResponse);
+		} catch (AMapException e) {
+		}
+
+		return ResponseResultUtil.wrapSuccessResponseResult(null);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, path = "/regeo")
+	public ResponseResult<WayAMapRegeoResponse> requestRegeo(
+			@RequestBody WayAMapRegeoRequest wayAMapRegeoRequest) {
+
+		AMapRegeoRequest aMapRegeoRequest = BeanMapper
+				.map(wayAMapRegeoRequest, AMapRegeoRequest.class);
+
+		WayAMapRegeoResponse wayAMapRegeoResponse = null;
+		try {
+			AMapRegeoResponse aMapRegeoResponse = aMapRegeoService.getRegeo(aMapRegeoRequest);
+
+			wayAMapRegeoResponse = BeanMapper
+					.map(aMapRegeoResponse.getaMapRegeoModel(), WayAMapRegeoResponse.class);
+
+			return ResponseResultUtil.wrapSuccessResponseResult(wayAMapRegeoResponse);
 		} catch (AMapException e) {
 		}
 

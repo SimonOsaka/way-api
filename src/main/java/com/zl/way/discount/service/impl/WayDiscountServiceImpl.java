@@ -2,8 +2,11 @@ package com.zl.way.discount.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.zl.way.amap.exception.AMapException;
+import com.zl.way.amap.model.AMapRegeoRequest;
+import com.zl.way.amap.model.AMapRegeoResponse;
 import com.zl.way.amap.model.AMapStaticMapRequest;
 import com.zl.way.amap.model.AMapStaticMapResponse;
+import com.zl.way.amap.service.AMapRegeoService;
 import com.zl.way.amap.service.AMapStaticMapService;
 import com.zl.way.discount.mapper.WayDiscountMapper;
 import com.zl.way.discount.model.WayDiscount;
@@ -43,6 +46,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	@Autowired
 	private AMapStaticMapService aMapStaticMapService;
 
+	@Autowired
+	private AMapRegeoService aMapRegeoService;
+
 
 	@Override
 	@Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -53,6 +59,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		condition.setClientLng(wayDiscountParam.getClientLng());
 		condition.setDiscountId(wayDiscountParam.getDiscountId());
 		condition.setLimitTimeExpireEnable(wayDiscountParam.getLimitTimeExpireEnable());
+		condition.setCityCode(wayDiscountParam.getCityCode());
 
 		Pageable pageable = WayPageRequest.of(pageParam);
 		logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
@@ -146,8 +153,21 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			wayDiscount.setLimitTimeExpire(limitTimeExpire);
 		}
 
+		AMapRegeoRequest aMapRegeoRequest = new AMapRegeoRequest();
+		aMapRegeoRequest.setLocation(
+				wayDiscountParam.getClientLng() + "," + wayDiscountParam.getClientLat());
+		try {
+			AMapRegeoResponse aMapRegeoResponse = aMapRegeoService.getRegeo(aMapRegeoRequest);
+			if (aMapRegeoResponse.getCode() == 200) {
+				String cityCode = aMapRegeoResponse.getaMapRegeoModel().getCityCode();
+				wayDiscount.setCityCode(cityCode);
+			}
+		} catch (AMapException e) {
+			logger.warn("获取逆地理发生异常，入参={}", aMapRegeoRequest, e);
+		}
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount));
+			logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount, true));
 		}
 
 		wayDiscountMapper.insertSelective(wayDiscount);

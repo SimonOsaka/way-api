@@ -5,58 +5,67 @@ import com.zl.way.util.PageParam;
 import java.math.BigDecimal;
 
 public class WayShopRequest extends PageParam {
-    private String shopName;
-    private Integer shopCateLeafId;
-    private Long shopId;
-    private String keywords;
-    private BigDecimal clientLat;//纬度
-    private BigDecimal clientLng;//经度
+	private String shopName;
+	private Integer shopCateLeafId;
+	private Long shopId;
+	private String keywords;
+	private BigDecimal clientLat;//纬度
+	private BigDecimal clientLng;//经度
+	private String cityCode;
 
-    public String getShopName() {
-        return shopName;
-    }
+	public String getCityCode() {
+		return cityCode;
+	}
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
 
-    public Integer getShopCateLeafId() {
-        return shopCateLeafId;
-    }
+	public String getShopName() {
+		return shopName;
+	}
 
-    public void setShopCateLeafId(Integer shopCateLeafId) {
-        this.shopCateLeafId = shopCateLeafId;
-    }
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
 
-    public Long getShopId() {
-        return shopId;
-    }
+	public Integer getShopCateLeafId() {
+		return shopCateLeafId;
+	}
 
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
+	public void setShopCateLeafId(Integer shopCateLeafId) {
+		this.shopCateLeafId = shopCateLeafId;
+	}
 
-    public String getKeywords() {
-        return keywords;
-    }
+	public Long getShopId() {
+		return shopId;
+	}
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
+	public void setShopId(Long shopId) {
+		this.shopId = shopId;
+	}
 
-    public BigDecimal getClientLat() {
-        return clientLat;
-    }
+	public String getKeywords() {
+		return keywords;
+	}
 
-    public void setClientLat(BigDecimal clientLat) {
-        this.clientLat = clientLat;
-    }
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
 
-    public BigDecimal getClientLng() {
-        return clientLng;
-    }
+	public BigDecimal getClientLat() {
+		return clientLat;
+	}
 
-    public void setClientLng(BigDecimal clientLng) {
-        this.clientLng = clientLng;
-    }
+	public void setClientLat(BigDecimal clientLat) {
+		this.clientLat = clientLat;
+	}
+
+	public BigDecimal getClientLng() {
+		return clientLng;
+	}
+
+	public void setClientLng(BigDecimal clientLng) {
+		this.clientLng = clientLng;
+	}
 }

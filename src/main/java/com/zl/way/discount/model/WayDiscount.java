@@ -43,6 +43,8 @@ public class WayDiscount {
 
 	private Byte isDeleted;
 
+	private String cityCode;
+
 
 	public Long getId() {
 		return id;
@@ -168,5 +170,13 @@ public class WayDiscount {
 
 	public void setIsDeleted(Byte isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
 	}
 }

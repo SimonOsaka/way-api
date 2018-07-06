@@ -8,6 +8,7 @@ public class WayDiscountRequest extends PageParam {
 	private Long discountId;
 	private BigDecimal clientLat;//纬度
 	private BigDecimal clientLng;//经度
+	private String cityCode;//城市编码
 
 	private String commodityName;
 	private String commodityCate;
@@ -96,5 +97,13 @@ public class WayDiscountRequest extends PageParam {
 
 	public void setExpireDays(Integer expireDays) {
 		this.expireDays = expireDays;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
 	}
 }

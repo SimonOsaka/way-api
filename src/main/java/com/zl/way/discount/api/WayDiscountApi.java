@@ -33,6 +33,7 @@ public class WayDiscountApi {
 		wayDiscountParam.setClientLng(wayDiscountRequest.getClientLng());
 		wayDiscountParam.setClientLat(wayDiscountRequest.getClientLat());
 		wayDiscountParam.setLimitTimeExpireEnable(Boolean.TRUE);
+		wayDiscountParam.setCityCode(wayDiscountRequest.getCityCode());
 
 		PageParam pageParam = new PageParam();
 		pageParam.setPageNum(wayDiscountRequest.getPageNum());

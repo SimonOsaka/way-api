@@ -7,6 +7,7 @@ public class WayDiscountParam extends WayDiscount {
 	private Long discountId;
 	private BigDecimal clientLat;//纬度
 	private BigDecimal clientLng;//经度
+	private String cityCode;
 
 	private Boolean limitTimeExpireEnable;
 	private Integer expireDays;
@@ -49,5 +50,15 @@ public class WayDiscountParam extends WayDiscount {
 
 	public void setExpireDays(Integer expireDays) {
 		this.expireDays = expireDays;
+	}
+
+	@Override
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	@Override
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
 	}
 }

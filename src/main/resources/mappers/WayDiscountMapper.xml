@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zl.way.discount.mapper.WayDiscountMapper">
     <resultMap id="BaseResultMap" type="com.zl.way.discount.model.WayDiscount">
 
@@ -16,17 +17,20 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
     </resultMap>
     <sql id="Base_Column_List">
-        
+
         id, commodity_name, commodity_cate, commodity_price, shop_position, shop_lng, shop_lat,
-        user_login_id, commodity_real, limit_time_expire, create_time, update_time, is_deleted
+        user_login_id, commodity_real, limit_time_expire, create_time, update_time, is_deleted,
+        city_code
     </sql>
     <sql id="condition_Column_List">
-        
+
         discount.id, discount.commodity_name, discount.commodity_cate, discount.commodity_price, discount.shop_position,
         discount.shop_lng, discount.shop_lat,
-        discount.user_login_id, discount.commodity_real, discount.limit_time_expire, discount.create_time, discount.update_time, discount.is_deleted
+        discount.user_login_id, discount.commodity_real, discount.limit_time_expire, discount.create_time, discount.update_time, discount.is_deleted,
+        discount.city_code
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
@@ -36,25 +40,33 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        
+
         delete from way_discount
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.discount.model.WayDiscount"
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.discount.model.WayDiscount"
             useGeneratedKeys="true">
-        
+
         insert into way_discount (commodity_name, commodity_cate, commodity_price,
-        shop_position, shop_lng, shop_lat,
-        user_login_id, commodity_real, limit_time_expire, create_time,
-        update_time, is_deleted)
+                                  shop_position, shop_lng, shop_lat,
+                                  user_login_id, commodity_real, limit_time_expire, create_time,
+                                  update_time, is_deleted, city_code)
         values (#{commodityName,jdbcType=VARCHAR}, #{commodityCate,jdbcType=VARCHAR},
-        #{commodityPrice,jdbcType=DECIMAL},
-        #{shopPosition,jdbcType=VARCHAR}, #{shopLng,jdbcType=DECIMAL}, #{shopLat,jdbcType=DECIMAL},
-        #{userLoginId,jdbcType=BIGINT}, #{commodityReal,jdbcType=INTEGER}, #{limitTimeExpire,jdbcType=TIMESTAMP},
-        #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT})
+                                                   #{commodityPrice,jdbcType=DECIMAL},
+                                                   #{shopPosition,jdbcType=VARCHAR},
+                                                   #{shopLng,jdbcType=DECIMAL},
+                                                   #{shopLat,jdbcType=DECIMAL},
+                                                   #{userLoginId,jdbcType=BIGINT},
+                                                   #{commodityReal,jdbcType=INTEGER},
+                                                   #{limitTimeExpire,jdbcType=TIMESTAMP},
+                                                   #{createTime,jdbcType=TIMESTAMP},
+                                                   #{updateTime,jdbcType=TIMESTAMP},
+                #{isDeleted,jdbcType=TINYINT},
+                #{cityCode,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.discount.model.WayDiscount"
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.discount.model.WayDiscount"
             useGeneratedKeys="true">
 
         insert into way_discount
@@ -95,6 +107,9 @@
             <if test="isDeleted != null">
                 is_deleted,
             </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="commodityName != null">
@@ -132,6 +147,9 @@
             </if>
             <if test="isDeleted != null">
                 #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -175,24 +193,28 @@
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.zl.way.discount.model.WayDiscount">
-        
+
         update way_discount
-        set commodity_name = #{commodityName,jdbcType=VARCHAR},
-        commodity_cate = #{commodityCate,jdbcType=VARCHAR},
-        commodity_price = #{commodityPrice,jdbcType=DECIMAL},
-        shop_position = #{shopPosition,jdbcType=VARCHAR},
-        shop_lng = #{shopLng,jdbcType=DECIMAL},
-        shop_lat = #{shopLat,jdbcType=DECIMAL},
-        user_login_id = #{userLoginId,jdbcType=BIGINT},
-        commodity_real = #{commodityReal,jdbcType=INTEGER},
-        limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-        is_deleted = #{isDeleted,jdbcType=TINYINT}
+        set commodity_name    = #{commodityName,jdbcType=VARCHAR},
+            commodity_cate    = #{commodityCate,jdbcType=VARCHAR},
+            commodity_price   = #{commodityPrice,jdbcType=DECIMAL},
+            shop_position     = #{shopPosition,jdbcType=VARCHAR},
+            shop_lng          = #{shopLng,jdbcType=DECIMAL},
+            shop_lat          = #{shopLat,jdbcType=DECIMAL},
+            user_login_id     = #{userLoginId,jdbcType=BIGINT},
+            commodity_real    = #{commodityReal,jdbcType=INTEGER},
+            limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
+            create_time       = #{createTime,jdbcType=TIMESTAMP},
+            update_time       = #{updateTime,jdbcType=TIMESTAMP},
+            is_deleted        = #{isDeleted,jdbcType=TINYINT},
+            city_code         = #{cityCode,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
     <select id="selectByCondition" resultMap="BaseResultMap">
@@ -209,17 +231,14 @@
         from way_discount discount
         left join user_login login on login.id = discount.user_login_id
         where discount.is_deleted=0
-        <if test="condition.clientLng != null and condition.clientLat != null">
-            and SQRT(ABS(shop_lng - #{condition.clientLng, jdbcType=DECIMAL})*ABS(shop_lng -
-            #{condition.clientLng, jdbcType=DECIMAL}) +ABS(shop_lat -
-            #{condition.clientLat, jdbcType=DECIMAL})*ABS(shop_lat -
-            #{condition.clientLat, jdbcType=DECIMAL})) <![CDATA[ < ]]> 0.004935
-        </if>
         <if test="condition.limitTimeExpireEnable != null and condition.limitTimeExpireEnable == true">
             and discount.limit_time_expire <![CDATA[ >= ]]> now()
         </if>
         <if test="condition.discountId != null">
             and discount.id = #{condition.discountId,jdbcType=BIGINT}
+        </if>
+        <if test="condition.cityCode != null">
+            and discount.city_code = #{condition.cityCode,jdbcType=VARCHAR}
         </if>
         <if test="condition.clientLng != null and condition.clientLat != null">
             order by s_distance

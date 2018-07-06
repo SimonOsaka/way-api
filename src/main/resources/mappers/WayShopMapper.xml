@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
         namespace="com.zl.way.shop.mapper.WayShopMapper">
     <resultMap id="BaseResultMap"
@@ -117,11 +118,13 @@
         shop_info, shop_lat, shop_lng,
         shop_logo_url, create_time, update_time,
         is_deleted)
-        values (#{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, #{shopTel,jdbcType=VARCHAR},
+        values (#{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR},
+        #{shopTel,jdbcType=VARCHAR},
         #{shopBusinessTime1,jdbcType=VARCHAR}, #{shopBusinessTime2,jdbcType=VARCHAR},
         #{shopCateLeafId,jdbcType=INTEGER},
         #{shopInfo,jdbcType=VARCHAR}, #{shopLat,jdbcType=DECIMAL}, #{shopLng,jdbcType=DECIMAL},
-        #{shopLogoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{shopLogoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
         #{isDeleted,jdbcType=TINYINT})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
@@ -317,6 +320,9 @@
         </if>
         <if test="condition.shopCateLeafId != null">
             and shop.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
+        </if>
+        <if test="condition.cityCode != null">
+            and shop.city_code = #{condition.cityCode,jdbcType=VARCHAR}
         </if>
         <trim prefix="and (" suffix=")" suffixOverrides="or">
             <if test="condition.shopName != null and condition.shopName != ''">
