@@ -12,6 +12,8 @@ public class WayDiscountParam extends WayDiscount {
 	private Boolean limitTimeExpireEnable;
 	private Integer expireDays;
 
+	private Long realUserLoginId;
+
 	public Long getDiscountId() {
 		return discountId;
 	}
@@ -60,5 +62,13 @@ public class WayDiscountParam extends WayDiscount {
 	@Override
 	public void setCityCode(String cityCode) {
 		this.cityCode = cityCode;
+	}
+
+	public Long getRealUserLoginId() {
+		return realUserLoginId;
+	}
+
+	public void setRealUserLoginId(Long realUserLoginId) {
+		this.realUserLoginId = realUserLoginId;
 	}
 }

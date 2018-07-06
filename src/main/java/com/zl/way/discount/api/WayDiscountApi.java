@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class WayDiscountApi {
 		wayDiscountParam.setClientLat(wayDiscountRequest.getClientLat());
 		wayDiscountParam.setLimitTimeExpireEnable(Boolean.TRUE);
 		wayDiscountParam.setCityCode(wayDiscountRequest.getCityCode());
+		wayDiscountParam.setRealUserLoginId(wayDiscountRequest.getRealUserLoginId());
 
 		PageParam pageParam = new PageParam();
 		pageParam.setPageNum(wayDiscountRequest.getPageNum());
@@ -44,8 +46,20 @@ public class WayDiscountApi {
 		if (CollectionUtils.isEmpty(wayDiscountBoList)) {
 			return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
 		}
-		List<WayDiscountResponse> wayDiscountResponseList = BeanMapper
-				.mapAsList(wayDiscountBoList, WayDiscountResponse.class);
+
+		List<WayDiscountResponse> wayDiscountResponseList = new ArrayList<>();
+		for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
+			WayDiscountResponse wayDiscountResponse = BeanMapper
+					.map(wayDiscountBo, WayDiscountResponse.class);
+			if (null != wayDiscountBo.getWayDiscountReal()) {
+				wayDiscountResponse
+						.setDiscountId(wayDiscountBo.getWayDiscountReal().getDiscountId());
+				wayDiscountResponse
+						.setRealUserLoginId(wayDiscountBo.getWayDiscountReal().getUserLoginId());
+			}
+			wayDiscountResponseList.add(wayDiscountResponse);
+		}
+
 		return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponseList);
 	}
 
@@ -90,13 +104,49 @@ public class WayDiscountApi {
 		return ResponseResultUtil.wrapSuccessResponseResult(null);
 	}
 
-	@RequestMapping(value = "/real/increate", method = RequestMethod.POST)
-	public ResponseResult<WayDiscountResponse> increateDiscountReal(
+	@RequestMapping(value = "/real/increase", method = RequestMethod.POST)
+	public ResponseResult<WayDiscountResponse> increaseDiscountReal(
 			@RequestBody WayDiscountRequest wayDiscountRequest) {
+
+		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("优惠id不能为空");
+		}
+
+		if (NumberUtil.isNotLongKey(wayDiscountRequest.getRealUserLoginId())) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("用户登录id不能为空");
+		}
 
 		WayDiscountParam wayDiscountParam = BeanMapper
 				.map(wayDiscountRequest, WayDiscountParam.class);
-		wayDiscountService.increateReal(wayDiscountParam.getDiscountId());
+		try {
+			wayDiscountService.increaseReal(wayDiscountParam);
+		} catch (Exception e) {
+			return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
+		}
+
+		return ResponseResultUtil.wrapSuccessResponseResult(null);
+
+	}
+
+	@RequestMapping(value = "/real/decrease", method = RequestMethod.POST)
+	public ResponseResult<WayDiscountResponse> decreaseDiscountReal(
+			@RequestBody WayDiscountRequest wayDiscountRequest) {
+
+		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("优惠id不能为空");
+		}
+
+		if (NumberUtil.isNotLongKey(wayDiscountRequest.getRealUserLoginId())) {
+			return ResponseResultUtil.wrapWrongParamResponseResult("用户登录id不能为空");
+		}
+
+		WayDiscountParam wayDiscountParam = BeanMapper
+				.map(wayDiscountRequest, WayDiscountParam.class);
+		try {
+			wayDiscountService.decreaseReal(wayDiscountParam);
+		} catch (Exception e) {
+			return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
+		}
 
 		return ResponseResultUtil.wrapSuccessResponseResult(null);
 

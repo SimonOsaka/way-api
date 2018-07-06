@@ -9,10 +9,8 @@ import com.zl.way.amap.model.AMapStaticMapResponse;
 import com.zl.way.amap.service.AMapRegeoService;
 import com.zl.way.amap.service.AMapStaticMapService;
 import com.zl.way.discount.mapper.WayDiscountMapper;
-import com.zl.way.discount.model.WayDiscount;
-import com.zl.way.discount.model.WayDiscountBo;
-import com.zl.way.discount.model.WayDiscountParam;
-import com.zl.way.discount.model.WayDiscountQueryCondition;
+import com.zl.way.discount.mapper.WayDiscountRealMapper;
+import com.zl.way.discount.model.*;
 import com.zl.way.discount.service.WayDiscountService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.GeoUtil;
@@ -44,6 +42,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	private WayDiscountMapper wayDiscountMapper;
 
 	@Autowired
+	private WayDiscountRealMapper wayDiscountRealMapper;
+
+	@Autowired
 	private AMapStaticMapService aMapStaticMapService;
 
 	@Autowired
@@ -60,6 +61,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		condition.setDiscountId(wayDiscountParam.getDiscountId());
 		condition.setLimitTimeExpireEnable(wayDiscountParam.getLimitTimeExpireEnable());
 		condition.setCityCode(wayDiscountParam.getCityCode());
+		condition.setRealUserLoginId(wayDiscountParam.getRealUserLoginId());
 
 		Pageable pageable = WayPageRequest.of(pageParam);
 		logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
@@ -71,8 +73,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			return Collections.emptyList();
 		}
 
-		Date now = DateTime.now().toDate();
-		long nowMills = now.getTime();
+		//		Date now = DateTime.now().toDate();
+		//		long nowMills = now.getTime();
 
 		List<WayDiscountBo> wayDiscountBoList = BeanMapper
 				.mapAsList(wayDiscountList, WayDiscountBo.class);
@@ -176,7 +178,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class, readOnly = false)
-	public void increateReal(Long discountId) {
+	public void increaseReal(WayDiscountParam wayDiscountParam) {
+		Long discountId = wayDiscountParam.getDiscountId();
 		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
 		if (null == wayDiscount) {
 			logger.info("赞优惠信息discountId={}", discountId);
@@ -194,5 +197,71 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		}
 
 		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
+
+		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
+
+		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
+		condition.setDiscountId(discountId);
+		condition.setRealUserLoginId(realUserLoginId);
+		WayDiscountReal selectReal = wayDiscountRealMapper
+				.selectByDiscountIdAndRealUserLoginId(condition);
+		if (null != selectReal) {
+			logger.info("优惠real已经存在={}", JSON.toJSONString(selectReal));
+			throw new RuntimeException("已经投过了");
+		}
+
+		WayDiscountReal record = new WayDiscountReal();
+		record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
+		record.setDiscountId(discountId);
+		wayDiscountRealMapper.insertSelective(record);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠real信息sql条件={}", JSON.toJSONString(record));
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class, readOnly = false)
+	public void decreaseReal(WayDiscountParam wayDiscountParam) {
+		Long discountId = wayDiscountParam.getDiscountId();
+		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
+		if (null == wayDiscount) {
+			logger.info("优惠信息discountId={}", discountId);
+			return;
+		}
+
+		int commodityReal = wayDiscount.getCommodityReal();
+		commodityReal = commodityReal - 1;
+		commodityReal = commodityReal < 0 ? 0 : commodityReal;
+		WayDiscount upWayDiscount = new WayDiscount();
+		upWayDiscount.setId(discountId);
+		upWayDiscount.setCommodityReal(commodityReal);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠信息sql条件={}", JSON.toJSONString(upWayDiscount));
+		}
+
+		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
+
+		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
+
+		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
+		condition.setDiscountId(discountId);
+		condition.setRealUserLoginId(realUserLoginId);
+		WayDiscountReal selectReal = wayDiscountRealMapper
+				.selectByDiscountIdAndRealUserLoginId(condition);
+		if (null == selectReal) {
+			logger.info("优惠real不存在={}", JSON.toJSONString(condition));
+			throw new RuntimeException("还没有投过");
+		}
+
+		WayDiscountReal updateRecord = new WayDiscountReal();
+		updateRecord.setId(selectReal.getId());
+		updateRecord.setIsDeleted((byte) 1);
+		wayDiscountRealMapper.updateByPrimaryKeySelective(updateRecord);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠real信息sql条件={}", JSON.toJSONString(updateRecord));
+		}
 	}
 }

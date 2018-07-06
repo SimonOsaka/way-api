@@ -24,6 +24,10 @@ public class WayDiscountResponse {
 
 	private String commodityImageUrl;
 
+	private Long discountId;
+
+	private Long realUserLoginId;
+
 	public Long getId() {
 		return id;
 	}
@@ -102,5 +106,21 @@ public class WayDiscountResponse {
 
 	public void setCommodityImageUrl(String commodityImageUrl) {
 		this.commodityImageUrl = commodityImageUrl;
+	}
+
+	public Long getDiscountId() {
+		return discountId;
+	}
+
+	public void setDiscountId(Long discountId) {
+		this.discountId = discountId;
+	}
+
+	public Long getRealUserLoginId() {
+		return realUserLoginId;
+	}
+
+	public void setRealUserLoginId(Long realUserLoginId) {
+		this.realUserLoginId = realUserLoginId;
 	}
 }

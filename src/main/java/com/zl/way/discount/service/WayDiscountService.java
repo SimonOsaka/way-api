@@ -14,5 +14,7 @@ public interface WayDiscountService {
 
 	void createDiscount(WayDiscountParam wayDiscountParam);
 
-	void increateReal(Long discountId);
+	void increaseReal(WayDiscountParam wayDiscountParam);
+
+	void decreaseReal(WayDiscountParam wayDiscountParam);
 }

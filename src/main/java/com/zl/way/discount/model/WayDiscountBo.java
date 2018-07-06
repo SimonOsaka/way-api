@@ -40,4 +40,5 @@ public class WayDiscountBo extends WayDiscount {
 	public void setCommodityImageUrl(String commodityImageUrl) {
 		this.commodityImageUrl = commodityImageUrl;
 	}
+
 }

@@ -21,6 +21,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
         <result column="shop_logo_url" jdbcType="VARCHAR" property="shopLogoUrl"/>
@@ -49,6 +50,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
         <result column="shop_logo_url" jdbcType="VARCHAR" property="shopLogoUrl"/>

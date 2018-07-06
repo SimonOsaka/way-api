@@ -11,6 +11,8 @@ public class WayDiscountQueryCondition extends WayDiscount {
 
 	private Boolean limitTimeExpireEnable;
 
+	private Long realUserLoginId;
+
 	public Long getDiscountId() {
 		return discountId;
 	}
@@ -41,5 +43,13 @@ public class WayDiscountQueryCondition extends WayDiscount {
 
 	public void setLimitTimeExpireEnable(Boolean limitTimeExpireEnable) {
 		this.limitTimeExpireEnable = limitTimeExpireEnable;
+	}
+
+	public Long getRealUserLoginId() {
+		return realUserLoginId;
+	}
+
+	public void setRealUserLoginId(Long realUserLoginId) {
+		this.realUserLoginId = realUserLoginId;
 	}
 }

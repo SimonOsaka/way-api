@@ -45,6 +45,8 @@ public class WayDiscount {
 
 	private String cityCode;
 
+	private WayDiscountReal wayDiscountReal;
+
 
 	public Long getId() {
 		return id;
@@ -178,5 +180,13 @@ public class WayDiscount {
 
 	public void setCityCode(String cityCode) {
 		this.cityCode = cityCode;
+	}
+
+	public WayDiscountReal getWayDiscountReal() {
+		return wayDiscountReal;
+	}
+
+	public void setWayDiscountReal(WayDiscountReal wayDiscountReal) {
+		this.wayDiscountReal = wayDiscountReal;
 	}
 }

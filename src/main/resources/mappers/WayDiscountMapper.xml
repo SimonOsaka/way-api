@@ -18,6 +18,12 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <association property="wayDiscountReal"
+                     javaType="com.zl.way.discount.model.WayDiscountReal">
+            <id column="discount_real_id" property="id"/>
+            <result column="real_user_login_id" property="userLoginId"/>
+            <result column="discount_id" property="discountId"/>
+        </association>
     </resultMap>
     <sql id="Base_Column_List">
 
@@ -30,7 +36,10 @@
         discount.id, discount.commodity_name, discount.commodity_cate, discount.commodity_price, discount.shop_position,
         discount.shop_lng, discount.shop_lat,
         discount.user_login_id, discount.commodity_real, discount.limit_time_expire, discount.create_time, discount.update_time, discount.is_deleted,
-        discount.city_code
+        discount.city_code,
+        discount_real.id as 'discount_real_id',
+        discount_real.user_login_id as 'real_user_login_id',
+        discount_real.discount_id
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
@@ -230,6 +239,9 @@
         </trim>
         from way_discount discount
         left join user_login login on login.id = discount.user_login_id
+        left join way_discount_real discount_real on discount_real.discount_id = discount.id
+        and discount_real.is_deleted=0
+        and discount_real.user_login_id = #{condition.realUserLoginId, jdbcType=BIGINT}
         where discount.is_deleted=0
         <if test="condition.limitTimeExpireEnable != null and condition.limitTimeExpireEnable == true">
             and discount.limit_time_expire <![CDATA[ >= ]]> now()
