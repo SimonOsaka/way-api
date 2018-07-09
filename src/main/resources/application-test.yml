@@ -34,3 +34,7 @@ logging:
   file: /apps/log/on_the_way/app.log
   level:
     com.zl.way: info
+
+custom:
+  security:
+    host: www.way.com

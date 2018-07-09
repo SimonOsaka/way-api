@@ -20,6 +20,7 @@ public class WayDiscountRequest extends PageParam {
 	private String discountCate;
 
 	private Long realUserLoginId;
+	private String realType;
 
 	public String getDiscountCate() {
 		return discountCate;
@@ -115,5 +116,13 @@ public class WayDiscountRequest extends PageParam {
 
 	public void setRealUserLoginId(Long realUserLoginId) {
 		this.realUserLoginId = realUserLoginId;
+	}
+
+	public String getRealType() {
+		return realType;
+	}
+
+	public void setRealType(String realType) {
+		this.realType = realType;
 	}
 }

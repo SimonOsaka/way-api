@@ -111,6 +111,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	public WayDiscountBo selectOne(WayDiscountParam wayDiscountParam) {
 		WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
 		condition.setDiscountId(wayDiscountParam.getDiscountId());
+		condition.setRealUserLoginId(wayDiscountParam.getRealUserLoginId());
 
 		Pageable pageable = WayPageRequest.of(1, 1);
 		logger.info("优惠条件查询sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
@@ -126,6 +127,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			WayDiscountBo wayDiscountBo = BeanMapper.map(wayDiscount, WayDiscountBo.class);
 			wayDiscountBo.setCommodityImageUrl(String.format("http://h5.way.com/images/%s.jpg",
 					wayDiscountBo.getCommodityCate()));
+			if (null != wayDiscount.getWayDiscountReal()) {
+				wayDiscountBo.setRealType(wayDiscount.getWayDiscountReal().getRealType());
+			}
 			try {
 				String location = wayDiscountBo.getShopLng() + "," + wayDiscountBo.getShopLat();
 				AMapStaticMapRequest aMapStaticMapRequest = new AMapStaticMapRequest();
@@ -178,13 +182,21 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class, readOnly = false)
-	public void increaseReal(WayDiscountParam wayDiscountParam) {
+	public WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam) {
 		Long discountId = wayDiscountParam.getDiscountId();
 		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
 		if (null == wayDiscount) {
 			logger.info("赞优惠信息discountId={}", discountId);
-			return;
+			throw new RuntimeException("优惠信息不存在");
 		}
+
+		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
+		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
+		condition.setDiscountId(discountId);
+		condition.setRealUserLoginId(realUserLoginId);
+
+		WayDiscountReal selectReal = wayDiscountRealMapper
+				.selectByDiscountIdAndRealUserLoginId(condition);
 
 		int commodityReal = wayDiscount.getCommodityReal();
 		commodityReal = commodityReal + 1;
@@ -192,42 +204,42 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		upWayDiscount.setId(discountId);
 		upWayDiscount.setCommodityReal(commodityReal);
 
+		if (null == selectReal) {
+			WayDiscountReal record = new WayDiscountReal();
+			record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
+			record.setDiscountId(discountId);
+			record.setRealType((byte) 0);
+			wayDiscountRealMapper.insertSelective(record);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("优惠real信息sql条件={}", JSON.toJSONString(record));
+			}
+
+		} else {
+
+			logger.info("优惠real已经存在={}", JSON.toJSONString(selectReal));
+
+			int commodityUnReal = wayDiscount.getCommodityUnreal();
+			commodityUnReal = commodityUnReal - 1;
+			upWayDiscount.setCommodityUnreal(commodityUnReal);
+		}
+
+		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
 		if (logger.isDebugEnabled()) {
 			logger.debug("赞优惠信息sql条件={}", JSON.toJSONString(upWayDiscount));
 		}
 
-		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
-
-		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
-
-		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
-		condition.setDiscountId(discountId);
-		condition.setRealUserLoginId(realUserLoginId);
-		WayDiscountReal selectReal = wayDiscountRealMapper
-				.selectByDiscountIdAndRealUserLoginId(condition);
-		if (null != selectReal) {
-			logger.info("优惠real已经存在={}", JSON.toJSONString(selectReal));
-			throw new RuntimeException("已经投过了");
-		}
-
-		WayDiscountReal record = new WayDiscountReal();
-		record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
-		record.setDiscountId(discountId);
-		wayDiscountRealMapper.insertSelective(record);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("优惠real信息sql条件={}", JSON.toJSONString(record));
-		}
+		return getRealAndUnRealCount(discountId);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class, readOnly = false)
-	public void decreaseReal(WayDiscountParam wayDiscountParam) {
+	public WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam) {
 		Long discountId = wayDiscountParam.getDiscountId();
 		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
 		if (null == wayDiscount) {
 			logger.info("优惠信息discountId={}", discountId);
-			return;
+			throw new RuntimeException("优惠信息不存在");
 		}
 
 		int commodityReal = wayDiscount.getCommodityReal();
@@ -263,5 +275,114 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("优惠real信息sql条件={}", JSON.toJSONString(updateRecord));
 		}
+
+		return getRealAndUnRealCount(discountId);
+	}
+
+	@Override
+	public WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam) {
+		Long discountId = wayDiscountParam.getDiscountId();
+		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
+		if (null == wayDiscount) {
+			logger.info("赞优惠信息discountId={}", discountId);
+			throw new RuntimeException("优惠信息不存在");
+		}
+
+		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
+		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
+		condition.setDiscountId(discountId);
+		condition.setRealUserLoginId(realUserLoginId);
+
+		WayDiscountReal selectReal = wayDiscountRealMapper
+				.selectByDiscountIdAndRealUserLoginId(condition);
+
+		int commodityUnreal = wayDiscount.getCommodityUnreal();
+		commodityUnreal = commodityUnreal + 1;
+		WayDiscount upWayDiscount = new WayDiscount();
+		upWayDiscount.setId(discountId);
+		upWayDiscount.setCommodityUnreal(commodityUnreal);
+
+		if (null == selectReal) {
+			WayDiscountReal record = new WayDiscountReal();
+			record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
+			record.setDiscountId(discountId);
+			record.setRealType((byte) 1);
+			wayDiscountRealMapper.insertSelective(record);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("优惠real信息sql条件={}", JSON.toJSONString(record));
+			}
+
+		} else {
+
+			logger.info("优惠real已经存在={}", JSON.toJSONString(selectReal));
+
+			int commodityReal = wayDiscount.getCommodityReal();
+			commodityReal = commodityReal - 1;
+			upWayDiscount.setCommodityReal(commodityReal);
+		}
+
+		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
+		if (logger.isDebugEnabled()) {
+			logger.debug("赞优惠信息sql条件={}", JSON.toJSONString(upWayDiscount));
+		}
+
+		return getRealAndUnRealCount(discountId);
+	}
+
+	@Override
+	public WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam) {
+		Long discountId = wayDiscountParam.getDiscountId();
+		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
+		if (null == wayDiscount) {
+			logger.info("优惠信息discountId={}", discountId);
+			throw new RuntimeException("优惠信息不存在");
+		}
+
+		int commodityUnreal = wayDiscount.getCommodityUnreal();
+		commodityUnreal = commodityUnreal - 1;
+		commodityUnreal = commodityUnreal < 0 ? 0 : commodityUnreal;
+		WayDiscount upWayDiscount = new WayDiscount();
+		upWayDiscount.setId(discountId);
+		upWayDiscount.setCommodityUnreal(commodityUnreal);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠信息sql条件={}", JSON.toJSONString(upWayDiscount));
+		}
+
+		wayDiscountMapper.updateByPrimaryKeySelective(upWayDiscount);
+
+		Long realUserLoginId = wayDiscountParam.getRealUserLoginId();
+
+		WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
+		condition.setDiscountId(discountId);
+		condition.setRealUserLoginId(realUserLoginId);
+		WayDiscountReal selectReal = wayDiscountRealMapper
+				.selectByDiscountIdAndRealUserLoginId(condition);
+		if (null == selectReal) {
+			logger.info("优惠real不存在={}", JSON.toJSONString(condition));
+			throw new RuntimeException("还没有投过");
+		}
+
+		WayDiscountReal updateRecord = new WayDiscountReal();
+		updateRecord.setId(selectReal.getId());
+		updateRecord.setIsDeleted((byte) 1);
+		wayDiscountRealMapper.updateByPrimaryKeySelective(updateRecord);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("优惠real信息sql条件={}", JSON.toJSONString(updateRecord));
+		}
+
+		return getRealAndUnRealCount(discountId);
+	}
+
+	private WayDiscountRealBo getRealAndUnRealCount(Long discountId) {
+		WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
+
+		WayDiscountRealBo wayDiscountRealBo = new WayDiscountRealBo();
+		wayDiscountRealBo.setDiscountReal(wayDiscount.getCommodityReal());
+		wayDiscountRealBo.setDiscountUnReal(wayDiscount.getCommodityUnreal());
+
+		return wayDiscountRealBo;
 	}
 }

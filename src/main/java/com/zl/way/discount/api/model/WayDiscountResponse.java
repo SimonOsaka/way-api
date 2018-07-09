@@ -13,8 +13,11 @@ public class WayDiscountResponse {
 	private BigDecimal commodityPrice;
 
 	private String shopPosition;
+	private BigDecimal shopLng;
+	private BigDecimal shopLat;
 
 	private Integer commodityReal;
+	private Integer commodityUnreal;
 
 	private String shopDistance;
 
@@ -27,6 +30,40 @@ public class WayDiscountResponse {
 	private Long discountId;
 
 	private Long realUserLoginId;
+
+	private Byte realType;
+
+	public BigDecimal getShopLng() {
+		return shopLng;
+	}
+
+	public void setShopLng(BigDecimal shopLng) {
+		this.shopLng = shopLng;
+	}
+
+	public BigDecimal getShopLat() {
+		return shopLat;
+	}
+
+	public void setShopLat(BigDecimal shopLat) {
+		this.shopLat = shopLat;
+	}
+
+	public Integer getCommodityUnreal() {
+		return commodityUnreal;
+	}
+
+	public void setCommodityUnreal(Integer commodityUnreal) {
+		this.commodityUnreal = commodityUnreal;
+	}
+
+	public Byte getRealType() {
+		return realType;
+	}
+
+	public void setRealType(Byte realType) {
+		this.realType = realType;
+	}
 
 	public Long getId() {
 		return id;

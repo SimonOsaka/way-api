@@ -32,6 +32,8 @@ public class WayDiscount {
 
 	private Integer commodityReal;
 
+	private Integer commodityUnreal;
+
 	private Date limitTimeExpire;
 
 
@@ -135,6 +137,14 @@ public class WayDiscount {
 
 	public void setCommodityReal(Integer commodityReal) {
 		this.commodityReal = commodityReal;
+	}
+
+	public Integer getCommodityUnreal() {
+		return commodityUnreal;
+	}
+
+	public void setCommodityUnreal(Integer commodityUnreal) {
+		this.commodityUnreal = commodityUnreal;
 	}
 
 	public Date getLimitTimeExpire() {

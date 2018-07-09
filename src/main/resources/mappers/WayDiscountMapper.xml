@@ -13,6 +13,7 @@
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
         <result column="commodity_real" jdbcType="INTEGER" property="commodityReal"/>
+        <result column="commodity_unreal" jdbcType="INTEGER" property="commodityUnreal"/>
         <result column="limit_time_expire" jdbcType="TIMESTAMP" property="limitTimeExpire"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -23,23 +24,46 @@
             <id column="discount_real_id" property="id"/>
             <result column="real_user_login_id" property="userLoginId"/>
             <result column="discount_id" property="discountId"/>
+            <result column="real_type" property="realType"/>
         </association>
     </resultMap>
     <sql id="Base_Column_List">
-
-        id, commodity_name, commodity_cate, commodity_price, shop_position, shop_lng, shop_lat,
-        user_login_id, commodity_real, limit_time_expire, create_time, update_time, is_deleted,
+        id,
+        commodity_name,
+        commodity_cate,
+        commodity_price,
+        shop_position,
+        shop_lng,
+        shop_lat,
+        user_login_id,
+        commodity_real,
+        commodity_unreal,
+        limit_time_expire,
+        create_time,
+        update_time,
+        is_deleted,
         city_code
     </sql>
     <sql id="condition_Column_List">
-
-        discount.id, discount.commodity_name, discount.commodity_cate, discount.commodity_price, discount.shop_position,
-        discount.shop_lng, discount.shop_lat,
-        discount.user_login_id, discount.commodity_real, discount.limit_time_expire, discount.create_time, discount.update_time, discount.is_deleted,
+        discount.id,
+        discount.commodity_name,
+        discount.commodity_cate,
+        discount.commodity_price,
+        discount.shop_position,
+        discount.shop_lng,
+        discount.shop_lat,
+        discount.user_login_id,
+        discount.commodity_real,
+        discount.commodity_unreal,
+        discount.limit_time_expire,
+        discount.create_time,
+        discount.update_time,
+        discount.is_deleted,
         discount.city_code,
         discount_real.id as 'discount_real_id',
         discount_real.user_login_id as 'real_user_login_id',
-        discount_real.discount_id
+        discount_real.discount_id,
+        discount_real.real_type
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
@@ -59,7 +83,7 @@
 
         insert into way_discount (commodity_name, commodity_cate, commodity_price,
                                   shop_position, shop_lng, shop_lat,
-                                  user_login_id, commodity_real, limit_time_expire, create_time,
+                                  user_login_id, commodity_real, commodity_unreal, limit_time_expire, create_time,
                                   update_time, is_deleted, city_code)
         values (#{commodityName,jdbcType=VARCHAR}, #{commodityCate,jdbcType=VARCHAR},
                                                    #{commodityPrice,jdbcType=DECIMAL},
@@ -68,9 +92,10 @@
                                                    #{shopLat,jdbcType=DECIMAL},
                                                    #{userLoginId,jdbcType=BIGINT},
                                                    #{commodityReal,jdbcType=INTEGER},
+                                                   #{commodityUnreal,jdbcType=INTEGER},
                                                    #{limitTimeExpire,jdbcType=TIMESTAMP},
                                                    #{createTime,jdbcType=TIMESTAMP},
-                                                   #{updateTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP},
                 #{isDeleted,jdbcType=TINYINT},
                 #{cityCode,jdbcType=VARCHAR})
     </insert>
@@ -103,6 +128,9 @@
             </if>
             <if test="commodityReal != null">
                 commodity_real,
+            </if>
+            <if test="commodityUnreal != null">
+                commodity_unreal,
             </if>
             <if test="limitTimeExpire != null">
                 limit_time_expire,
@@ -144,6 +172,9 @@
             </if>
             <if test="commodityReal != null">
                 #{commodityReal,jdbcType=INTEGER},
+            </if>
+            <if test="commodityUnreal != null">
+                #{commodityUnreal,jdbcType=INTEGER},
             </if>
             <if test="limitTimeExpire != null">
                 #{limitTimeExpire,jdbcType=TIMESTAMP},
@@ -190,6 +221,9 @@
             <if test="commodityReal != null">
                 commodity_real = #{commodityReal,jdbcType=INTEGER},
             </if>
+            <if test="commodityUnreal != null">
+                commodity_unreal = #{commodityUnreal,jdbcType=INTEGER},
+            </if>
             <if test="limitTimeExpire != null">
                 limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
             </if>
@@ -219,6 +253,7 @@
             shop_lat          = #{shopLat,jdbcType=DECIMAL},
             user_login_id     = #{userLoginId,jdbcType=BIGINT},
             commodity_real    = #{commodityReal,jdbcType=INTEGER},
+            commodity_unreal  = #{commodityUnreal,jdbcType=INTEGER},
             limit_time_expire = #{limitTimeExpire,jdbcType=TIMESTAMP},
             create_time       = #{createTime,jdbcType=TIMESTAMP},
             update_time       = #{updateTime,jdbcType=TIMESTAMP},

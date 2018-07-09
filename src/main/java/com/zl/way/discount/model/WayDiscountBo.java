@@ -9,6 +9,16 @@ public class WayDiscountBo extends WayDiscount {
 
 	private String commodityImageUrl;
 
+	private Byte realType;
+
+	public Byte getRealType() {
+		return realType;
+	}
+
+	public void setRealType(Byte realType) {
+		this.realType = realType;
+	}
+
 	public String getShopDistance() {
 		return shopDistance;
 	}

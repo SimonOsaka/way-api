@@ -2,6 +2,7 @@ package com.zl.way.discount.service;
 
 import com.zl.way.discount.model.WayDiscountBo;
 import com.zl.way.discount.model.WayDiscountParam;
+import com.zl.way.discount.model.WayDiscountRealBo;
 import com.zl.way.util.PageParam;
 
 import java.util.List;
@@ -14,7 +15,11 @@ public interface WayDiscountService {
 
 	void createDiscount(WayDiscountParam wayDiscountParam);
 
-	void increaseReal(WayDiscountParam wayDiscountParam);
+	WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam);
 
-	void decreaseReal(WayDiscountParam wayDiscountParam);
+	WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam);
+
+	WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam);
+
+	WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam);
 }

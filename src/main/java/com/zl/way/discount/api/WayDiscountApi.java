@@ -4,6 +4,7 @@ import com.zl.way.discount.api.model.WayDiscountRequest;
 import com.zl.way.discount.api.model.WayDiscountResponse;
 import com.zl.way.discount.model.WayDiscountBo;
 import com.zl.way.discount.model.WayDiscountParam;
+import com.zl.way.discount.model.WayDiscountRealBo;
 import com.zl.way.discount.service.WayDiscountService;
 import com.zl.way.util.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -69,6 +70,7 @@ public class WayDiscountApi {
 
 		WayDiscountParam wayDiscountParam = new WayDiscountParam();
 		wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
+		wayDiscountParam.setRealUserLoginId(wayDiscountRequest.getRealUserLoginId());
 
 		WayDiscountBo wayDiscountBo = wayDiscountService.selectOne(wayDiscountParam);
 		if (null == wayDiscountBo) {
@@ -105,7 +107,7 @@ public class WayDiscountApi {
 	}
 
 	@RequestMapping(value = "/real/increase", method = RequestMethod.POST)
-	public ResponseResult<WayDiscountResponse> increaseDiscountReal(
+	public ResponseResult<WayDiscountRealBo> increaseDiscountReal(
 			@RequestBody WayDiscountRequest wayDiscountRequest) {
 
 		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
@@ -119,17 +121,25 @@ public class WayDiscountApi {
 		WayDiscountParam wayDiscountParam = BeanMapper
 				.map(wayDiscountRequest, WayDiscountParam.class);
 		try {
-			wayDiscountService.increaseReal(wayDiscountParam);
+			WayDiscountRealBo wayDiscountRealBo = null;
+			if ("real".equalsIgnoreCase(wayDiscountRequest.getRealType())) {
+				wayDiscountRealBo = wayDiscountService.increaseReal(wayDiscountParam);
+			} else if ("unreal".equalsIgnoreCase(wayDiscountRequest.getRealType())) {
+				wayDiscountRealBo = wayDiscountService.increaseUnReal(wayDiscountParam);
+			} else {
+				return ResponseResultUtil.wrapWrongParamResponseResult("类型不正确");
+			}
+
+			return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountRealBo);
 		} catch (Exception e) {
 			return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
 		}
 
-		return ResponseResultUtil.wrapSuccessResponseResult(null);
 
 	}
 
 	@RequestMapping(value = "/real/decrease", method = RequestMethod.POST)
-	public ResponseResult<WayDiscountResponse> decreaseDiscountReal(
+	public ResponseResult<WayDiscountRealBo> decreaseDiscountReal(
 			@RequestBody WayDiscountRequest wayDiscountRequest) {
 
 		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
@@ -143,12 +153,19 @@ public class WayDiscountApi {
 		WayDiscountParam wayDiscountParam = BeanMapper
 				.map(wayDiscountRequest, WayDiscountParam.class);
 		try {
-			wayDiscountService.decreaseReal(wayDiscountParam);
+			WayDiscountRealBo wayDiscountRealBo = null;
+			if ("real".equalsIgnoreCase(wayDiscountRequest.getRealType())) {
+				wayDiscountRealBo = wayDiscountService.decreaseReal(wayDiscountParam);
+			} else if ("unreal".equalsIgnoreCase(wayDiscountRequest.getRealType())) {
+				wayDiscountRealBo = wayDiscountService.decreaseUnReal(wayDiscountParam);
+			} else {
+				return ResponseResultUtil.wrapWrongParamResponseResult("类型不正确");
+			}
+
+			return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountRealBo);
 		} catch (Exception e) {
 			return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
 		}
-
-		return ResponseResultUtil.wrapSuccessResponseResult(null);
 
 	}
 
