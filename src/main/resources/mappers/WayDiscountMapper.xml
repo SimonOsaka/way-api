@@ -19,6 +19,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="commodity_approve" jdbcType="TINYINT" property="commodityApprove"/>
         <association property="wayDiscountReal"
                      javaType="com.zl.way.discount.model.WayDiscountReal">
             <id column="discount_real_id" property="id"/>
@@ -42,7 +43,8 @@
         create_time,
         update_time,
         is_deleted,
-        city_code
+        city_code,
+        commodity_approve
     </sql>
     <sql id="condition_Column_List">
         discount.id,
@@ -60,6 +62,7 @@
         discount.update_time,
         discount.is_deleted,
         discount.city_code,
+        discount.commodity_approve,
         discount_real.id as 'discount_real_id',
         discount_real.user_login_id as 'real_user_login_id',
         discount_real.discount_id,
@@ -81,23 +84,37 @@
             parameterType="com.zl.way.discount.model.WayDiscount"
             useGeneratedKeys="true">
 
-        insert into way_discount (commodity_name, commodity_cate, commodity_price,
-                                  shop_position, shop_lng, shop_lat,
-                                  user_login_id, commodity_real, commodity_unreal, limit_time_expire, create_time,
-                                  update_time, is_deleted, city_code)
-        values (#{commodityName,jdbcType=VARCHAR}, #{commodityCate,jdbcType=VARCHAR},
-                                                   #{commodityPrice,jdbcType=DECIMAL},
-                                                   #{shopPosition,jdbcType=VARCHAR},
-                                                   #{shopLng,jdbcType=DECIMAL},
-                                                   #{shopLat,jdbcType=DECIMAL},
-                                                   #{userLoginId,jdbcType=BIGINT},
-                                                   #{commodityReal,jdbcType=INTEGER},
-                                                   #{commodityUnreal,jdbcType=INTEGER},
-                                                   #{limitTimeExpire,jdbcType=TIMESTAMP},
-                                                   #{createTime,jdbcType=TIMESTAMP},
+        insert into way_discount (commodity_name,
+                                  commodity_cate,
+                                  commodity_price,
+                                  shop_position,
+                                  shop_lng,
+                                  shop_lat,
+                                  user_login_id,
+                                  commodity_real,
+                                  commodity_unreal,
+                                  limit_time_expire,
+                                  create_time,
+                                  update_time,
+                                  is_deleted,
+                                  city_code,
+                                  commodity_approve)
+        values (#{commodityName,jdbcType=VARCHAR},
+            #{commodityCate,jdbcType=VARCHAR},
+            #{commodityPrice,jdbcType=DECIMAL},
+            #{shopPosition,jdbcType=VARCHAR},
+            #{shopLng,jdbcType=DECIMAL},
+            #{shopLat,jdbcType=DECIMAL},
+            #{userLoginId,jdbcType=BIGINT},
+            #{commodityReal,jdbcType=INTEGER},
+            #{commodityUnreal,jdbcType=INTEGER},
+            #{limitTimeExpire,jdbcType=TIMESTAMP},
+            #{createTime,jdbcType=TIMESTAMP},
                 #{updateTime,jdbcType=TIMESTAMP},
                 #{isDeleted,jdbcType=TINYINT},
-                #{cityCode,jdbcType=VARCHAR})
+                #{cityCode,jdbcType=VARCHAR},
+                #{commodityApprove,jdbcType=TINYINT}
+        )
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="com.zl.way.discount.model.WayDiscount"
@@ -147,6 +164,9 @@
             <if test="cityCode != null">
                 city_code,
             </if>
+            <if test="commodityApprove != null">
+                commodity_approve,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="commodityName != null">
@@ -190,6 +210,9 @@
             </if>
             <if test="cityCode != null">
                 #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityApprove != null">
+                #{commodityApprove,jdbcType=TINYINT},
             </if>
         </trim>
     </insert>
@@ -239,6 +262,9 @@
             <if test="cityCode != null">
                 city_code = #{cityCode,jdbcType=VARCHAR},
             </if>
+            <if test="commodityApprove != null">
+                commodity_approve = #{commodityApprove,jdbcType=TINYINT},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -258,7 +284,8 @@
             create_time       = #{createTime,jdbcType=TIMESTAMP},
             update_time       = #{updateTime,jdbcType=TIMESTAMP},
             is_deleted        = #{isDeleted,jdbcType=TINYINT},
-            city_code         = #{cityCode,jdbcType=VARCHAR}
+            city_code         = #{cityCode,jdbcType=VARCHAR},
+            commodity_approve = #{commodityApprove,jdbcType=TINYINT}
         where id = #{id,jdbcType=BIGINT}
     </update>
     <select id="selectByCondition" resultMap="BaseResultMap">

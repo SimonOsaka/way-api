@@ -172,6 +172,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 			logger.warn("获取逆地理发生异常，入参={}", aMapRegeoRequest, e);
 		}
 
+		wayDiscount.setIsDeleted((byte) 2);
+		wayDiscount.setCommodityApprove((byte) 2);
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount, true));
 		}

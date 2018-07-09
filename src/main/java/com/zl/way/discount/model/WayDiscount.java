@@ -49,6 +49,7 @@ public class WayDiscount {
 
 	private WayDiscountReal wayDiscountReal;
 
+	private Byte commodityApprove;
 
 	public Long getId() {
 		return id;
@@ -198,5 +199,13 @@ public class WayDiscount {
 
 	public void setWayDiscountReal(WayDiscountReal wayDiscountReal) {
 		this.wayDiscountReal = wayDiscountReal;
+	}
+
+	public Byte getCommodityApprove() {
+		return commodityApprove;
+	}
+
+	public void setCommodityApprove(Byte commodityApprove) {
+		this.commodityApprove = commodityApprove;
 	}
 }
