@@ -24,3 +24,5 @@ mybatis:
 custom:
   discount:
     imageUrl: http://h5.duozouzou.top/images/%s.jpg
+  user:
+    agreementsUrl: //h5.duozouzou.top/user_agreements.html

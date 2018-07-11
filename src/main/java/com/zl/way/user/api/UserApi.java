@@ -9,7 +9,9 @@ import com.zl.way.user.service.UserService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
+import com.zl.way.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,46 +21,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserApi {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
+	@Value("${custom.user.agreementsUrl}")
+	private String agreementsUrl;
 
-        UserLoginParam userLoginParam = new UserLoginParam();
-        userLoginParam.setLoginTel(userRequest.getUserTel());
-        userLoginParam.setValidCode(userRequest.getValidCode());
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
 
-        try {
-            if (userService.userLogin(userLoginParam)) {
-                UserProfileBo userProfileBo = userService.getUser(userRequest.getUserTel());
-                UserProfile userProfile = BeanMapper.map(userProfileBo, UserProfile.class);
-                UserResponse userResponse = BeanMapper.map(userProfile, UserResponse.class);
-                return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
-            }
-        } catch (RuntimeException re) {
-            return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
-        }
+		UserLoginParam userLoginParam = new UserLoginParam();
+		userLoginParam.setLoginTel(userRequest.getUserTel());
+		userLoginParam.setValidCode(userRequest.getValidCode());
 
-        return ResponseResultUtil.wrapWrongParamResponseResult("用户登录异常");
-    }
+		try {
+			if (userService.userLogin(userLoginParam)) {
+				UserProfileBo userProfileBo = userService.getUser(userRequest.getUserTel());
+				UserProfile userProfile = BeanMapper.map(userProfileBo, UserProfile.class);
+				UserResponse userResponse = BeanMapper.map(userProfile, UserResponse.class);
+				userResponse.setToken(
+						TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
+				return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
+			}
+		} catch (RuntimeException re) {
+			return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
+		}
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseResult<UserResponse> userLogout(@RequestBody UserRequest userRequest) {
+		return ResponseResultUtil.wrapWrongParamResponseResult("用户登录异常");
+	}
 
-        UserLoginParam userLoginParam = new UserLoginParam();
-        userLoginParam.setId(userRequest.getUserLoginId());
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	public ResponseResult<UserResponse> userLogout(@RequestBody UserRequest userRequest) {
 
-        try {
-            if (userService.userLogout(userLoginParam)) {
-                return ResponseResultUtil.wrapSuccessResponseResult(null);
-            }
-        } catch (RuntimeException re) {
-            return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
-        }
+		UserLoginParam userLoginParam = new UserLoginParam();
+		userLoginParam.setId(userRequest.getUserLoginId());
 
-        return ResponseResultUtil.wrapWrongParamResponseResult("退出登录异常");
-    }
+		try {
+			if (userService.userLogout(userLoginParam)) {
+				return ResponseResultUtil.wrapSuccessResponseResult(null);
+			}
+		} catch (RuntimeException re) {
+			return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
+		}
+
+		return ResponseResultUtil.wrapWrongParamResponseResult("退出登录异常");
+	}
 
     /*@RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseResult<UserResponse> getUserDetail(UserRequest userRequest) {
@@ -73,14 +80,22 @@ public class UserApi {
 
     }*/
 
-    @RequestMapping(value = "/validCode", method = RequestMethod.POST)
-    public ResponseResult<UserResponse> getUserValidCode(@RequestBody UserRequest userRequest) {
+	@RequestMapping(value = "/validCode", method = RequestMethod.POST)
+	public ResponseResult<UserResponse> getUserValidCode(@RequestBody UserRequest userRequest) {
 
-        try {
-            userService.getUserValidCode(userRequest.getUserTel());
-            return ResponseResultUtil.wrapSuccessResponseResult(new UserResponse());
-        } catch (RuntimeException re) {
-            return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
-        }
-    }
+		try {
+			userService.getUserValidCode(userRequest.getUserTel());
+			return ResponseResultUtil.wrapSuccessResponseResult(new UserResponse());
+		} catch (RuntimeException re) {
+			return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
+		}
+	}
+
+	@RequestMapping(value = "/agreements", method = RequestMethod.POST)
+	public ResponseResult<UserResponse> getAgreements() {
+
+		UserResponse userResponse = new UserResponse();
+		userResponse.setUserAgreementsUrl(agreementsUrl);
+		return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
+	}
 }

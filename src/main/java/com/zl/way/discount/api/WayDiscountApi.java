@@ -9,11 +9,10 @@ import com.zl.way.discount.service.WayDiscountService;
 import com.zl.way.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +22,7 @@ import java.util.List;
 @RequestMapping("/discount")
 public class WayDiscountApi {
 
+	private final Logger logger = LoggerFactory.getLogger(WayDiscountApi.class);
 
 	@Autowired
 	private WayDiscountService wayDiscountService;
@@ -66,7 +66,14 @@ public class WayDiscountApi {
 
 	@RequestMapping(value = "/getDetail", method = RequestMethod.GET)
 	public ResponseResult<WayDiscountResponse> getDiscountDetail(
-			WayDiscountRequest wayDiscountRequest) {
+			WayDiscountRequest wayDiscountRequest, @RequestHeader("token") String userToken) {
+
+		if (NumberUtil.isLongKey(wayDiscountRequest.getRealUserLoginId()) && !TokenUtil
+				.validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
+			logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
+					userToken);
+			return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+		}
 
 		WayDiscountParam wayDiscountParam = new WayDiscountParam();
 		wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
@@ -84,7 +91,14 @@ public class WayDiscountApi {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseResult<WayDiscountResponse> createDiscount(
-			@RequestBody WayDiscountRequest wayDiscountRequest) {
+			@RequestBody WayDiscountRequest wayDiscountRequest,
+			@RequestHeader("token") String userToken) {
+
+		if (!TokenUtil.validToken(String.valueOf(wayDiscountRequest.getUserLoginId()), userToken)) {
+			logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
+					userToken);
+			return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+		}
 
 		if (StringUtils.isBlank(wayDiscountRequest.getCommodityName())) {
 
@@ -108,7 +122,15 @@ public class WayDiscountApi {
 
 	@RequestMapping(value = "/real/increase", method = RequestMethod.POST)
 	public ResponseResult<WayDiscountRealBo> increaseDiscountReal(
-			@RequestBody WayDiscountRequest wayDiscountRequest) {
+			@RequestBody WayDiscountRequest wayDiscountRequest,
+			@RequestHeader("token") String userToken) {
+
+		if (!TokenUtil
+				.validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
+			logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
+					userToken);
+			return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+		}
 
 		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
 			return ResponseResultUtil.wrapWrongParamResponseResult("优惠id不能为空");
@@ -140,7 +162,15 @@ public class WayDiscountApi {
 
 	@RequestMapping(value = "/real/decrease", method = RequestMethod.POST)
 	public ResponseResult<WayDiscountRealBo> decreaseDiscountReal(
-			@RequestBody WayDiscountRequest wayDiscountRequest) {
+			@RequestBody WayDiscountRequest wayDiscountRequest,
+			@RequestHeader("token") String userToken) {
+
+		if (!TokenUtil
+				.validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
+			logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
+					userToken);
+			return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+		}
 
 		if (NumberUtil.isNotLongKey(wayDiscountRequest.getDiscountId())) {
 			return ResponseResultUtil.wrapWrongParamResponseResult("优惠id不能为空");
