@@ -22,6 +22,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 	@Autowired
 	private AMapRegeoService aMapRegeoService;
 
+	@Value("${custom.discount.imageUrl}")
+	private String discountImageUrl;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -87,8 +90,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 				wayDiscountBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
 			}
 
-			wayDiscountBo.setCommodityImageUrl(String.format("http://h5.way.com/images/%s.jpg",
-					wayDiscountBo.getCommodityCate()));
+			wayDiscountBo.setCommodityImageUrl(
+					String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
 
 			//			if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
 			//					.after(now)) {
@@ -125,8 +128,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 		if (CollectionUtils.isNotEmpty(wayDiscountList)) {
 			WayDiscount wayDiscount = wayDiscountList.get(0);
 			WayDiscountBo wayDiscountBo = BeanMapper.map(wayDiscount, WayDiscountBo.class);
-			wayDiscountBo.setCommodityImageUrl(String.format("http://h5.way.com/images/%s.jpg",
-					wayDiscountBo.getCommodityCate()));
+			wayDiscountBo.setCommodityImageUrl(
+					String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
 			if (null != wayDiscount.getWayDiscountReal()) {
 				wayDiscountBo.setRealType(wayDiscount.getWayDiscountReal().getRealType());
 			}

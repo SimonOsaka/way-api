@@ -28,7 +28,7 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
 		String referer = request.getHeader(HEADER_REFERER);
 		String env = EnvUtil.getAppEnv();
 		if (logger.isDebugEnabled()) {
-			logger.debug("请求api之前={}", request.getHeader(HEADER_REFERER));
+			logger.debug("请求api之前referer={}，env={}，host={}", referer, env, host);
 		}
 
 		if (StringUtils.equalsIgnoreCase(env, ENV_TEST) || StringUtils
