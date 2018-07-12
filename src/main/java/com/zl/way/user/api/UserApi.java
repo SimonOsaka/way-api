@@ -6,20 +6,18 @@ import com.zl.way.user.model.UserLoginParam;
 import com.zl.way.user.model.UserProfile;
 import com.zl.way.user.model.UserProfileBo;
 import com.zl.way.user.service.UserService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.ResponseResult;
-import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
+import com.zl.way.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserApi {
+
+	private final Logger logger = LoggerFactory.getLogger(UserApi.class);
 
 	@Autowired
 	private UserService userService;
@@ -36,7 +34,8 @@ public class UserApi {
 
 		try {
 			if (userService.userLogin(userLoginParam)) {
-				UserProfileBo userProfileBo = userService.getUser(userRequest.getUserTel());
+				UserProfileBo userProfileBo = userService
+						.getUser(userRequest.getUserTel());
 				UserProfile userProfile = BeanMapper.map(userProfileBo, UserProfile.class);
 				UserResponse userResponse = BeanMapper.map(userProfile, UserResponse.class);
 				userResponse.setToken(
@@ -51,7 +50,14 @@ public class UserApi {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public ResponseResult<UserResponse> userLogout(@RequestBody UserRequest userRequest) {
+	public ResponseResult<UserResponse> userLogout(@RequestBody UserRequest userRequest,
+			@RequestHeader("token") String userToken) {
+
+		if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
+			logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(),
+					userToken);
+			return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+		}
 
 		UserLoginParam userLoginParam = new UserLoginParam();
 		userLoginParam.setId(userRequest.getUserLoginId());

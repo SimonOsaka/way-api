@@ -3,209 +3,209 @@ package com.zl.way.discount.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
 public class WayDiscount {
 
-	private Long id;
+    private Long id;
 
+    private String commodityName;
 
-	private String commodityName;
+    private String commodityCate;
 
+    private BigDecimal commodityPrice;
 
-	private String commodityCate;
+    private String shopPosition;
 
+    private BigDecimal shopLng;
 
-	private BigDecimal commodityPrice;
+    private BigDecimal shopLat;
 
+    private Long userLoginId;
 
-	private String shopPosition;
+    private Integer commodityReal;
 
+    private Integer commodityUnreal;
 
-	private BigDecimal shopLng;
+    private Date limitTimeExpire;
 
+    private Date createTime;
 
-	private BigDecimal shopLat;
+    private Date updateTime;
 
+    private Byte isDeleted;
 
-	private Long userLoginId;
+    private String cityCode;
 
+    private WayDiscountReal wayDiscountReal;
 
-	private Integer commodityReal;
+    private Byte commodityApprove;
 
-	private Integer commodityUnreal;
+    public Long getId() {
 
-	private Date limitTimeExpire;
+        return id;
+    }
 
+    public void setId(Long id) {
 
-	private Date createTime;
+        this.id = id;
+    }
 
+    public String getCommodityName() {
 
-	private Date updateTime;
+        return commodityName;
+    }
 
+    public void setCommodityName(String commodityName) {
 
-	private Byte isDeleted;
+        this.commodityName = commodityName == null ? null : commodityName.trim();
+    }
 
-	private String cityCode;
+    public String getCommodityCate() {
 
-	private WayDiscountReal wayDiscountReal;
+        return commodityCate;
+    }
 
-	private Byte commodityApprove;
+    public void setCommodityCate(String commodityCate) {
 
-	public Long getId() {
-		return id;
-	}
+        this.commodityCate = commodityCate == null ? null : commodityCate.trim();
+    }
 
+    public BigDecimal getCommodityPrice() {
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+        return commodityPrice;
+    }
 
+    public void setCommodityPrice(BigDecimal commodityPrice) {
 
-	public String getCommodityName() {
-		return commodityName;
-	}
+        this.commodityPrice = commodityPrice;
+    }
 
+    public String getShopPosition() {
 
-	public void setCommodityName(String commodityName) {
-		this.commodityName = commodityName == null ? null : commodityName.trim();
-	}
+        return shopPosition;
+    }
 
+    public void setShopPosition(String shopPosition) {
 
-	public String getCommodityCate() {
-		return commodityCate;
-	}
+        this.shopPosition = shopPosition == null ? null : shopPosition.trim();
+    }
 
+    public BigDecimal getShopLng() {
 
-	public void setCommodityCate(String commodityCate) {
-		this.commodityCate = commodityCate == null ? null : commodityCate.trim();
-	}
+        return shopLng;
+    }
 
+    public void setShopLng(BigDecimal shopLng) {
 
-	public BigDecimal getCommodityPrice() {
-		return commodityPrice;
-	}
+        this.shopLng = shopLng;
+    }
 
+    public BigDecimal getShopLat() {
 
-	public void setCommodityPrice(BigDecimal commodityPrice) {
-		this.commodityPrice = commodityPrice;
-	}
+        return shopLat;
+    }
 
+    public void setShopLat(BigDecimal shopLat) {
 
-	public String getShopPosition() {
-		return shopPosition;
-	}
+        this.shopLat = shopLat;
+    }
 
+    public Long getUserLoginId() {
 
-	public void setShopPosition(String shopPosition) {
-		this.shopPosition = shopPosition == null ? null : shopPosition.trim();
-	}
+        return userLoginId;
+    }
 
+    public void setUserLoginId(Long userLoginId) {
 
-	public BigDecimal getShopLng() {
-		return shopLng;
-	}
+        this.userLoginId = userLoginId;
+    }
 
+    public Integer getCommodityReal() {
 
-	public void setShopLng(BigDecimal shopLng) {
-		this.shopLng = shopLng;
-	}
+        return commodityReal;
+    }
 
+    public void setCommodityReal(Integer commodityReal) {
 
-	public BigDecimal getShopLat() {
-		return shopLat;
-	}
+        this.commodityReal = commodityReal;
+    }
 
+    public Integer getCommodityUnreal() {
 
-	public void setShopLat(BigDecimal shopLat) {
-		this.shopLat = shopLat;
-	}
+        return commodityUnreal;
+    }
 
+    public void setCommodityUnreal(Integer commodityUnreal) {
 
-	public Long getUserLoginId() {
-		return userLoginId;
-	}
+        this.commodityUnreal = commodityUnreal;
+    }
 
+    public Date getLimitTimeExpire() {
 
-	public void setUserLoginId(Long userLoginId) {
-		this.userLoginId = userLoginId;
-	}
+        return limitTimeExpire;
+    }
 
+    public void setLimitTimeExpire(Date limitTimeExpire) {
 
-	public Integer getCommodityReal() {
-		return commodityReal;
-	}
+        this.limitTimeExpire = limitTimeExpire;
+    }
 
+    public Date getCreateTime() {
 
-	public void setCommodityReal(Integer commodityReal) {
-		this.commodityReal = commodityReal;
-	}
+        return createTime;
+    }
 
-	public Integer getCommodityUnreal() {
-		return commodityUnreal;
-	}
+    public void setCreateTime(Date createTime) {
 
-	public void setCommodityUnreal(Integer commodityUnreal) {
-		this.commodityUnreal = commodityUnreal;
-	}
+        this.createTime = createTime;
+    }
 
-	public Date getLimitTimeExpire() {
-		return limitTimeExpire;
-	}
+    public Date getUpdateTime() {
 
-	public void setLimitTimeExpire(Date limitTimeExpire) {
-		this.limitTimeExpire = limitTimeExpire;
-	}
+        return updateTime;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setUpdateTime(Date updateTime) {
 
+        this.updateTime = updateTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public Byte getIsDeleted() {
 
+        return isDeleted;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public void setIsDeleted(Byte isDeleted) {
 
+        this.isDeleted = isDeleted;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public String getCityCode() {
 
+        return cityCode;
+    }
 
-	public Byte getIsDeleted() {
-		return isDeleted;
-	}
+    public void setCityCode(String cityCode) {
 
+        this.cityCode = cityCode;
+    }
 
-	public void setIsDeleted(Byte isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+    public WayDiscountReal getWayDiscountReal() {
 
-	public String getCityCode() {
-		return cityCode;
-	}
+        return wayDiscountReal;
+    }
 
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
+    public void setWayDiscountReal(WayDiscountReal wayDiscountReal) {
 
-	public WayDiscountReal getWayDiscountReal() {
-		return wayDiscountReal;
-	}
+        this.wayDiscountReal = wayDiscountReal;
+    }
 
-	public void setWayDiscountReal(WayDiscountReal wayDiscountReal) {
-		this.wayDiscountReal = wayDiscountReal;
-	}
+    public Byte getCommodityApprove() {
 
-	public Byte getCommodityApprove() {
-		return commodityApprove;
-	}
+        return commodityApprove;
+    }
 
-	public void setCommodityApprove(Byte commodityApprove) {
-		this.commodityApprove = commodityApprove;
-	}
+    public void setCommodityApprove(Byte commodityApprove) {
+
+        this.commodityApprove = commodityApprove;
+    }
 }

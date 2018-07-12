@@ -21,56 +21,57 @@ import java.util.List;
 @RequestMapping("/shop")
 public class WayShopApi {
 
-	private Logger logger = LoggerFactory.getLogger(WayShopApi.class);
+    private Logger logger = LoggerFactory.getLogger(WayShopApi.class);
 
-	@Autowired
-	private WayShopService wayShopService;
+    @Autowired
+    private WayShopService wayShopService;
 
-	@RequestMapping(value = "/detail", method = RequestMethod.POST)
-	public ResponseResult<WayShopResponse> getShopDetail(
-			@RequestBody WayShopRequest wayShopRequest) {
-		if (NumberUtil.isNotLongKey(wayShopRequest.getShopId())) {
-			logger.info("参数id={}不正确", wayShopRequest.getShopId());
-			return ResponseResultUtil.wrapWrongParamResponseResult("店铺信息不存在");
-		}
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResponseResult<WayShopResponse> getShopDetail(
+            @RequestBody WayShopRequest wayShopRequest) {
 
-		WayShop wayShop = wayShopService.getPromoShopDetail(wayShopRequest.getShopId());
-		if (null == wayShop) {
-			logger.info("店铺不存在id={}", wayShopRequest.getShopId());
-			return ResponseResultUtil.wrapNotExistResponseResult("店铺信息不存在");
-		}
-		WayShopResponse wayShopResponse = BeanMapper.map(wayShop, WayShopResponse.class);
-		if (null != wayShop.getWayShopCateLeaf()) {
-			wayShopResponse.setShopCateLeafName(wayShop.getWayShopCateLeaf().getCateName());
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("商家信息返回{}", wayShopResponse);
-		}
+        if (NumberUtil.isNotLongKey(wayShopRequest.getShopId())) {
+            logger.info("参数id={}不正确", wayShopRequest.getShopId());
+            return ResponseResultUtil.wrapWrongParamResponseResult("店铺信息不存在");
+        }
 
-		return ResponseResultUtil.wrapSuccessResponseResult(wayShopResponse);
-	}
+        WayShop wayShop = wayShopService.getPromoShopDetail(wayShopRequest.getShopId());
+        if (null == wayShop) {
+            logger.info("店铺不存在id={}", wayShopRequest.getShopId());
+            return ResponseResultUtil.wrapNotExistResponseResult("店铺信息不存在");
+        }
+        WayShopResponse wayShopResponse = BeanMapper.map(wayShop, WayShopResponse.class);
+        if (null != wayShop.getWayShopCateLeaf()) {
+            wayShopResponse.setShopCateLeafName(wayShop.getWayShopCateLeaf().getCateName());
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug("商家信息返回{}", wayShopResponse);
+        }
 
-	@RequestMapping(value = "/query", method = RequestMethod.POST)
-	public ResponseResult<List<WayShopResponse>> queryByCondition(
-			@RequestBody WayShopRequest request) {
+        return ResponseResultUtil.wrapSuccessResponseResult(wayShopResponse);
+    }
 
-		WayShopParam wayShopParam = new WayShopParam();
-		wayShopParam.setShopCateLeafId(request.getShopCateLeafId());
-		wayShopParam.setShopName(request.getKeywords());
-		wayShopParam.setId(request.getShopId());
-		wayShopParam.setCommodityName(request.getKeywords());
-		wayShopParam.setClientLat(request.getClientLat());
-		wayShopParam.setClientLng(request.getClientLng());
-		wayShopParam.setCityCode(request.getCityCode());
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    public ResponseResult<List<WayShopResponse>> queryByCondition(
+            @RequestBody WayShopRequest request) {
 
-		PageParam pageParam = new PageParam();
-		pageParam.setPageNum(request.getPageNum());
-		pageParam.setPageSize(request.getPageSize());
+        WayShopParam wayShopParam = new WayShopParam();
+        wayShopParam.setShopCateLeafId(request.getShopCateLeafId());
+        wayShopParam.setShopName(request.getKeywords());
+        wayShopParam.setId(request.getShopId());
+        wayShopParam.setCommodityName(request.getKeywords());
+        wayShopParam.setClientLat(request.getClientLat());
+        wayShopParam.setClientLng(request.getClientLng());
+        wayShopParam.setCityCode(request.getCityCode());
 
-		List<WayShopBo> promoShopList = wayShopService
-				.pageWayShopByCondition(wayShopParam, pageParam);
-		List<WayShopResponse> wayShopResponseList = BeanMapper
-				.mapAsList(promoShopList, WayShopResponse.class);
-		return ResponseResultUtil.wrapSuccessResponseResult(wayShopResponseList);
-	}
+        PageParam pageParam = new PageParam();
+        pageParam.setPageNum(request.getPageNum());
+        pageParam.setPageSize(request.getPageSize());
+
+        List<WayShopBo> promoShopList = wayShopService
+                .pageWayShopByCondition(wayShopParam, pageParam);
+        List<WayShopResponse> wayShopResponseList = BeanMapper
+                .mapAsList(promoShopList, WayShopResponse.class);
+        return ResponseResultUtil.wrapSuccessResponseResult(wayShopResponseList);
+    }
 }
