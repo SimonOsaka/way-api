@@ -42,28 +42,28 @@ public class UserServiceImpl implements UserService {
 			logger.debug("用户={}", userLogin);
 		}
 		if (null == userLogin) {
-			logger.info("用户未注册,{}", JSON.toJSONString(condition));
+			logger.warn("用户未注册,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户未注册");
 		}
 
 		if (DateTime.now().toDate().after(userLogin.getValidCodeExpire())) {
-			logger.info("验证码过期，请重新获取,{}", JSON.toJSONString(condition));
+			logger.warn("验证码过期，请重新获取,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("验证码过期，请重新获取");
 		}
 
 		if (StringUtils.compare(userLogin.getValidCode(), userValidCode) != 0) {
-			logger.info("验证码不正确,{}", JSON.toJSONString(condition));
+			logger.warn("验证码不正确,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("验证码不正确");
 		}
 
 
 		if (userLogin.getIsUsed() == 1) {
-			logger.info("用户被禁用,{}", JSON.toJSONString(condition));
+			logger.warn("用户被禁用,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户被禁用");
 		}
 
 		if (userLogin.getIsDeleted() == 1) {
-			logger.info("用户已被删除,{}", JSON.toJSONString(condition));
+			logger.warn("用户已被删除,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户已被删除");
 		}
 
@@ -91,17 +91,17 @@ public class UserServiceImpl implements UserService {
 			logger.debug("用户={}", userLogin);
 		}
 		if (null == userLogin) {
-			logger.info("用户未注册,{}", JSON.toJSONString(condition));
+			logger.warn("用户未注册,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户未注册");
 		}
 
 		if (userLogin.getIsUsed() == 1) {
-			logger.info("用户被禁用,{}", JSON.toJSONString(condition));
+			logger.warn("用户被禁用,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户被禁用");
 		}
 
 		if (userLogin.getIsDeleted() == 1) {
-			logger.info("用户已被删除,{}", JSON.toJSONString(condition));
+			logger.warn("用户已被删除,{}", JSON.toJSONString(condition));
 			throw new RuntimeException("用户已被删除");
 		}
 
@@ -141,17 +141,17 @@ public class UserServiceImpl implements UserService {
 
 	private UserProfileBo getUser(UserLogin userLogin) {
 		if (null == userLogin) {
-			logger.info("用户未注册,{}", JSON.toJSONString(userLogin));
+			logger.warn("用户未注册,{}", JSON.toJSONString(userLogin));
 			throw new RuntimeException("用户未注册");
 		}
 
 		if (userLogin.getIsUsed() == 1) {
-			logger.info("用户被禁用,{}", JSON.toJSONString(userLogin));
+			logger.warn("用户被禁用,{}", JSON.toJSONString(userLogin));
 			throw new RuntimeException("用户被禁用");
 		}
 
 		if (userLogin.getIsDeleted() == 1) {
-			logger.info("用户已被删除,{}", JSON.toJSONString(userLogin));
+			logger.warn("用户已被删除,{}", JSON.toJSONString(userLogin));
 			throw new RuntimeException("用户已被删除");
 		}
 
@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
 		profileQueryCondition.setUserLoginId(userLogin.getId());
 		UserProfile userProfile = userProfileMapper.selectByPrimaryKey(profileQueryCondition);
 		if (null == userProfile) {
-			logger.info("用户信息不存在,{}", JSON.toJSONString(profileQueryCondition));
+			logger.warn("用户信息不存在,{}", JSON.toJSONString(profileQueryCondition));
 			throw new RuntimeException("用户信息不存在");
 		}
 
@@ -231,12 +231,12 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (StringUtils.isBlank(validCode)) {
-			logger.info("验证码生成失败{}", userTel);
+			logger.error("验证码生成失败{}", userTel);
 			throw new RuntimeException("验证码生成失败");
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("验证码={}", validCode);
+			logger.debug("手机号={}，验证码={}", userTel, validCode);
 		}
 		return validCode;
 	}

@@ -11,44 +11,31 @@ public class WayShop {
 
 	private Long id;
 
-
 	private String shopName;
-
 
 	private String shopAddress;
 
-
 	private String shopTel;
 
-
 	private String shopBusinessTime1;
-
 
 	private String shopBusinessTime2;
 
 	private Integer shopCateLeafId;
 
-
 	private WayShopCateLeaf wayShopCateLeaf;
-
 
 	private String shopInfo;
 
-
 	private Date createTime;
-
 
 	private Date updateTime;
 
-
 	private Byte isDeleted;
-
 
 	private BigDecimal shopLat;
 
-
 	private BigDecimal shopLng;
-
 
 	private String shopLogoUrl;
 
@@ -57,6 +44,10 @@ public class WayShop {
 	private String commodityName;
 
 	private String cityCode;
+
+	private String shopPinyin;
+
+	private String shopPy;
 
 	public String getCommodityName() {
 		return commodityName;
@@ -74,6 +65,21 @@ public class WayShop {
 		this.commodityList = commodityList;
 	}
 
+	public String getShopPinyin() {
+		return shopPinyin;
+	}
+
+	public void setShopPinyin(String shopPinyin) {
+		this.shopPinyin = shopPinyin;
+	}
+
+	public String getShopPy() {
+		return shopPy;
+	}
+
+	public void setShopPy(String shopPy) {
+		this.shopPy = shopPy;
+	}
 
 	public Long getId() {
 		return id;
