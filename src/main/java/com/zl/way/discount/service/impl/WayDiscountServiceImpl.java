@@ -133,7 +133,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             wayDiscountBo.setCommodityImageUrl(
                     String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
             wayDiscountBo.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
-            
+
             if (null != wayDiscount.getWayDiscountReal()) {
                 wayDiscountBo.setRealType(wayDiscount.getWayDiscountReal().getRealType());
             }
@@ -180,8 +180,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             logger.warn("获取逆地理发生异常，入参={}", aMapRegeoRequest, e);
         }
 
-        wayDiscount.setIsDeleted((byte) 2);
-        wayDiscount.setCommodityApprove((byte) 2);
+        wayDiscount.setIsDeleted((byte) 0);
+        wayDiscount.setCommodityApprove((byte) 0);
 
         if (logger.isDebugEnabled()) {
             logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount, true));

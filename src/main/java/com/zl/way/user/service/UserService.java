@@ -5,13 +5,17 @@ import com.zl.way.user.model.UserProfileBo;
 
 public interface UserService {
 
-    boolean userLogin(UserLoginParam userLoginParam);
+    boolean userTelLogin(UserLoginParam userLoginParam);
+
+    boolean userNameLogin(UserLoginParam userLoginParam);
 
     boolean userLogout(UserLoginParam userlogoutParam);
 
-    UserProfileBo getUser(Long userLoginId);
+    UserProfileBo getUserById(Long userLoginId);
 
-    UserProfileBo getUser(String userTel);
+    UserProfileBo getUserByTel(String userLoginTel);
+
+    UserProfileBo getUserByName(String userLoginName);
 
     String getUserValidCode(String userTel);
 }

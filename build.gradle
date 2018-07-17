@@ -36,6 +36,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.data:spring-data-commons:2.0.6.RELEASE')
     compile('com.alibaba:druid:1.1.8')
+    compile('com.aliyun:aliyun-java-sdk-dysmsapi:1.1.0')
+    compile('com.aliyun:aliyun-java-sdk-core:3.7.1')
     compile('org.mybatis.caches:mybatis-ehcache:1.1.0')
     compile('joda-time:joda-time:2.10')
     compile('com.github.SilenceDut:jpinyin:v1.0')
