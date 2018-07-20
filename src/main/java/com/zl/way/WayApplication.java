@@ -1,8 +1,13 @@
 package com.zl.way;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.zl.way.util.EnvUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +27,8 @@ import org.springframework.web.filter.CorsFilter;
 @EnableAspectJAutoProxy
 public class WayApplication {
 
+    private final Logger logger = LoggerFactory.getLogger(WayApplication.class);
+
     public static void main(String[] args) {
 
         SpringApplication.run(WayApplication.class, args);
@@ -32,7 +39,11 @@ public class WayApplication {
 
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        //        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        String env = EnvUtil.getAppEnv();
+        if (StringUtils.equalsIgnoreCase(env, EnvUtil.ENV_DEVELOPMENT)) {
+            logger.info("fastjson启用PrettyFormat，方便前端调试");
+            fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        }
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         //        fastJsonConfig.setSerializeFilters(new XssValueFilter());
         fastConverter.setFastJsonConfig(fastJsonConfig);
