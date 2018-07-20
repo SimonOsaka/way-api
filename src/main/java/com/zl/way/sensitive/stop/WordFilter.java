@@ -59,9 +59,9 @@ public class WordFilter {
                     continue;
                 words.add(buf);
                 ////
-                if (buf.length() == 1) {
-                    System.out.println(buf);
-                }
+                //                if (buf.length() == 1) {
+                //                    System.out.println(buf);
+                //                }
                 ////
             }
         } catch (Exception e) {

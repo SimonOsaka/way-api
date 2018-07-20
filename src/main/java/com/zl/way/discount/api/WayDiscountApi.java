@@ -9,6 +9,7 @@ import com.zl.way.discount.service.WayDiscountService;
 import com.zl.way.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,13 @@ public class WayDiscountApi {
         }
 
         if (SensiWordsUtil.isSensiWords(wayDiscountRequest.getCommodityName())) {
-            return ResponseResultUtil.wrapWrongParamResponseResult("商品名称包含敏感字");
+            String sensiWords = SensiWordsUtil.getSensiWords(wayDiscountRequest.getCommodityName());
+            return ResponseResultUtil
+                    .wrapWrongParamResponseResult("商品名称包含敏感词汇[" + sensiWords + "]");
+        }
+
+        if (!NumberUtils.isCreatable(wayDiscountRequest.getCommodityPrice().toString())) {
+            return ResponseResultUtil.wrapWrongParamResponseResult("商品价格格式不正确[整数或小数]");
         }
 
         WayDiscountParam wayDiscountParam = BeanMapper
