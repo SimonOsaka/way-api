@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.sp.mapper.WayShopMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.sp.model.WayShop">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="shop_address" jdbcType="VARCHAR" property="shopAddress"/>
+        <result column="shop_tel" jdbcType="VARCHAR" property="shopTel"/>
+        <result column="shop_business_time1" jdbcType="VARCHAR" property="shopBusinessTime1"/>
+        <result column="shop_business_time2" jdbcType="VARCHAR" property="shopBusinessTime2"/>
+        <result column="shop_cate_leaf_id" jdbcType="INTEGER" property="shopCateLeafId"/>
+        <result column="shop_info" jdbcType="VARCHAR" property="shopInfo"/>
+        <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
+        <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
+        <result column="shop_logo_url" jdbcType="VARCHAR" property="shopLogoUrl"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="shop_pinyin" jdbcType="VARCHAR" property="shopPinyin"/>
+        <result column="shop_py" jdbcType="VARCHAR" property="shopPy"/>
+    </resultMap>
+    <resultMap id="selectByconditionResultMap"
+               type="com.zl.way.sp.model.WayShop">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="shop_address" jdbcType="VARCHAR" property="shopAddress"/>
+        <result column="shop_tel" jdbcType="VARCHAR" property="shopTel"/>
+        <result column="shop_business_time1" jdbcType="VARCHAR" property="shopBusinessTime1"/>
+        <result column="shop_business_time2" jdbcType="VARCHAR" property="shopBusinessTime2"/>
+        <result column="shop_cate_leaf_id" jdbcType="INTEGER" property="shopCateLeafId"/>
+        <result column="shop_info" jdbcType="VARCHAR" property="shopInfo"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
+        <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
+        <result column="shop_logo_url" jdbcType="VARCHAR" property="shopLogoUrl"/>
+        <result column="shop_pinyin" jdbcType="VARCHAR" property="shopPinyin"/>
+        <result column="shop_py" jdbcType="VARCHAR" property="shopPy"/>
+        <association property="wayShopCateLeaf"
+                     javaType="com.zl.way.sp.model.WayShopCateLeaf">
+            <id column="id" property="id"/>
+            <result column="cate_name" property="cateName"/>
+        </association>
+        <collection property="commodityList"
+                    ofType="com.zl.way.sp.model.WayCommodity"
+                    javaType="ArrayList">
+            <id property="id" column="commodityId"/>
+            <result property="name" column="commodityName"/>
+            <result property="price" column="commodityPrice"/>
+            <result property="imgUrl" column="commodityImgUrl"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, shop_name, shop_address, shop_tel, shop_business_time1, shop_business_time2,
+        shop_cate_leaf_id, shop_info, shop_lat, shop_lng, shop_logo_url, create_time, update_time,
+        is_deleted, city_code, shop_pinyin, shop_py
+    </sql>
+    <sql id="Base_CateLeaf_Column_List">
+        shop.id,
+        shop.shop_name,
+        shop.shop_address,
+        shop.shop_tel,
+        shop.shop_business_time1,
+        shop.shop_business_time2,
+        shop.shop_cate_leaf_id,
+        shop.shop_info,
+        shop.create_time,
+        shop.update_time,
+        shop.is_deleted,
+        shop.shop_lat,
+        shop.shop_lng,
+        shop.shop_logo_url,
+        shop.city_code,
+        shop.shop_pinyin,
+        shop.shop_py,
+        leaf.cate_name
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_shop
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from way_shop
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.sp.model.WayShop"
+            useGeneratedKeys="true">
+        insert into way_shop (shop_name, shop_address, shop_tel,
+        shop_business_time1, shop_business_time2, shop_cate_leaf_id,
+        shop_info, shop_lat, shop_lng,
+        shop_logo_url, create_time, update_time,
+        is_deleted, city_code, shop_pinyin,
+        shop_py)
+        values (#{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR},
+        #{shopTel,jdbcType=VARCHAR},
+        #{shopBusinessTime1,jdbcType=VARCHAR}, #{shopBusinessTime2,jdbcType=VARCHAR},
+        #{shopCateLeafId,jdbcType=INTEGER},
+        #{shopInfo,jdbcType=VARCHAR}, #{shopLat,jdbcType=DECIMAL}, #{shopLng,jdbcType=DECIMAL},
+        #{shopLogoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{isDeleted,jdbcType=TINYINT}, #{cityCode,jdbcType=VARCHAR}, #{shopPinyin,jdbcType=VARCHAR},
+        #{shopPy,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.sp.model.WayShop" useGeneratedKeys="true">
+        insert into way_shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                shop_name,
+            </if>
+            <if test="shopAddress != null">
+                shop_address,
+            </if>
+            <if test="shopTel != null">
+                shop_tel,
+            </if>
+            <if test="shopBusinessTime1 != null">
+                shop_business_time1,
+            </if>
+            <if test="shopBusinessTime2 != null">
+                shop_business_time2,
+            </if>
+            <if test="shopCateLeafId != null">
+                shop_cate_leaf_id,
+            </if>
+            <if test="shopInfo != null">
+                shop_info,
+            </if>
+            <if test="shopLat != null">
+                shop_lat,
+            </if>
+            <if test="shopLng != null">
+                shop_lng,
+            </if>
+            <if test="shopLogoUrl != null">
+                shop_logo_url,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="shopPinyin != null">
+                shop_pinyin,
+            </if>
+            <if test="shopPy != null">
+                shop_py,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                #{shopName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopAddress != null">
+                #{shopAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="shopTel != null">
+                #{shopTel,jdbcType=VARCHAR},
+            </if>
+            <if test="shopBusinessTime1 != null">
+                #{shopBusinessTime1,jdbcType=VARCHAR},
+            </if>
+            <if test="shopBusinessTime2 != null">
+                #{shopBusinessTime2,jdbcType=VARCHAR},
+            </if>
+            <if test="shopCateLeafId != null">
+                #{shopCateLeafId,jdbcType=INTEGER},
+            </if>
+            <if test="shopInfo != null">
+                #{shopInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLat != null">
+                #{shopLat,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLng != null">
+                #{shopLng,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLogoUrl != null">
+                #{shopLogoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shopPinyin != null">
+                #{shopPinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="shopPy != null">
+                #{shopPy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.sp.model.WayShop">
+        update way_shop
+        <set>
+            <if test="shopName != null">
+                shop_name = #{shopName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopAddress != null">
+                shop_address = #{shopAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="shopTel != null">
+                shop_tel = #{shopTel,jdbcType=VARCHAR},
+            </if>
+            <if test="shopBusinessTime1 != null">
+                shop_business_time1 = #{shopBusinessTime1,jdbcType=VARCHAR},
+            </if>
+            <if test="shopBusinessTime2 != null">
+                shop_business_time2 = #{shopBusinessTime2,jdbcType=VARCHAR},
+            </if>
+            <if test="shopCateLeafId != null">
+                shop_cate_leaf_id = #{shopCateLeafId,jdbcType=INTEGER},
+            </if>
+            <if test="shopInfo != null">
+                shop_info = #{shopInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLat != null">
+                shop_lat = #{shopLat,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLng != null">
+                shop_lng = #{shopLng,jdbcType=DECIMAL},
+            </if>
+            <if test="shopLogoUrl != null">
+                shop_logo_url = #{shopLogoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shopPinyin != null">
+                shop_pinyin = #{shopPinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="shopPy != null">
+                shop_py = #{shopPy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.sp.model.WayShop">
+        update way_shop
+        set shop_name = #{shopName,jdbcType=VARCHAR},
+        shop_address = #{shopAddress,jdbcType=VARCHAR},
+        shop_tel = #{shopTel,jdbcType=VARCHAR},
+        shop_business_time1 = #{shopBusinessTime1,jdbcType=VARCHAR},
+        shop_business_time2 = #{shopBusinessTime2,jdbcType=VARCHAR},
+        shop_cate_leaf_id = #{shopCateLeafId,jdbcType=INTEGER},
+        shop_info = #{shopInfo,jdbcType=VARCHAR},
+        shop_lat = #{shopLat,jdbcType=DECIMAL},
+        shop_lng = #{shopLng,jdbcType=DECIMAL},
+        shop_logo_url = #{shopLogoUrl,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        city_code = #{cityCode,jdbcType=VARCHAR},
+        shop_pinyin = #{shopPinyin,jdbcType=VARCHAR},
+        shop_py = #{shopPy,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByCondition" resultMap="selectByconditionResultMap">
+        select
+        <include refid="Base_CateLeaf_Column_List"/>,
+        commodity.name as 'commodityName',
+        commodity.id as 'commodityId',
+        commodity.price as 'commodityPrice',
+        commodity.img_url as 'commodityImgUrl'
+        from way_shop shop
+        left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
+        left join way_commodity commodity on shop.id = commodity.shop_id
+        where shop.is_deleted = 0 and commodity.is_deleted = 0
+        <if test="condition.id != null">
+            and shop.id = #{condition.id, jdbcType=BIGINT}
+        </if>
+        <if test="condition.shopCateLeafId != null">
+            and shop.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
+        </if>
+        <if test="condition.cityCode != null">
+            and shop.city_code = #{condition.cityCode,jdbcType=VARCHAR}
+        </if>
+        <trim prefix="and (" suffix=")" suffixOverrides="or">
+            <if test="condition.shopName != null and condition.shopName != ''">
+                shop.shop_name like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
+                shop.shop_pinyin like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
+                shop.shop_py like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
+            </if>
+        </trim>
+        order by shop.update_time desc
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

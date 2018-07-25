@@ -45,7 +45,7 @@ public class WayApplication {
             fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         }
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        //        fastJsonConfig.setSerializeFilters(new XssValueFilter());
+        //        fastJsonConfig.setSerializeFilters(new XssValueFilter()); //NOSONAR
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
