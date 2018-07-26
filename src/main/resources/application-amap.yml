@@ -5,3 +5,4 @@ amap:
   aroundUrl: http://restapi.amap.com/v3/place/around
   staticMapUrl: http://restapi.amap.com/v3/staticmap
   regeoUrl: http://restapi.amap.com/v3/geocode/regeo
+  searchTextUrl: https://restapi.amap.com/v3/place/text

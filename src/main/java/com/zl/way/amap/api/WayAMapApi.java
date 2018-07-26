@@ -9,10 +9,7 @@ import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +32,9 @@ public class WayAMapApi {
 
     @Autowired
     private AMapRegeoService aMapRegeoService;
+
+    @Autowired
+    private AMapSearchTextService aMapSearchTextService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/inputtips")
     public ResponseResult<List<WayAMapInputTipsResponse>> requestInputTips(
@@ -162,5 +162,37 @@ public class WayAMapApi {
         }
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping(path = "/searchText")
+    public ResponseResult<List<WayAMapSearchTextResponse>> requestSearchText(
+            @RequestBody WayAMapSearchTextRequest request) {
+
+        if (StringUtils.isBlank(request.getKeywords())) {
+            return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
+        }
+
+        AMapSearchTextRequest aMapSearchTextRequest = new AMapSearchTextRequest();
+        aMapSearchTextRequest.setKeywords(request.getKeywords());//关键字
+        aMapSearchTextRequest.setCity(request.getCity());//当前城市
+        try {
+            AMapSearchTextResponse aMapSearchTextResponse = aMapSearchTextService
+                    .searchText(aMapSearchTextRequest);
+            if (aMapSearchTextResponse.getCode() == 200) {
+                List<AMapSearchTextModel> searchTextModelList = aMapSearchTextResponse
+                        .getSearchTextModelList();
+                List<WayAMapSearchTextResponse> wayAMapSearchTextResponseList = BeanMapper
+                        .mapAsList(searchTextModelList, WayAMapSearchTextResponse.class);
+                for (WayAMapSearchTextResponse response : wayAMapSearchTextResponseList) {
+                    response.setFullAddress(
+                            response.getpName() + response.getCityName() + response.getAdName()
+                                    + response.getAddress());
+                }
+                return ResponseResultUtil.wrapSuccessResponseResult(wayAMapSearchTextResponseList);
+            }
+        } catch (Exception e) {
+        }
+
+        return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
     }
 }

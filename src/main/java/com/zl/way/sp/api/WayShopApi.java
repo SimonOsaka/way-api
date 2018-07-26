@@ -10,10 +10,7 @@ import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,7 +49,8 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/create")
-    public ResponseResult<WayShopResponse> createShop(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> createShop(@RequestBody WayShopRequest request,
+            @CookieValue("token") String token) {
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 

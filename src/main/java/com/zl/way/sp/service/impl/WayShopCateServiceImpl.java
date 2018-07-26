@@ -7,6 +7,7 @@ import com.zl.way.sp.service.WayShopCateService;
 import com.zl.way.util.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class WayShopCateServiceImpl implements WayShopCateService {
     private WayShopCateLeafMapper cateLeafMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateRootBo> queryCateRoot() {
 
         List<WayShopCateRoot> cateRootList = cateRootMapper.selectByCondition(null);
@@ -27,6 +29,7 @@ public class WayShopCateServiceImpl implements WayShopCateService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateLeafBo> queryCateLeaf(WayShopCateLeafParam leafParam) {
 
         WayShopCateLeafCondition condition = BeanMapper

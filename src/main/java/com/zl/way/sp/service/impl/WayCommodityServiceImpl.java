@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     private WayCommodityMapper commodityMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam,
             PageParam pageParam) {
 
@@ -37,6 +39,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayCommodityBo getCommodity(WayCommodityParam commodityParam) {
 
         Pageable pageable = WayPageRequest.of(1, 1);
@@ -50,6 +53,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo createCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
@@ -58,6 +62,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
@@ -66,6 +71,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo deleteCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
