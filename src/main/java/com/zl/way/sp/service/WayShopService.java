@@ -17,4 +17,8 @@ public interface WayShopService {
     WayShopBo updateShop(WayShopParam shopParam);
 
     WayShopBo deleteShop(WayShopParam shopParam);
+
+    WayShopBo onlineShop(WayShopParam shopParam);
+
+    WayShopBo offlineShop(WayShopParam shopParam);
 }

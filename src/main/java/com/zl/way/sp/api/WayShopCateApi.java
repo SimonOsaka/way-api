@@ -21,8 +21,7 @@ public class WayShopCateApi {
     private WayShopCateService cateService;
 
     @PostMapping("/root")
-    public ResponseResult<WayShopCateResponse> queryCateRoot(
-            @RequestBody WayShopCateRequest request) {
+    public ResponseResult<WayShopCateResponse> queryCateRoot() {
 
         List<WayShopCateRootBo> cateRootBoList = cateService.queryCateRoot();
         WayShopCateResponse response = new WayShopCateResponse();
@@ -38,6 +37,15 @@ public class WayShopCateApi {
         List<WayShopCateLeafBo> cateLeafBoList = cateService.queryCateLeaf(leafParam);
         WayShopCateResponse response = new WayShopCateResponse();
         response.setCateLeafBoList(cateLeafBoList);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/all")
+    public ResponseResult<WayShopCateResponse> queryCateAll() {
+
+        List<WayShopCateRootBo> cateRootBoList = cateService.queryCateRoot();
+        WayShopCateResponse response = new WayShopCateResponse();
+        response.setCateRootBoList(cateRootBoList);
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 }

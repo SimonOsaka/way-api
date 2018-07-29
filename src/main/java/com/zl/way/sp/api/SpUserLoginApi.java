@@ -51,6 +51,7 @@ public class SpUserLoginApi {
             if (userService.userNameLogin(userLoginParam)) {
                 UserProfileBo userProfileBo = userService.getUserByName(request.getUserLoginName());
                 SpUserResponse response = new SpUserResponse();
+                response.setUserLoginId(userProfileBo.getUserLoginId());
                 response.setToken(
                         TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
                 return ResponseResultUtil.wrapSuccessResponseResult(response);

@@ -6,6 +6,8 @@ public class SpUserResponse {
 
     private String token;
 
+    private Long userLoginId;
+
     private UserProfile profile;
 
     private WayShopBo shop;
@@ -18,6 +20,16 @@ public class SpUserResponse {
     public void setToken(String token) {
 
         this.token = token;
+    }
+
+    public Long getUserLoginId() {
+
+        return userLoginId;
+    }
+
+    public void setUserLoginId(Long userLoginId) {
+
+        this.userLoginId = userLoginId;
     }
 
     public UserProfile getProfile() {

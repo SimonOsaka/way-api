@@ -1,5 +1,6 @@
 package com.zl.way.sp.service.impl;
 
+import com.zl.way.sp.enums.WayShopStatus;
 import com.zl.way.sp.mapper.SpUserShopMapper;
 import com.zl.way.sp.mapper.WayShopMapper;
 import com.zl.way.sp.model.*;
@@ -48,7 +49,9 @@ public class WayShopServiceImpl implements WayShopService {
         if (CollectionUtils.isEmpty(shopList)) {
             return null;
         }
-        return BeanMapper.map(shopList.get(0), WayShopBo.class);
+        WayShopBo wayShopBo = BeanMapper.map(shopList.get(0), WayShopBo.class);
+        wayShopBo.setShopStatusName(WayShopStatus.getStatus(wayShopBo.getIsDeleted()).getDesc());
+        return wayShopBo;
     }
 
     @Override
@@ -61,6 +64,7 @@ public class WayShopServiceImpl implements WayShopService {
         SpUserShop spUserShopRecord = new SpUserShop();
         spUserShopRecord.setShopId(wayShopRecord.getId());
         spUserShopRecord.setUserLoginId(shopParam.getSpUserLoginId());
+        spUserShopRecord.setIsDeleted(WayShopStatus.PENDING.getStatus());
         spUserShopMapper.insertSelective(spUserShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -70,6 +74,7 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo updateShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
+        wayShopRecord.setIsDeleted(WayShopStatus.PENDING.getStatus());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -79,7 +84,27 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo deleteShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted((byte) 1);
+        wayShopRecord.setIsDeleted((WayShopStatus.DELETED.getStatus()));
+        shopMapper.updateByPrimaryKeySelective(wayShopRecord);
+        return BeanMapper.map(wayShopRecord, WayShopBo.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    public WayShopBo onlineShop(WayShopParam shopParam) {
+
+        WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
+        wayShopRecord.setIsDeleted((WayShopStatus.NORMAL.getStatus()));
+        shopMapper.updateByPrimaryKeySelective(wayShopRecord);
+        return BeanMapper.map(wayShopRecord, WayShopBo.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    public WayShopBo offlineShop(WayShopParam shopParam) {
+
+        WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
+        wayShopRecord.setIsDeleted((WayShopStatus.PENDING.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }

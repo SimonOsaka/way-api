@@ -43,8 +43,12 @@
         <result column="shop_py" jdbcType="VARCHAR" property="shopPy"/>
         <association property="wayShopCateLeaf"
                      javaType="com.zl.way.sp.model.WayShopCateLeaf">
-            <id column="id" property="id"/>
-            <result column="cate_name" property="cateName"/>
+            <id column="shop_cate_leaf_id" property="id"/>
+            <result column="shop_cate_leaf_name" property="cateName"/>
+        </association>
+        <association property="wayShopCateRoot" javaType="com.zl.way.sp.model.WayShopCateRoot">
+            <id column="shop_cate_root_id" property="id"/>
+            <result column="shop_cate_root_name" property="cateName"/>
         </association>
         <collection property="commodityList"
                     ofType="com.zl.way.sp.model.WayCommodity"
@@ -78,7 +82,10 @@
         shop.city_code,
         shop.shop_pinyin,
         shop.shop_py,
-        leaf.cate_name
+        leaf.cate_name as 'shop_cate_leaf_name',
+        leaf.id as 'shop_cate_leaf_id',
+        root.cate_name as 'shop_cate_root_name',
+        root.id as 'shop_cate_root_id'
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -295,8 +302,10 @@
         commodity.img_url as 'commodityImgUrl'
         from way_shop shop
         left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
-        left join way_commodity commodity on shop.id = commodity.shop_id
-        where shop.is_deleted = 0 and commodity.is_deleted = 0
+        left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
+        left join way_commodity commodity on shop.id = commodity.shop_id and commodity.is_deleted =
+        0
+        where shop.is_deleted != 1
         <if test="condition.id != null">
             and shop.id = #{condition.id, jdbcType=BIGINT}
         </if>

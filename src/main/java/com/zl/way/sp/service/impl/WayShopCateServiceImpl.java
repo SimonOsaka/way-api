@@ -37,4 +37,12 @@ public class WayShopCateServiceImpl implements WayShopCateService {
         List<WayShopCateLeaf> cateLeafList = cateLeafMapper.selectByCondition(condition);
         return BeanMapper.mapAsList(cateLeafList, WayShopCateLeafBo.class);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<WayShopCateRootBo> queryCateAll() {
+
+        List<WayShopCateRoot> cateRootList = cateRootMapper.selectByCondition(null);
+        return BeanMapper.mapAsList(cateRootList, WayShopCateRootBo.class);
+    }
 }

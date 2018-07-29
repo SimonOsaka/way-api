@@ -1,5 +1,5 @@
 package com.zl.way.sp.model;
 
-public class WayShopCateLeafBo extends WayShopCateRoot {
+public class WayShopCateLeafBo extends WayShopCateLeaf {
 
 }

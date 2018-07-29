@@ -11,4 +11,7 @@ public interface WayShopCateService {
     List<WayShopCateRootBo> queryCateRoot();
 
     List<WayShopCateLeafBo> queryCateLeaf(WayShopCateLeafParam leafParam);
+
+    List<WayShopCateRootBo> queryCateAll();
+
 }

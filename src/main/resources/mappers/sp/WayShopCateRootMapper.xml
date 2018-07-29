@@ -8,9 +8,23 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <collection property="leafList"
+                    ofType="com.zl.way.sp.model.WayShopCateLeaf"
+                    javaType="ArrayList">
+            <id property="id" column="leaf_cate_id"/>
+            <result property="cateName" column="leaf_cate_name"/>
+            <result property="shopCateRootId" column="shop_cate_root_id"/>
+        </collection>
     </resultMap>
     <sql id="Base_Column_List">
-        id, cate_name, create_time, update_time, is_deleted
+        root.id,
+        root.cate_name,
+        root.create_time,
+        root.update_time,
+        root.is_deleted,
+        leaf.id as 'leaf_cate_id',
+        leaf.cate_name as 'leaf_cate_name',
+        leaf.shop_cate_root_id
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -92,6 +106,6 @@
         select
         <include refid="Base_Column_List"/>
         from
-        way_shop_cate_root
+        way_shop_cate_root root left join way_shop_cate_leaf leaf on root.id=leaf.shop_cate_root_id
     </select>
 </mapper>

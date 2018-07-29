@@ -7,6 +7,10 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="img_url_1" jdbcType="VARCHAR" property="imgUrl1"/>
+        <result column="img_url_2" jdbcType="VARCHAR" property="imgUrl2"/>
+        <result column="img_url_3" jdbcType="VARCHAR" property="imgUrl3"/>
+        <result column="img_url_4" jdbcType="VARCHAR" property="imgUrl4"/>
         <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -15,11 +19,18 @@
         <result column="name_py" jdbcType="VARCHAR" property="namePy"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, price, img_url, shop_id, create_time, update_time, is_deleted, name_pinyin,
+        id, name, price, img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
+        update_time, is_deleted, name_pinyin,
         name_py
     </sql>
     <sql id="Shop_Commodity_Column_List">
-        commodity.id, commodity.name, commodity.price, commodity.img_url, commodity.shop_id,
+        commodity.id, commodity.name, commodity.price,
+        commodity.img_url,
+        commodity.img_url_1,
+        commodity.img_url_2,
+        commodity.img_url_3,
+        commodity.img_url_4,
+        commodity.shop_id,
         commodity.create_time, commodity.update_time,
         commodity.is_deleted,
         commodity.name_pinyin,
@@ -38,11 +49,14 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id"
             parameterType="com.zl.way.sp.model.WayCommodity" useGeneratedKeys="true">
-        insert into way_commodity (name, price, img_url,
+        insert into way_commodity (name, price, img_url, img_url_1, img_url_2, img_url_3,
+        img_url_4,
         shop_id, create_time, update_time,
         is_deleted, name_pinyin, name_py
         )
         values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{imgUrl,jdbcType=VARCHAR},
+        #{imgUrl1,jdbcType=VARCHAR}, #{imgUrl2,jdbcType=VARCHAR}, #{imgUrl3,jdbcType=VARCHAR},
+        #{imgUrl4,jdbcType=VARCHAR},
         #{shopId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP},
         #{isDeleted,jdbcType=TINYINT}, #{namePinyin,jdbcType=VARCHAR}, #{namePy,jdbcType=VARCHAR}
@@ -60,6 +74,18 @@
             </if>
             <if test="imgUrl != null">
                 img_url,
+            </if>
+            <if test="imgUrl1 != null">
+                img_url_1,
+            </if>
+            <if test="imgUrl2 != null">
+                img_url_2,
+            </if>
+            <if test="imgUrl3 != null">
+                img_url_3,
+            </if>
+            <if test="imgUrl4 != null">
+                img_url_4,
             </if>
             <if test="shopId != null">
                 shop_id,
@@ -89,6 +115,18 @@
             </if>
             <if test="imgUrl != null">
                 #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl1 != null">
+                #{imgUrl1,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl2 != null">
+                #{imgUrl2,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl3 != null">
+                #{imgUrl3,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl4 != null">
+                #{imgUrl4,jdbcType=VARCHAR},
             </if>
             <if test="shopId != null">
                 #{shopId,jdbcType=BIGINT},
@@ -122,6 +160,18 @@
             <if test="imgUrl != null">
                 img_url = #{imgUrl,jdbcType=VARCHAR},
             </if>
+            <if test="imgUrl1 != null">
+                img_url_1 = #{imgUrl1,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl2 != null">
+                img_url_2 = #{imgUrl2,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl3 != null">
+                img_url_3 = #{imgUrl3,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl4 != null">
+                img_url_4 = #{imgUrl4,jdbcType=VARCHAR},
+            </if>
             <if test="shopId != null">
                 shop_id = #{shopId,jdbcType=BIGINT},
             </if>
@@ -148,6 +198,10 @@
         set name = #{name,jdbcType=VARCHAR},
         price = #{price,jdbcType=DECIMAL},
         img_url = #{imgUrl,jdbcType=VARCHAR},
+        img_url_1 = #{imgUrl1,jdbcType=VARCHAR},
+        img_url_2 = #{imgUrl2,jdbcType=VARCHAR},
+        img_url_3 = #{imgUrl3,jdbcType=VARCHAR},
+        img_url_4 = #{imgUrl4,jdbcType=VARCHAR},
         shop_id = #{shopId,jdbcType=BIGINT},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -161,7 +215,7 @@
         <include refid="Shop_Commodity_Column_List"/>
         from
         way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
-        where commodity.is_deleted = 0 and shop.is_deleted = 0
+        where commodity.is_deleted = 0 and shop.is_deleted != 1
         <if test="condition.name != null and condition.name != ''">
             and (
             commodity.name like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
@@ -171,6 +225,9 @@
         </if>
         <if test="condition.shopId != null">
             and commodity.shop_id = #{condition.shopId, jdbcType=BIGINT}
+        </if>
+        <if test="condition.id != null">
+            and commodity.id = #{condition.id, jdbcType=BIGINT}
         </if>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
