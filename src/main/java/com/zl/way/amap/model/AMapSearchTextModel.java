@@ -16,6 +16,8 @@ public class AMapSearchTextModel {
 
     private String adName;
 
+    private String adCode;
+
     public String getName() {
 
         return name;
@@ -84,5 +86,15 @@ public class AMapSearchTextModel {
     public void setAdName(String adName) {
 
         this.adName = adName;
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
     }
 }

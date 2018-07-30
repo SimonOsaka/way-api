@@ -3,6 +3,7 @@ package com.zl.way.sp.api;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
+import com.zl.way.sp.api.validation.WayShopApiValidation;
 import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
 import com.zl.way.sp.model.WayShopRequest;
@@ -45,6 +46,11 @@ public class WayShopApi {
     @PostMapping(value = "/get")
     public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request) {
 
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 
         WayShopBo shopBo = shopService.getShop(shopParam);
@@ -60,6 +66,12 @@ public class WayShopApi {
         if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl().shopName()
+                .shopCateLeafId().shopAddress().shopTel().shopBusinessTime().shopLocation();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
@@ -78,6 +90,12 @@ public class WayShopApi {
     @PostMapping(value = "/update")
     public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request) {
 
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopName().shopTel()
+                .shopAddress().shopBusinessTime().shopLocation().shopLogoUrl().shopId()
+                .shopCateLeafId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
         try {
             shopParam.setShopPinyin(PinyinHelper
@@ -93,6 +111,11 @@ public class WayShopApi {
     @PostMapping(value = "/delete")
     public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request) {
 
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 
         shopService.deleteShop(shopParam);
@@ -102,6 +125,11 @@ public class WayShopApi {
     @PostMapping(value = "/online")
     public ResponseResult<WayShopResponse> online(@RequestBody WayShopRequest request) {
 
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 
         shopService.onlineShop(shopParam);
@@ -110,6 +138,11 @@ public class WayShopApi {
 
     @PostMapping(value = "/offline")
     public ResponseResult<WayShopResponse> offline(@RequestBody WayShopRequest request) {
+
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 

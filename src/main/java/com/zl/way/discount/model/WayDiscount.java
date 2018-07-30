@@ -33,6 +33,8 @@ public class WayDiscount {
 
     private Byte isDeleted;
 
+    private String adCode;
+
     private String cityCode;
 
     private WayDiscountReal wayDiscountReal;
@@ -177,6 +179,16 @@ public class WayDiscount {
     public void setIsDeleted(Byte isDeleted) {
 
         this.isDeleted = isDeleted;
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
     }
 
     public String getCityCode() {

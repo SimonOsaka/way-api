@@ -175,6 +175,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             if (aMapRegeoResponse.getCode() == 200) {
                 String cityCode = aMapRegeoResponse.getaMapRegeoModel().getCityCode();
                 wayDiscount.setCityCode(cityCode);
+                String adCode = aMapRegeoResponse.getaMapRegeoModel().getAdCode();
+                wayDiscount.setAdCode(adCode);
             }
         } catch (AMapException e) {
             logger.warn("获取逆地理发生异常，入参={}", aMapRegeoRequest, e);

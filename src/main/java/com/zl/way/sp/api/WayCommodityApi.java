@@ -1,5 +1,6 @@
 package com.zl.way.sp.api;
 
+import com.zl.way.sp.api.validation.WayCommodityApiValidation;
 import com.zl.way.sp.model.WayCommodityBo;
 import com.zl.way.sp.model.WayCommodityParam;
 import com.zl.way.sp.model.WayCommodityRequest;
@@ -45,6 +46,11 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> getCommodity(
             @RequestBody WayCommodityRequest request) {
 
+        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 
         WayCommodityBo commodityBo = commodityService.getCommodity(commodityParam);
@@ -57,6 +63,12 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> createCommodity(
             @RequestBody WayCommodityRequest request) {
 
+        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).shopId()
+                .name().price().imgUrl();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 
         commodityService.createCommodity(commodityParam);
@@ -67,6 +79,12 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> updateCommodity(
             @RequestBody WayCommodityRequest request) {
 
+        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId()
+                .shopId().name().price().imgUrl();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 
         commodityService.updateCommodity(commodityParam);
@@ -76,6 +94,11 @@ public class WayCommodityApi {
     @PostMapping(value = "/delete")
     public ResponseResult<WayCommodityResponse> deleteCommodity(
             @RequestBody WayCommodityRequest request) {
+
+        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId();
+        if (validation.hasErrors()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 

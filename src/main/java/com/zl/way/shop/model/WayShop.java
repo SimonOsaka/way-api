@@ -6,227 +6,257 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-
 public class WayShop {
 
-	private Long id;
+    private Long id;
 
-	private String shopName;
+    private String shopName;
 
-	private String shopAddress;
+    private String shopAddress;
 
-	private String shopTel;
+    private String shopTel;
 
-	private String shopBusinessTime1;
+    private String shopBusinessTime1;
 
-	private String shopBusinessTime2;
+    private String shopBusinessTime2;
 
-	private Integer shopCateLeafId;
+    private Integer shopCateLeafId;
 
-	private WayShopCateLeaf wayShopCateLeaf;
+    private WayShopCateLeaf wayShopCateLeaf;
 
-	private String shopInfo;
+    private String shopInfo;
 
-	private Date createTime;
+    private Date createTime;
 
-	private Date updateTime;
+    private Date updateTime;
 
-	private Byte isDeleted;
+    private Byte isDeleted;
 
-	private BigDecimal shopLat;
+    private BigDecimal shopLat;
 
-	private BigDecimal shopLng;
+    private BigDecimal shopLng;
 
-	private String shopLogoUrl;
+    private String shopLogoUrl;
 
-	private List<WayCommodity> commodityList;
+    private List<WayCommodity> commodityList;
 
-	private String commodityName;
+    private String commodityName;
 
-	private String cityCode;
+    private String adCode;
 
-	private String shopPinyin;
+    private String cityCode;
 
-	private String shopPy;
+    private String shopPinyin;
 
-	public String getCommodityName() {
-		return commodityName;
-	}
+    private String shopPy;
 
-	public void setCommodityName(String commodityName) {
-		this.commodityName = commodityName;
-	}
+    public String getCommodityName() {
 
-	public List<WayCommodity> getCommodityList() {
-		return commodityList;
-	}
+        return commodityName;
+    }
 
-	public void setCommodityList(List<WayCommodity> commodityList) {
-		this.commodityList = commodityList;
-	}
+    public void setCommodityName(String commodityName) {
 
-	public String getShopPinyin() {
-		return shopPinyin;
-	}
+        this.commodityName = commodityName;
+    }
 
-	public void setShopPinyin(String shopPinyin) {
-		this.shopPinyin = shopPinyin;
-	}
+    public List<WayCommodity> getCommodityList() {
 
-	public String getShopPy() {
-		return shopPy;
-	}
+        return commodityList;
+    }
 
-	public void setShopPy(String shopPy) {
-		this.shopPy = shopPy;
-	}
+    public void setCommodityList(List<WayCommodity> commodityList) {
 
-	public Long getId() {
-		return id;
-	}
+        this.commodityList = commodityList;
+    }
 
+    public String getShopPinyin() {
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+        return shopPinyin;
+    }
 
+    public void setShopPinyin(String shopPinyin) {
 
-	public String getShopName() {
-		return shopName;
-	}
+        this.shopPinyin = shopPinyin;
+    }
 
+    public String getShopPy() {
 
-	public void setShopName(String shopName) {
-		this.shopName = shopName == null ? null : shopName.trim();
-	}
+        return shopPy;
+    }
 
+    public void setShopPy(String shopPy) {
 
-	public String getShopAddress() {
-		return shopAddress;
-	}
+        this.shopPy = shopPy;
+    }
 
+    public Long getId() {
 
-	public void setShopAddress(String shopAddress) {
-		this.shopAddress = shopAddress == null ? null : shopAddress.trim();
-	}
+        return id;
+    }
 
+    public void setId(Long id) {
 
-	public String getShopTel() {
-		return shopTel;
-	}
+        this.id = id;
+    }
 
+    public String getShopName() {
 
-	public void setShopTel(String shopTel) {
-		this.shopTel = shopTel == null ? null : shopTel.trim();
-	}
+        return shopName;
+    }
 
+    public void setShopName(String shopName) {
 
-	public String getShopBusinessTime1() {
-		return shopBusinessTime1;
-	}
+        this.shopName = shopName == null ? null : shopName.trim();
+    }
 
+    public String getShopAddress() {
 
-	public void setShopBusinessTime1(String shopBusinessTime1) {
-		this.shopBusinessTime1 = shopBusinessTime1 == null ? null : shopBusinessTime1.trim();
-	}
+        return shopAddress;
+    }
 
+    public void setShopAddress(String shopAddress) {
 
-	public String getShopBusinessTime2() {
-		return shopBusinessTime2;
-	}
+        this.shopAddress = shopAddress == null ? null : shopAddress.trim();
+    }
 
+    public String getShopTel() {
 
-	public void setShopBusinessTime2(String shopBusinessTime2) {
-		this.shopBusinessTime2 = shopBusinessTime2 == null ? null : shopBusinessTime2.trim();
-	}
+        return shopTel;
+    }
 
-	public WayShopCateLeaf getWayShopCateLeaf() {
-		return wayShopCateLeaf;
-	}
+    public void setShopTel(String shopTel) {
 
-	public void setWayShopCateLeaf(WayShopCateLeaf wayShopCateLeaf) {
-		this.wayShopCateLeaf = wayShopCateLeaf;
-	}
+        this.shopTel = shopTel == null ? null : shopTel.trim();
+    }
 
+    public String getShopBusinessTime1() {
 
-	public String getShopInfo() {
-		return shopInfo;
-	}
+        return shopBusinessTime1;
+    }
 
+    public void setShopBusinessTime1(String shopBusinessTime1) {
 
-	public void setShopInfo(String shopInfo) {
-		this.shopInfo = shopInfo == null ? null : shopInfo.trim();
-	}
+        this.shopBusinessTime1 = shopBusinessTime1 == null ? null : shopBusinessTime1.trim();
+    }
 
+    public String getShopBusinessTime2() {
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+        return shopBusinessTime2;
+    }
 
+    public void setShopBusinessTime2(String shopBusinessTime2) {
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+        this.shopBusinessTime2 = shopBusinessTime2 == null ? null : shopBusinessTime2.trim();
+    }
 
+    public WayShopCateLeaf getWayShopCateLeaf() {
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+        return wayShopCateLeaf;
+    }
 
+    public void setWayShopCateLeaf(WayShopCateLeaf wayShopCateLeaf) {
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+        this.wayShopCateLeaf = wayShopCateLeaf;
+    }
 
+    public String getShopInfo() {
 
-	public Byte getIsDeleted() {
-		return isDeleted;
-	}
+        return shopInfo;
+    }
 
+    public void setShopInfo(String shopInfo) {
 
-	public void setIsDeleted(Byte isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+        this.shopInfo = shopInfo == null ? null : shopInfo.trim();
+    }
 
-	public Integer getShopCateLeafId() {
-		return shopCateLeafId;
-	}
+    public Date getCreateTime() {
 
-	public void setShopCateLeafId(Integer shopCateLeafId) {
-		this.shopCateLeafId = shopCateLeafId;
-	}
+        return createTime;
+    }
 
-	public BigDecimal getShopLat() {
-		return shopLat;
-	}
+    public void setCreateTime(Date createTime) {
 
-	public void setShopLat(BigDecimal shopLat) {
-		this.shopLat = shopLat;
-	}
+        this.createTime = createTime;
+    }
 
-	public BigDecimal getShopLng() {
-		return shopLng;
-	}
+    public Date getUpdateTime() {
 
-	public void setShopLng(BigDecimal shopLng) {
-		this.shopLng = shopLng;
-	}
+        return updateTime;
+    }
 
+    public void setUpdateTime(Date updateTime) {
 
-	public String getShopLogoUrl() {
-		return shopLogoUrl;
-	}
+        this.updateTime = updateTime;
+    }
 
+    public Byte getIsDeleted() {
 
-	public void setShopLogoUrl(String shopLogoUrl) {
-		this.shopLogoUrl = shopLogoUrl == null ? null : shopLogoUrl.trim();
-	}
+        return isDeleted;
+    }
 
-	public String getCityCode() {
-		return cityCode;
-	}
+    public void setIsDeleted(Byte isDeleted) {
 
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
+        this.isDeleted = isDeleted;
+    }
+
+    public Integer getShopCateLeafId() {
+
+        return shopCateLeafId;
+    }
+
+    public void setShopCateLeafId(Integer shopCateLeafId) {
+
+        this.shopCateLeafId = shopCateLeafId;
+    }
+
+    public BigDecimal getShopLat() {
+
+        return shopLat;
+    }
+
+    public void setShopLat(BigDecimal shopLat) {
+
+        this.shopLat = shopLat;
+    }
+
+    public BigDecimal getShopLng() {
+
+        return shopLng;
+    }
+
+    public void setShopLng(BigDecimal shopLng) {
+
+        this.shopLng = shopLng;
+    }
+
+    public String getShopLogoUrl() {
+
+        return shopLogoUrl;
+    }
+
+    public void setShopLogoUrl(String shopLogoUrl) {
+
+        this.shopLogoUrl = shopLogoUrl == null ? null : shopLogoUrl.trim();
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
+    }
+
+    public String getCityCode() {
+
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+
+        this.cityCode = cityCode;
+    }
 }

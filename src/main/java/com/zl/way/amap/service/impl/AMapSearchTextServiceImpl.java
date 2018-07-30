@@ -95,6 +95,12 @@ public class AMapSearchTextServiceImpl implements AMapSearchTextService {
                     }
                     searchTextModel.setCityCode(cityCode);
 
+                    String adCode = poiJsonObj.getString("adcode");
+                    if (StringUtils.isBlank(adCode) || adCode.contains("[]")) {
+                        adCode = "";
+                    }
+                    searchTextModel.setAdCode(adCode);
+
                     searchTextModelList.add(searchTextModel);
                 }
 

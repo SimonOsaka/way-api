@@ -1,6 +1,6 @@
 package com.zl.way.sp.service.impl;
 
-import com.zl.way.sp.enums.WayShopStatus;
+import com.zl.way.sp.enums.WayShopStatusEnum;
 import com.zl.way.sp.mapper.SpUserShopMapper;
 import com.zl.way.sp.mapper.WayShopMapper;
 import com.zl.way.sp.model.*;
@@ -50,7 +50,8 @@ public class WayShopServiceImpl implements WayShopService {
             return null;
         }
         WayShopBo wayShopBo = BeanMapper.map(shopList.get(0), WayShopBo.class);
-        wayShopBo.setShopStatusName(WayShopStatus.getStatus(wayShopBo.getIsDeleted()).getDesc());
+        wayShopBo
+                .setShopStatusName(WayShopStatusEnum.getStatus(wayShopBo.getIsDeleted()).getDesc());
         return wayShopBo;
     }
 
@@ -58,14 +59,36 @@ public class WayShopServiceImpl implements WayShopService {
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo createShop(WayShopParam shopParam) {
 
+        SpUserShopCondition spUserShopCondition = new SpUserShopCondition();
+        spUserShopCondition.setUserLoginId(shopParam.getSpUserLoginId());
+        SpUserShop existSpUserShop = spUserShopMapper.selectByCondition(spUserShopCondition);
+        if (null != existSpUserShop) {//已经创建过
+            Long shopId = existSpUserShop.getShopId();
+            WayShopCondition getShopCondition = new WayShopCondition();
+            getShopCondition.setId(shopId);
+            List<WayShop> wayShopList = shopMapper
+                    .selectByCondition(getShopCondition, WayPageRequest.of(1, 1));
+            if (CollectionUtils.isNotEmpty(wayShopList)) {
+                return BeanMapper.map(wayShopList.get(0), WayShopBo.class);//幂等
+            }
+
+        }
+
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
+        wayShopRecord.setIsDeleted(WayShopStatusEnum.PENDING.getStatus());
         shopMapper.insertSelective(wayShopRecord);
 
         SpUserShop spUserShopRecord = new SpUserShop();
-        spUserShopRecord.setShopId(wayShopRecord.getId());
-        spUserShopRecord.setUserLoginId(shopParam.getSpUserLoginId());
-        spUserShopRecord.setIsDeleted(WayShopStatus.PENDING.getStatus());
-        spUserShopMapper.insertSelective(spUserShopRecord);
+
+        if (null != existSpUserShop) {//已经创建过
+            spUserShopRecord.setShopId(wayShopRecord.getId());
+            spUserShopRecord.setId(existSpUserShop.getId());
+            spUserShopMapper.updateByPrimaryKeySelective(spUserShopRecord);
+        } else {
+            spUserShopRecord.setShopId(wayShopRecord.getId());
+            spUserShopRecord.setUserLoginId(shopParam.getSpUserLoginId());
+            spUserShopMapper.insertSelective(spUserShopRecord);
+        }
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
 
@@ -74,7 +97,7 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo updateShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted(WayShopStatus.PENDING.getStatus());
+        wayShopRecord.setIsDeleted(WayShopStatusEnum.PENDING.getStatus());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -84,7 +107,7 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo deleteShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted((WayShopStatus.DELETED.getStatus()));
+        wayShopRecord.setIsDeleted((WayShopStatusEnum.DELETED.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -94,7 +117,7 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo onlineShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted((WayShopStatus.NORMAL.getStatus()));
+        wayShopRecord.setIsDeleted((WayShopStatusEnum.NORMAL.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -104,7 +127,7 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo offlineShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted((WayShopStatus.PENDING.getStatus()));
+        wayShopRecord.setIsDeleted((WayShopStatusEnum.PENDING.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }

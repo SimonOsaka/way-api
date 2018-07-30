@@ -28,6 +28,8 @@ public class WayShopRequest extends PageParam {
 
     private String shopLogoUrl;
 
+    private String adCode;
+
     private String cityCode;
 
     private Long userLoginId;
@@ -160,5 +162,15 @@ public class WayShopRequest extends PageParam {
     public void setUserLoginId(Long userLoginId) {
 
         this.userLoginId = userLoginId;
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
     }
 }

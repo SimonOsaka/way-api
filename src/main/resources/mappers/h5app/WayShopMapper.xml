@@ -17,6 +17,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="ad_code" jdbcType="VARCHAR" property="adCode"/>
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
@@ -44,6 +45,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="ad_code" jdbcType="VARCHAR" property="adCode"/>
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="shop_lat" jdbcType="DECIMAL" property="shopLat"/>
         <result column="shop_lng" jdbcType="DECIMAL" property="shopLng"/>
@@ -68,7 +70,7 @@
     <sql id="Base_Column_List">
         id, shop_name, shop_address, shop_tel, shop_business_time1, shop_business_time2,
         shop_cate_leaf_id, shop_lat, shop_lng, shop_logo_url, shop_info, create_time, update_time,
-        is_deleted, city_code, shop_pinyin, shop_py
+        is_deleted, ad_code, city_code, shop_pinyin, shop_py
     </sql>
 
     <sql id="Base_CateLeaf_Column_List">
@@ -86,6 +88,7 @@
         shop.shop_lat,
         shop.shop_lng,
         shop.shop_logo_url,
+        shop.ad_code,
         shop.city_code,
         shop.shop_pinyin,
         shop.shop_py,
@@ -111,7 +114,7 @@
         shop_business_time1, shop_business_time2, shop_cate_leaf_id,
         shop_info, shop_lat, shop_lng,
         shop_logo_url, create_time, update_time,
-        is_deleted, city_code, shop_pinyin,
+        is_deleted, ad_code, city_code, shop_pinyin,
         shop_py)
         values (#{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR},
         #{shopTel,jdbcType=VARCHAR},
@@ -120,7 +123,8 @@
         #{shopInfo,jdbcType=VARCHAR}, #{shopLat,jdbcType=DECIMAL}, #{shopLng,jdbcType=DECIMAL},
         #{shopLogoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP},
-        #{isDeleted,jdbcType=TINYINT}, #{cityCode,jdbcType=VARCHAR}, #{shopPinyin,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=TINYINT}, #{adCode,jdbcType=VARCHAR},
+        #{cityCode,jdbcType=VARCHAR}, #{shopPinyin,jdbcType=VARCHAR},
         #{shopPy,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
@@ -167,6 +171,9 @@
             </if>
             <if test="isDeleted != null">
                 is_deleted,
+            </if>
+            <if test="adCode != null">
+                ad_code,
             </if>
             <if test="cityCode != null">
                 city_code,
@@ -217,6 +224,9 @@
             </if>
             <if test="isDeleted != null">
                 #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="adCode != null">
+                #{adCode,jdbcType=VARCHAR},
             </if>
             <if test="cityCode != null">
                 #{cityCode,jdbcType=VARCHAR},
@@ -273,6 +283,9 @@
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
+            <if test="adCode != null">
+                ad_code = #{adCode,jdbcType=VARCHAR},
+            </if>
             <if test="cityCode != null">
                 city_code = #{cityCode,jdbcType=VARCHAR},
             </if>
@@ -302,6 +315,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         is_deleted = #{isDeleted,jdbcType=TINYINT},
+        ad_code = #{adCode,jdbcType=VARCHAR},
         city_code = #{cityCode,jdbcType=VARCHAR},
         shop_pinyin = #{shopPinyin,jdbcType=VARCHAR},
         shop_py = #{shopPy,jdbcType=VARCHAR}

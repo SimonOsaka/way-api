@@ -35,6 +35,8 @@ public class WayShop implements Serializable {
 
     private Byte isDeleted;
 
+    private String adCode;
+
     private String cityCode;
 
     private String shopPinyin;
@@ -187,6 +189,16 @@ public class WayShop implements Serializable {
     public void setIsDeleted(Byte isDeleted) {
 
         this.isDeleted = isDeleted;
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
     }
 
     public String getCityCode() {

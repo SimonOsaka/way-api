@@ -16,6 +16,8 @@ public class WayAMapSearchTextResponse {
 
     private String adName;
 
+    private String adCode;
+
     private String fullAddress;
 
     public String getFullAddress() {
@@ -46,6 +48,16 @@ public class WayAMapSearchTextResponse {
     public void setCityCode(String cityCode) {
 
         this.cityCode = cityCode;
+    }
+
+    public String getAdCode() {
+
+        return adCode;
+    }
+
+    public void setAdCode(String adCode) {
+
+        this.adCode = adCode;
     }
 
     public String getLocation() {
