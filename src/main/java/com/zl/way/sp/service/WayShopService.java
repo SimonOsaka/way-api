@@ -1,5 +1,6 @@
 package com.zl.way.sp.service;
 
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
 import com.zl.way.util.PageParam;
@@ -18,7 +19,7 @@ public interface WayShopService {
 
     WayShopBo deleteShop(WayShopParam shopParam);
 
-    WayShopBo onlineShop(WayShopParam shopParam);
+    WayShopBo onlineShop(WayShopParam shopParam) throws BusinessException;
 
     WayShopBo offlineShop(WayShopParam shopParam);
 }

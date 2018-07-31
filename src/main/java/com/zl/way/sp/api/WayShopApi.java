@@ -4,6 +4,7 @@ import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.sp.api.validation.WayShopApiValidation;
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
 import com.zl.way.sp.model.WayShopRequest;
@@ -132,7 +133,11 @@ public class WayShopApi {
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
 
-        shopService.onlineShop(shopParam);
+        try {
+            shopService.onlineShop(shopParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 

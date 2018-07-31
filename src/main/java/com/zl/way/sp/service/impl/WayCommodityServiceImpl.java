@@ -78,6 +78,14 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo createCommodity(WayCommodityParam commodityParam) {
+        //当前只能增加一个商品，如果已存在商品，返回当前的商品，幂等操作
+        WayCommodityCondition getCommodityCondition = new WayCommodityCondition();
+        getCommodityCondition.setShopId(commodityParam.getShopId());
+        List<WayCommodity> existCommodityList = commodityMapper
+                .selectByCondition(getCommodityCondition, WayPageRequest.of(1, 1));
+        if (CollectionUtils.isNotEmpty(existCommodityList)) {
+            return BeanMapper.map(existCommodityList.get(0), WayCommodityBo.class);
+        }
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         try {

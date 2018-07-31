@@ -1,7 +1,9 @@
 package com.zl.way.sp.service.impl;
 
 import com.zl.way.sp.enums.WayShopStatusEnum;
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.mapper.SpUserShopMapper;
+import com.zl.way.sp.mapper.WayCommodityMapper;
 import com.zl.way.sp.mapper.WayShopMapper;
 import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.WayShopService;
@@ -25,6 +27,9 @@ public class WayShopServiceImpl implements WayShopService {
 
     @Autowired
     private SpUserShopMapper spUserShopMapper;
+
+    @Autowired
+    private WayCommodityMapper commodityMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -52,6 +57,17 @@ public class WayShopServiceImpl implements WayShopService {
         WayShopBo wayShopBo = BeanMapper.map(shopList.get(0), WayShopBo.class);
         wayShopBo
                 .setShopStatusName(WayShopStatusEnum.getStatus(wayShopBo.getIsDeleted()).getDesc());
+        //        String cityCode = wayShopBo.getCityCode();
+        //        String adCode = wayShopBo.getAdCode();
+        //        WayCityCondition wayCityCondition = new WayCityCondition();
+        //        wayCityCondition.setAdcode(adCode);
+        //        wayCityCondition.setCitycode(cityCode);
+        //        List<WayCity> wayCityList = cityMapper
+        //                .selectByCondition(wayCityCondition, WayPageRequest.ONE);
+        //        if (CollectionUtils.isNotEmpty(wayCityList)) {
+        //            WayCity wayCity = wayCityList.get(0);
+        //            wayShopBo.setCityName(wayCity.getName());
+        //        }
         return wayShopBo;
     }
 
@@ -114,11 +130,20 @@ public class WayShopServiceImpl implements WayShopService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public WayShopBo onlineShop(WayShopParam shopParam) {
+    public WayShopBo onlineShop(WayShopParam shopParam) throws BusinessException {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.NORMAL.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
+
+        Long shopId = shopParam.getId();
+        WayCommodityCondition wayCommodityCondition = new WayCommodityCondition();
+        wayCommodityCondition.setShopId(shopId);
+        List<WayCommodity> commodityList = commodityMapper
+                .selectByCondition(wayCommodityCondition, WayPageRequest.ONE);
+        if (CollectionUtils.isEmpty(commodityList)) {
+            throw new BusinessException("商品未创建，无法执行上线操作");
+        }
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
 
