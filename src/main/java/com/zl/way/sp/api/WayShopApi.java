@@ -9,6 +9,7 @@ import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
 import com.zl.way.sp.model.WayShopRequest;
 import com.zl.way.sp.model.WayShopResponse;
+import com.zl.way.sp.service.ApiValidationService;
 import com.zl.way.sp.service.WayShopService;
 import com.zl.way.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -28,8 +29,18 @@ public class WayShopApi {
     @Autowired
     private WayShopService shopService;
 
+    @Autowired
+    private ApiValidationService apiValidationService;
+
     @PostMapping(value = "/list")
-    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopParam shopParam = new WayShopParam();
         shopParam.setShopName(request.getShopName());
@@ -45,11 +56,24 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/get")
-    public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
+        try {
+            apiValidationService.validateUserShop(userLoginId, request.getId());
+        } catch (BusinessException be) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(be.getMessage());
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
@@ -62,10 +86,11 @@ public class WayShopApi {
 
     @PostMapping(value = "/create")
     public ResponseResult<WayShopResponse> createShop(@RequestBody WayShopRequest request,
-            @RequestHeader("token") String userToken) {
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
 
-        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
@@ -89,7 +114,14 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/update")
-    public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopName().shopTel()
                 .shopAddress().shopBusinessTime().shopLocation().shopLogoUrl().shopId()
@@ -97,6 +129,13 @@ public class WayShopApi {
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
+
+        try {
+            apiValidationService.validateUserShop(userLoginId, request.getId());
+        } catch (BusinessException be) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(be.getMessage());
+        }
+
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
         try {
             shopParam.setShopPinyin(PinyinHelper
@@ -110,11 +149,24 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/delete")
-    public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
+        try {
+            apiValidationService.validateUserShop(userLoginId, request.getId());
+        } catch (BusinessException be) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(be.getMessage());
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
@@ -124,11 +176,24 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/online")
-    public ResponseResult<WayShopResponse> online(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> online(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
+        try {
+            apiValidationService.validateUserShop(userLoginId, request.getId());
+        } catch (BusinessException be) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(be.getMessage());
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
@@ -142,11 +207,24 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/offline")
-    public ResponseResult<WayShopResponse> offline(@RequestBody WayShopRequest request) {
+    public ResponseResult<WayShopResponse> offline(@RequestBody WayShopRequest request,
+            @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
+        }
+
+        try {
+            apiValidationService.validateUserShop(userLoginId, request.getId());
+        } catch (BusinessException be) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(be.getMessage());
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
