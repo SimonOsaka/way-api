@@ -95,7 +95,8 @@ public class WayShopApi {
         }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl().shopName()
-                .shopCateLeafId().shopAddress().shopTel().shopBusinessTime().shopLocation();
+                .shopCateLeafId().shopAddress().shopTel().shopBusinessTime1().shopLocation()
+                .shopInfo();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -124,8 +125,8 @@ public class WayShopApi {
         }
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopName().shopTel()
-                .shopAddress().shopBusinessTime().shopLocation().shopLogoUrl().shopId()
-                .shopCateLeafId();
+                .shopAddress().shopBusinessTime1().shopLocation().shopLogoUrl().shopId()
+                .shopCateLeafId().shopInfo();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }

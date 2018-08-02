@@ -1,6 +1,7 @@
 package com.zl.way.sp.api.validation;
 
 import com.zl.way.sp.model.WayShopRequest;
+import com.zl.way.util.SensiWordsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -37,6 +38,17 @@ public class WayShopApiValidation {
 
         if (StringUtils.isBlank(request.getShopName())) {
             validationMessageList.add("商家名称不能为空");
+            return this;
+        }
+
+        if (SensiWordsUtil.isSensiWords(request.getShopName())) {
+            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopName());
+            validationMessageList.add("商家名称包含敏感词汇[" + sensiWords + "]");
+            return this;
+        }
+
+        if (StringUtils.length(request.getShopName()) > 20) {
+            validationMessageList.add("商家名称最多20字");
         }
         return this;
     }
@@ -45,14 +57,36 @@ public class WayShopApiValidation {
 
         if (StringUtils.isBlank(request.getShopAddress())) {
             validationMessageList.add("商家地址不能为空");
+            return this;
+        }
+
+        if (SensiWordsUtil.isSensiWords(request.getShopAddress())) {
+            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopAddress());
+            validationMessageList.add("商家地址包含敏感词汇[" + sensiWords + "]");
+            return this;
+        }
+
+        if (StringUtils.length(request.getShopAddress()) > 200) {
+            validationMessageList.add("商家地址最多200字");
         }
         return this;
     }
 
-    public WayShopApiValidation shopBusinessTime() {
+    public WayShopApiValidation shopBusinessTime1() {
 
         if (StringUtils.isBlank(request.getShopBusinessTime1())) {
             validationMessageList.add("商家营业时间1不能为空");
+            return this;
+        }
+
+        if (SensiWordsUtil.isSensiWords(request.getShopBusinessTime1())) {
+            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopBusinessTime1());
+            validationMessageList.add("商家营业时间1包含敏感词汇[" + sensiWords + "]");
+            return this;
+        }
+
+        if (StringUtils.length(request.getShopBusinessTime1()) > 11) {
+            validationMessageList.add("商家营业时间1格式不正确");
         }
         return this;
     }
@@ -61,6 +95,11 @@ public class WayShopApiValidation {
 
         if (StringUtils.isBlank(request.getShopLogoUrl())) {
             validationMessageList.add("商家LOGO不能为空");
+            return this;
+        }
+
+        if (StringUtils.length(request.getShopLogoUrl()) > 300) {
+            validationMessageList.add("商家LOGO格式不正确");
         }
         return this;
     }
@@ -89,6 +128,24 @@ public class WayShopApiValidation {
         if (null == request.getShopLat() || null == request.getShopLng()) {
             validationMessageList.add("商家地址不能为空[必须选择地址]");
         }
+        return this;
+    }
+
+    public WayShopApiValidation shopInfo() {
+
+        if (StringUtils.isNotBlank(request.getShopInfo())) {
+            if (SensiWordsUtil.isSensiWords(request.getShopInfo())) {
+                String sensiWords = SensiWordsUtil.getSensiWords(request.getShopInfo());
+                validationMessageList.add("商家简介包含敏感词汇[" + sensiWords + "]");
+                return this;
+            }
+
+            if (StringUtils.length(request.getShopInfo()) > 100) {
+                validationMessageList.add("商家简介最多100字");
+                return this;
+            }
+        }
+
         return this;
     }
 

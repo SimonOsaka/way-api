@@ -1,6 +1,7 @@
 package com.zl.way.sp.api.validation;
 
 import com.zl.way.sp.model.WayCommodityRequest;
+import com.zl.way.util.SensiWordsUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,6 +40,12 @@ public class WayCommodityApiValidation {
 
         if (StringUtils.isBlank(request.getName())) {
             validationMessageList.add("商品名称不能为空");
+            return this;
+        }
+
+        if (SensiWordsUtil.isSensiWords(request.getName())) {
+            String sensiWords = SensiWordsUtil.getSensiWords(request.getName());
+            validationMessageList.add("商品名称包含敏感词汇[" + sensiWords + "]");
             return this;
         }
 
