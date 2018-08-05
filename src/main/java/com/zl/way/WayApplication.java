@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,6 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableAutoConfiguration
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+@EnableScheduling
 public class WayApplication {
 
     private final Logger logger = LoggerFactory.getLogger(WayApplication.class);
