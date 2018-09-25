@@ -1,30 +1,28 @@
-package com.zl.way.sp.service.impl;
+package com.zl.way.mp.service.impl;
 
-import com.github.stuxuhai.jpinyin.PinyinException;
-import com.github.stuxuhai.jpinyin.PinyinFormat;
-import com.github.stuxuhai.jpinyin.PinyinHelper;
-import com.zl.way.sp.enums.WayCommodityStatusEnum;
-import com.zl.way.sp.mapper.WayCommodityMapper;
-import com.zl.way.sp.model.WayCommodity;
-import com.zl.way.sp.model.WayCommodityBo;
-import com.zl.way.sp.model.WayCommodityCondition;
-import com.zl.way.sp.model.WayCommodityParam;
-import com.zl.way.sp.service.WayCommodityService;
+import com.zl.way.mp.enums.WayCommodityStatusEnum;
+import com.zl.way.mp.mapper.WayCommodityMapper;
+import com.zl.way.mp.model.WayCommodity;
+import com.zl.way.mp.model.WayCommodityBo;
+import com.zl.way.mp.model.WayCommodityCondition;
+import com.zl.way.mp.model.WayCommodityParam;
+import com.zl.way.mp.service.WayCommodityService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Service("spWayCommodityService")
+@Service("mpWayCommodityService")
 public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Autowired
@@ -44,7 +42,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         return BeanMapper.mapAsList(commodityList, WayCommodityBo.class);
     }
 
-    @Override
+    /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayCommodityBo getCommodity(WayCommodityParam commodityParam) {
 
@@ -74,9 +72,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         }
         wayCommodityBo.setImgUrlList(imgUrlList);
         return wayCommodityBo;
-    }
+    }*/
 
-    @Override
+    /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo createCommodity(WayCommodityParam commodityParam) {
         //当前只能增加一个商品，如果已存在商品，返回当前的商品，幂等操作
@@ -114,9 +112,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getStatus());
         commodityMapper.insertSelective(wayCommodityRecord);
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
-    }
+    }*/
 
-    @Override
+    /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
 
@@ -154,9 +152,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         }
         commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
-    }
+    }*/
 
-    @Override
+    /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo deleteCommodity(WayCommodityParam commodityParam) {
 
@@ -164,5 +162,40 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         wayShopRecord.setIsDeleted((byte) 1);
         commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
+    }*/
+
+    @Override
+    public Map<String, String> getAllCommodityStatus() {
+
+        WayCommodityStatusEnum[] commodityStatusEnums = WayCommodityStatusEnum.values();
+        if (commodityStatusEnums.length < 1) {
+            return MapUtils.EMPTY_SORTED_MAP;
+        }
+
+        Map<String, String> commodityStatusMap = new HashMap<>(commodityStatusEnums.length);
+        for (WayCommodityStatusEnum commodityStatusEnum : commodityStatusEnums) {
+            byte status = commodityStatusEnum.getStatus();
+            String desc = commodityStatusEnum.getDesc();
+            commodityStatusMap.put(String.valueOf(status), desc);
+        }
+
+        return commodityStatusMap;
+    }
+
+    @Override
+    public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) {
+
+        WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayShopRecord.setIsDeleted(commodityParam.getStatus());
+        commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
+        return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
+    }
+
+    @Override
+    public Long queryCommodityCount(WayCommodityParam commodityParam) {
+
+        WayCommodityCondition condition = BeanMapper
+                .map(commodityParam, WayCommodityCondition.class);
+        return commodityMapper.countByCondition(condition);
     }
 }

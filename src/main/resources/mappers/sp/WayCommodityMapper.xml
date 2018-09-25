@@ -215,7 +215,7 @@
         <include refid="Shop_Commodity_Column_List"/>
         from
         way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
-        where commodity.is_deleted = 0 and shop.is_deleted != 1
+        where commodity.is_deleted != 1 and shop.is_deleted != 1
         <if test="condition.name != null and condition.name != ''">
             and (
             commodity.name like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')

@@ -22,6 +22,20 @@
         id, name, price, img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
         update_time, is_deleted, name_pinyin, name_py
     </sql>
+    <sql id="Shop_Commodity_Column_List">
+        commodity.id, commodity.name, commodity.price,
+        commodity.img_url,
+        commodity.img_url_1,
+        commodity.img_url_2,
+        commodity.img_url_3,
+        commodity.img_url_4,
+        commodity.shop_id,
+        commodity.create_time, commodity.update_time,
+        commodity.is_deleted,
+        commodity.name_pinyin,
+        commodity.name_py,
+        shop.id, shop.shop_name
+    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -194,4 +208,35 @@
         name_py = #{namePy,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <sql id="whereByCondition">
+        from
+        way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
+        where commodity.is_deleted != 1 and shop.is_deleted != 1
+        <if test="condition.name != null and condition.name != ''">
+            and (
+            commodity.name like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
+            or commodity.name_pinyin like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
+            or commodity.name_py like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
+            )
+        </if>
+        <if test="condition.shopId != null">
+            and commodity.shop_id = #{condition.shopId, jdbcType=BIGINT}
+        </if>
+        <if test="condition.id != null">
+            and commodity.id = #{condition.id, jdbcType=BIGINT}
+        </if>
+    </sql>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Shop_Commodity_Column_List"/>
+        <include refid="whereByCondition"/>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+    <select id="countByCondition" resultType="java.lang.Long">
+        select
+        count(*)
+        <include refid="whereByCondition"/>
+    </select>
 </mapper>
