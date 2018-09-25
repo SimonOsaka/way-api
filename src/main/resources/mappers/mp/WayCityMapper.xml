@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayCityMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.model.WayCity">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="adcode" jdbcType="VARCHAR" property="adcode"/>
+        <result column="citycode" jdbcType="VARCHAR" property="citycode"/>
+        <result column="pinyin_short" jdbcType="VARCHAR" property="pinyinShort"/>
+        <result column="pinyin_all" jdbcType="VARCHAR" property="pinyinAll"/>
+        <result column="is_used" jdbcType="TINYINT" property="isUsed"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, adcode, citycode, pinyin_short, pinyin_all, is_used, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_city
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from way_city
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.mp.model.WayCity"
+            useGeneratedKeys="true">
+        insert into way_city (name, adcode, citycode,
+        pinyin_short, pinyin_all, is_used,
+        create_time, update_time)
+        values (#{name,jdbcType=VARCHAR}, #{adcode,jdbcType=VARCHAR}, #{citycode,jdbcType=VARCHAR},
+        #{pinyinShort,jdbcType=VARCHAR}, #{pinyinAll,jdbcType=VARCHAR}, #{isUsed,jdbcType=TINYINT},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayCity" useGeneratedKeys="true">
+        insert into way_city
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="adcode != null">
+                adcode,
+            </if>
+            <if test="citycode != null">
+                citycode,
+            </if>
+            <if test="pinyinShort != null">
+                pinyin_short,
+            </if>
+            <if test="pinyinAll != null">
+                pinyin_all,
+            </if>
+            <if test="isUsed != null">
+                is_used,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="adcode != null">
+                #{adcode,jdbcType=VARCHAR},
+            </if>
+            <if test="citycode != null">
+                #{citycode,jdbcType=VARCHAR},
+            </if>
+            <if test="pinyinShort != null">
+                #{pinyinShort,jdbcType=VARCHAR},
+            </if>
+            <if test="pinyinAll != null">
+                #{pinyinAll,jdbcType=VARCHAR},
+            </if>
+            <if test="isUsed != null">
+                #{isUsed,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.WayCity">
+        update way_city
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="adcode != null">
+                adcode = #{adcode,jdbcType=VARCHAR},
+            </if>
+            <if test="citycode != null">
+                citycode = #{citycode,jdbcType=VARCHAR},
+            </if>
+            <if test="pinyinShort != null">
+                pinyin_short = #{pinyinShort,jdbcType=VARCHAR},
+            </if>
+            <if test="pinyinAll != null">
+                pinyin_all = #{pinyinAll,jdbcType=VARCHAR},
+            </if>
+            <if test="isUsed != null">
+                is_used = #{isUsed,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.mp.model.WayCity">
+        update way_city
+        set name = #{name,jdbcType=VARCHAR},
+        adcode = #{adcode,jdbcType=VARCHAR},
+        citycode = #{citycode,jdbcType=VARCHAR},
+        pinyin_short = #{pinyinShort,jdbcType=VARCHAR},
+        pinyin_all = #{pinyinAll,jdbcType=VARCHAR},
+        is_used = #{isUsed,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

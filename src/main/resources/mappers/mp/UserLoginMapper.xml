@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.UserLoginMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.model.UserLogin">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="login_tel" jdbcType="VARCHAR" property="loginTel"/>
+        <result column="valid_code" jdbcType="VARCHAR" property="validCode"/>
+        <result column="valid_code_expire" jdbcType="TIMESTAMP" property="validCodeExpire"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_used" jdbcType="TINYINT" property="isUsed"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="login_time" jdbcType="TIMESTAMP" property="loginTime"/>
+        <result column="logout_time" jdbcType="TIMESTAMP" property="logoutTime"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="login_password" jdbcType="VARCHAR" property="loginPassword"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, login_tel, valid_code, valid_code_expire, create_time, update_time, is_used,
+        is_deleted, login_time, logout_time, login_name, login_password
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_login
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user_login
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.UserLogin" useGeneratedKeys="true">
+        insert into user_login (login_tel, valid_code, valid_code_expire,
+        create_time, update_time, is_used,
+        is_deleted, login_time, logout_time,
+        login_name, login_password)
+        values (#{loginTel,jdbcType=VARCHAR}, #{validCode,jdbcType=VARCHAR},
+        #{validCodeExpire,jdbcType=TIMESTAMP},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{isUsed,jdbcType=TINYINT},
+        #{isDeleted,jdbcType=TINYINT}, #{loginTime,jdbcType=TIMESTAMP},
+        #{logoutTime,jdbcType=TIMESTAMP},
+        #{loginName,jdbcType=VARCHAR}, #{loginPassword,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.UserLogin" useGeneratedKeys="true">
+        insert into user_login
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loginTel != null">
+                login_tel,
+            </if>
+            <if test="validCode != null">
+                valid_code,
+            </if>
+            <if test="validCodeExpire != null">
+                valid_code_expire,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isUsed != null">
+                is_used,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="loginTime != null">
+                login_time,
+            </if>
+            <if test="logoutTime != null">
+                logout_time,
+            </if>
+            <if test="loginName != null">
+                login_name,
+            </if>
+            <if test="loginPassword != null">
+                login_password,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="loginTel != null">
+                #{loginTel,jdbcType=VARCHAR},
+            </if>
+            <if test="validCode != null">
+                #{validCode,jdbcType=VARCHAR},
+            </if>
+            <if test="validCodeExpire != null">
+                #{validCodeExpire,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isUsed != null">
+                #{isUsed,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="logoutTime != null">
+                #{logoutTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginName != null">
+                #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPassword != null">
+                #{loginPassword,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.UserLogin">
+        update user_login
+        <set>
+            <if test="loginTel != null">
+                login_tel = #{loginTel,jdbcType=VARCHAR},
+            </if>
+            <if test="validCode != null">
+                valid_code = #{validCode,jdbcType=VARCHAR},
+            </if>
+            <if test="validCodeExpire != null">
+                valid_code_expire = #{validCodeExpire,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isUsed != null">
+                is_used = #{isUsed,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="logoutTime != null">
+                logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPassword != null">
+                login_password = #{loginPassword,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.mp.model.UserLogin">
+        update user_login
+        set login_tel = #{loginTel,jdbcType=VARCHAR},
+        valid_code = #{validCode,jdbcType=VARCHAR},
+        valid_code_expire = #{validCodeExpire,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_used = #{isUsed,jdbcType=TINYINT},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+        logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+        login_name = #{loginName,jdbcType=VARCHAR},
+        login_password = #{loginPassword,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

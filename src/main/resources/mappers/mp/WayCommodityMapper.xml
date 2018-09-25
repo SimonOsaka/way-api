@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayCommodityMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.model.WayCommodity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="img_url_1" jdbcType="VARCHAR" property="imgUrl1"/>
+        <result column="img_url_2" jdbcType="VARCHAR" property="imgUrl2"/>
+        <result column="img_url_3" jdbcType="VARCHAR" property="imgUrl3"/>
+        <result column="img_url_4" jdbcType="VARCHAR" property="imgUrl4"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="name_pinyin" jdbcType="VARCHAR" property="namePinyin"/>
+        <result column="name_py" jdbcType="VARCHAR" property="namePy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, price, img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
+        update_time, is_deleted, name_pinyin, name_py
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_commodity
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from way_commodity
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayCommodity" useGeneratedKeys="true">
+        insert into way_commodity (name, price, img_url,
+        img_url_1, img_url_2, img_url_3,
+        img_url_4, shop_id, create_time,
+        update_time, is_deleted, name_pinyin,
+        name_py)
+        values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{imgUrl,jdbcType=VARCHAR},
+        #{imgUrl1,jdbcType=VARCHAR}, #{imgUrl2,jdbcType=VARCHAR}, #{imgUrl3,jdbcType=VARCHAR},
+        #{imgUrl4,jdbcType=VARCHAR}, #{shopId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT},
+        #{namePinyin,jdbcType=VARCHAR},
+        #{namePy,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayCommodity" useGeneratedKeys="true">
+        insert into way_commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="imgUrl1 != null">
+                img_url_1,
+            </if>
+            <if test="imgUrl2 != null">
+                img_url_2,
+            </if>
+            <if test="imgUrl3 != null">
+                img_url_3,
+            </if>
+            <if test="imgUrl4 != null">
+                img_url_4,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="namePinyin != null">
+                name_pinyin,
+            </if>
+            <if test="namePy != null">
+                name_py,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl1 != null">
+                #{imgUrl1,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl2 != null">
+                #{imgUrl2,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl3 != null">
+                #{imgUrl3,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl4 != null">
+                #{imgUrl4,jdbcType=VARCHAR},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="namePinyin != null">
+                #{namePinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="namePy != null">
+                #{namePy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.WayCommodity">
+        update way_commodity
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl1 != null">
+                img_url_1 = #{imgUrl1,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl2 != null">
+                img_url_2 = #{imgUrl2,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl3 != null">
+                img_url_3 = #{imgUrl3,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl4 != null">
+                img_url_4 = #{imgUrl4,jdbcType=VARCHAR},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="namePinyin != null">
+                name_pinyin = #{namePinyin,jdbcType=VARCHAR},
+            </if>
+            <if test="namePy != null">
+                name_py = #{namePy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.mp.model.WayCommodity">
+        update way_commodity
+        set name = #{name,jdbcType=VARCHAR},
+        price = #{price,jdbcType=DECIMAL},
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+        img_url_1 = #{imgUrl1,jdbcType=VARCHAR},
+        img_url_2 = #{imgUrl2,jdbcType=VARCHAR},
+        img_url_3 = #{imgUrl3,jdbcType=VARCHAR},
+        img_url_4 = #{imgUrl4,jdbcType=VARCHAR},
+        shop_id = #{shopId,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        name_pinyin = #{namePinyin,jdbcType=VARCHAR},
+        name_py = #{namePy,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

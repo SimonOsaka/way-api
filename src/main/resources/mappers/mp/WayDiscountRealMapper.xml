@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayDiscountRealMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.model.WayDiscountReal">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="discount_id" jdbcType="BIGINT" property="discountId"/>
+        <result column="real_type" jdbcType="TINYINT" property="realType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_login_id, discount_id, real_type, create_time, update_time, is_deleted
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_discount_real
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from way_discount_real
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayDiscountReal" useGeneratedKeys="true">
+        insert into way_discount_real (user_login_id, discount_id, real_type,
+        create_time, update_time, is_deleted
+        )
+        values (#{userLoginId,jdbcType=BIGINT}, #{discountId,jdbcType=BIGINT},
+        #{realType,jdbcType=TINYINT},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{isDeleted,jdbcType=TINYINT}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayDiscountReal" useGeneratedKeys="true">
+        insert into way_discount_real
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userLoginId != null">
+                user_login_id,
+            </if>
+            <if test="discountId != null">
+                discount_id,
+            </if>
+            <if test="realType != null">
+                real_type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userLoginId != null">
+                #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="discountId != null">
+                #{discountId,jdbcType=BIGINT},
+            </if>
+            <if test="realType != null">
+                #{realType,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.WayDiscountReal">
+        update way_discount_real
+        <set>
+            <if test="userLoginId != null">
+                user_login_id = #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="discountId != null">
+                discount_id = #{discountId,jdbcType=BIGINT},
+            </if>
+            <if test="realType != null">
+                real_type = #{realType,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.mp.model.WayDiscountReal">
+        update way_discount_real
+        set user_login_id = #{userLoginId,jdbcType=BIGINT},
+        discount_id = #{discountId,jdbcType=BIGINT},
+        real_type = #{realType,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_deleted = #{isDeleted,jdbcType=TINYINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
