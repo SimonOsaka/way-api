@@ -1,5 +1,6 @@
 package com.zl.way.mp.api;
 
+import com.zl.way.mp.api.validation.UserLoginApiValidation;
 import com.zl.way.mp.model.UserLoginBo;
 import com.zl.way.mp.model.UserLoginParam;
 import com.zl.way.mp.model.UserLoginRequest;
@@ -61,6 +62,11 @@ public class UserApi {
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+        UserLoginApiValidation loginApiValidation = new UserLoginApiValidation(request).Id();
+        if (loginApiValidation.hasErrors()) {
+            return ResponseResultUtil
+                    .wrapWrongParamResponseResult(loginApiValidation.getErrors().get(0));
         }
 
         UserLoginParam userLoginParam = new UserLoginParam();

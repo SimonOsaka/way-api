@@ -37,7 +37,7 @@ public final class TokenUtil {
 
     public static void main(String[] args) {
 
-        String str = "8";
+        String str = "9";
         String token = getToken(str);
         System.out.println(token);
 
