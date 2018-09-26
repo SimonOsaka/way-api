@@ -20,6 +20,10 @@
         id, login_tel, valid_code, valid_code_expire, create_time, update_time, is_used,
         is_deleted, login_time, logout_time, login_name, login_password
     </sql>
+    <sql id="Condition_Column_List">
+        id, login_tel, valid_code, valid_code_expire, create_time, update_time, is_used,
+        is_deleted, login_time, logout_time, login_name
+    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -172,4 +176,34 @@
         login_password = #{loginPassword,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <sql id="whereByCondition">
+        from user_login u
+        where u.is_deleted = 0
+        <if test="condition.id != null">
+            and u.id = #{condition.id, jdbcType=TINYINT}
+        </if>
+        <if test="condition.isUsed != null">
+            and u.is_used = #{condition.isUsed, jdbcType=TINYINT}
+        </if>
+        <if test="condition.loginTel != null and condition.loginTel != ''">
+            and u.login_tel = #{condition.loginTel, jdbcType=VARCHAR}
+        </if>
+        <if test="condition.loginName != null and condition.loginName != ''">
+            and u.login_name = #{condition.loginName, jdbcType=VARCHAR}
+        </if>
+    </sql>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Condition_Column_List"/>
+        <include refid="whereByCondition"/>
+        order by u.is_used asc
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+    <select id="countByCondition" resultType="java.lang.Long">
+        select
+        count(*)
+        <include refid="whereByCondition"/>
+    </select>
 </mapper>
