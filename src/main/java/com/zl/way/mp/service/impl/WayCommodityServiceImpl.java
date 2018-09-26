@@ -183,6 +183,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) {
 
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
@@ -192,6 +193,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Long queryCommodityCount(WayCommodityParam commodityParam) {
 
         WayCommodityCondition condition = BeanMapper

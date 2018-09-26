@@ -178,6 +178,7 @@ public class WayShopServiceImpl implements WayShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Long queryShopCount(WayShopParam shopParam) {
 
         WayShopCondition condition = BeanMapper.map(shopParam, WayShopCondition.class);

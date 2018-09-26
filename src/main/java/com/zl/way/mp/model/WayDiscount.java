@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class WayDiscount implements Serializable {
+
     private Long id;
 
     private String commodityName;
@@ -39,141 +40,187 @@ public class WayDiscount implements Serializable {
 
     private Byte commodityApprove;
 
+    private WayDiscountReal wayDiscountReal;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
+
         return id;
     }
 
     public void setId(Long id) {
+
         this.id = id;
     }
 
     public String getCommodityName() {
+
         return commodityName;
     }
 
     public void setCommodityName(String commodityName) {
+
         this.commodityName = commodityName == null ? null : commodityName.trim();
     }
 
     public String getCommodityCate() {
+
         return commodityCate;
     }
 
     public void setCommodityCate(String commodityCate) {
+
         this.commodityCate = commodityCate == null ? null : commodityCate.trim();
     }
 
     public BigDecimal getCommodityPrice() {
+
         return commodityPrice;
     }
 
     public void setCommodityPrice(BigDecimal commodityPrice) {
+
         this.commodityPrice = commodityPrice;
     }
 
     public String getShopPosition() {
+
         return shopPosition;
     }
 
     public void setShopPosition(String shopPosition) {
+
         this.shopPosition = shopPosition == null ? null : shopPosition.trim();
     }
 
     public BigDecimal getShopLng() {
+
         return shopLng;
     }
 
     public void setShopLng(BigDecimal shopLng) {
+
         this.shopLng = shopLng;
     }
 
     public BigDecimal getShopLat() {
+
         return shopLat;
     }
 
     public void setShopLat(BigDecimal shopLat) {
+
         this.shopLat = shopLat;
     }
 
     public Long getUserLoginId() {
+
         return userLoginId;
     }
 
     public void setUserLoginId(Long userLoginId) {
+
         this.userLoginId = userLoginId;
     }
 
     public Integer getCommodityReal() {
+
         return commodityReal;
     }
 
     public void setCommodityReal(Integer commodityReal) {
+
         this.commodityReal = commodityReal;
     }
 
     public Integer getCommodityUnreal() {
+
         return commodityUnreal;
     }
 
     public void setCommodityUnreal(Integer commodityUnreal) {
+
         this.commodityUnreal = commodityUnreal;
     }
 
     public Date getLimitTimeExpire() {
+
         return limitTimeExpire;
     }
 
     public void setLimitTimeExpire(Date limitTimeExpire) {
+
         this.limitTimeExpire = limitTimeExpire;
     }
 
     public Date getCreateTime() {
+
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
+
         this.createTime = createTime;
     }
 
     public Date getUpdateTime() {
+
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
+
         this.updateTime = updateTime;
     }
 
     public Byte getIsDeleted() {
+
         return isDeleted;
     }
 
     public void setIsDeleted(Byte isDeleted) {
+
         this.isDeleted = isDeleted;
     }
 
     public String getAdCode() {
+
         return adCode;
     }
 
     public void setAdCode(String adCode) {
+
         this.adCode = adCode == null ? null : adCode.trim();
     }
 
     public String getCityCode() {
+
         return cityCode;
     }
 
     public void setCityCode(String cityCode) {
+
         this.cityCode = cityCode == null ? null : cityCode.trim();
     }
 
     public Byte getCommodityApprove() {
+
         return commodityApprove;
     }
 
     public void setCommodityApprove(Byte commodityApprove) {
+
         this.commodityApprove = commodityApprove;
+    }
+
+    public WayDiscountReal getWayDiscountReal() {
+
+        return wayDiscountReal;
+    }
+
+    public void setWayDiscountReal(WayDiscountReal wayDiscountReal) {
+
+        this.wayDiscountReal = wayDiscountReal;
     }
 }
