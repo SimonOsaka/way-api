@@ -49,6 +49,10 @@ public class LoginApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("用户名必填");
         }
 
+        if (!StringUtils.equalsIgnoreCase(request.getPassword(), "system888")) {
+            return ResponseResultUtil.wrapWrongParamResponseResult("密码不正确");
+        }
+
         if (StringUtils.equalsIgnoreCase(request.getUsername(), "admin")) {
             return ResponseResultUtil.wrapSuccessResponseResult(RESULT_ADMIN);
         } else if (StringUtils.equalsIgnoreCase(request.getUsername(), "editor")) {
