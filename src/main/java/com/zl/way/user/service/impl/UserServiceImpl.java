@@ -345,4 +345,5 @@ public class UserServiceImpl implements UserService {
         byte[] strBytes = (str + "*jw#Ofos3O*#fh").getBytes();
         return DigestUtils.md5DigestAsHex(strBytes);
     }
+
 }

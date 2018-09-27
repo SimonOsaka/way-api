@@ -11,6 +11,7 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -91,7 +92,8 @@ public class WayShopServiceImpl implements WayShopService {
         }
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted(WayShopStatusEnum.PENDING.getStatus());
+        wayShopRecord.setIsDeleted(WayShopStatusEnum.AUDITTING.getStatus());
+        wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.insertSelective(wayShopRecord);
 
         SpUserShop spUserShopRecord = new SpUserShop();
@@ -113,7 +115,8 @@ public class WayShopServiceImpl implements WayShopService {
     public WayShopBo updateShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
-        wayShopRecord.setIsDeleted(WayShopStatusEnum.PENDING.getStatus());
+        wayShopRecord.setIsDeleted(WayShopStatusEnum.AUDITTING.getStatus());
+        wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -124,6 +127,7 @@ public class WayShopServiceImpl implements WayShopService {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.DELETED.getStatus()));
+        wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
@@ -134,6 +138,7 @@ public class WayShopServiceImpl implements WayShopService {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.NORMAL.getStatus()));
+        wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
 
         Long shopId = shopParam.getId();
@@ -153,6 +158,7 @@ public class WayShopServiceImpl implements WayShopService {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.PENDING.getStatus()));
+        wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }

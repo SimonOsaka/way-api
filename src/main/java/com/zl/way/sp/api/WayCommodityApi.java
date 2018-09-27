@@ -156,4 +156,43 @@ public class WayCommodityApi {
         commodityService.deleteCommodity(commodityParam);
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
+
+    @PostMapping("/online")
+    public ResponseResult<WayCommodityResponse> onlineCommodity(
+            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
+        commodityParam.setIsDeleted((byte) 0);
+        
+        WayCommodityBo commodityBo = commodityService.updateStatus(commodityParam);
+
+        WayCommodityResponse response = new WayCommodityResponse();
+        response.setCommodityBo(commodityBo);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/offline")
+    public ResponseResult<WayCommodityResponse> offlineCommodity(
+            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
+            @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
+        commodityParam.setIsDeleted((byte) 5);
+        WayCommodityBo commodityBo = commodityService.updateStatus(commodityParam);
+
+        WayCommodityResponse response = new WayCommodityResponse();
+        response.setCommodityBo(commodityBo);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
 }

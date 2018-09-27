@@ -152,6 +152,8 @@ public class WayCommodityServiceImpl implements WayCommodityService {
                         .setImgUrl4(StringUtils.defaultIfBlank(imgUrl, StringUtils.EMPTY));
             }
         }
+
+        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getStatus());
         commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
@@ -164,5 +166,18 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         wayShopRecord.setIsDeleted((byte) 1);
         commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    public WayCommodityBo updateStatus(WayCommodityParam commodityParam) {
+
+        WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayShopRecord.setIsDeleted(commodityParam.getIsDeleted());
+        commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
+        WayCommodityBo wayCommodityBo = BeanMapper.map(wayShopRecord, WayCommodityBo.class);
+        wayCommodityBo.setStatusName(
+                WayCommodityStatusEnum.getStatus(commodityParam.getIsDeleted()).getDesc());
+        return wayCommodityBo;
     }
 }

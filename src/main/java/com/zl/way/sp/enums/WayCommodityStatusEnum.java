@@ -33,6 +33,6 @@ public enum WayCommodityStatusEnum {
             }
         }
 
-        throw new RuntimeException("商品状态不存在");
+        return null;
     }
 }

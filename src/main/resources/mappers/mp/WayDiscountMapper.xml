@@ -274,17 +274,9 @@
     <select id="selectByCondition" resultMap="BaseResultMap">
         select
         <include refid="condition_Column_List"/>
-        <trim prefix="," suffixOverrides=",">
-            <if test="condition.clientLng != null and condition.clientLat != null">
-                SQRT(ABS(shop_lng - #{condition.clientLng, jdbcType=DECIMAL})*ABS(shop_lng -
-                #{condition.clientLng, jdbcType=DECIMAL}) +ABS(shop_lat -
-                #{condition.clientLat, jdbcType=DECIMAL})*ABS(shop_lat -
-                #{condition.clientLat, jdbcType=DECIMAL})) AS s_distance,
-            </if>
-        </trim>
         <include refid="whereByCondition"/>
         <if test="condition.clientLng != null and condition.clientLat != null">
-            order by s_distance
+            order by discount.id desc
         </if>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
