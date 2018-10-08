@@ -34,6 +34,33 @@ public class WayShopRequest extends PageParam {
 
     private Long userLoginId;
 
+    //商家资质开始
+    private String idcardFrontImgUrl;
+
+    private String idcardBackImgUrl;
+
+    private String idcardHandImgUrl;
+
+    private String businessLicenseImgUrl;
+
+    private String shopOutsideImgUrl;
+
+    private String shopInsideImgUrl;
+
+    private String other1ImgUrl;
+
+    private String other2ImgUrl;
+
+    private String other3ImgUrl;
+
+    private String other4ImgUrl;
+
+    private String other5ImgUrl;
+    //商家资质结束
+
+    //更新类型：保存=save、提交=submit
+    private String updateType;
+
     public Long getId() {
 
         return id;
@@ -172,5 +199,125 @@ public class WayShopRequest extends PageParam {
     public void setAdCode(String adCode) {
 
         this.adCode = adCode;
+    }
+
+    public String getIdcardFrontImgUrl() {
+
+        return idcardFrontImgUrl;
+    }
+
+    public void setIdcardFrontImgUrl(String idcardFrontImgUrl) {
+
+        this.idcardFrontImgUrl = idcardFrontImgUrl;
+    }
+
+    public String getIdcardBackImgUrl() {
+
+        return idcardBackImgUrl;
+    }
+
+    public void setIdcardBackImgUrl(String idcardBackImgUrl) {
+
+        this.idcardBackImgUrl = idcardBackImgUrl;
+    }
+
+    public String getIdcardHandImgUrl() {
+
+        return idcardHandImgUrl;
+    }
+
+    public void setIdcardHandImgUrl(String idcardHandImgUrl) {
+
+        this.idcardHandImgUrl = idcardHandImgUrl;
+    }
+
+    public String getBusinessLicenseImgUrl() {
+
+        return businessLicenseImgUrl;
+    }
+
+    public void setBusinessLicenseImgUrl(String businessLicenseImgUrl) {
+
+        this.businessLicenseImgUrl = businessLicenseImgUrl;
+    }
+
+    public String getShopOutsideImgUrl() {
+
+        return shopOutsideImgUrl;
+    }
+
+    public void setShopOutsideImgUrl(String shopOutsideImgUrl) {
+
+        this.shopOutsideImgUrl = shopOutsideImgUrl;
+    }
+
+    public String getShopInsideImgUrl() {
+
+        return shopInsideImgUrl;
+    }
+
+    public void setShopInsideImgUrl(String shopInsideImgUrl) {
+
+        this.shopInsideImgUrl = shopInsideImgUrl;
+    }
+
+    public String getOther1ImgUrl() {
+
+        return other1ImgUrl;
+    }
+
+    public void setOther1ImgUrl(String other1ImgUrl) {
+
+        this.other1ImgUrl = other1ImgUrl;
+    }
+
+    public String getOther2ImgUrl() {
+
+        return other2ImgUrl;
+    }
+
+    public void setOther2ImgUrl(String other2ImgUrl) {
+
+        this.other2ImgUrl = other2ImgUrl;
+    }
+
+    public String getOther3ImgUrl() {
+
+        return other3ImgUrl;
+    }
+
+    public void setOther3ImgUrl(String other3ImgUrl) {
+
+        this.other3ImgUrl = other3ImgUrl;
+    }
+
+    public String getOther4ImgUrl() {
+
+        return other4ImgUrl;
+    }
+
+    public void setOther4ImgUrl(String other4ImgUrl) {
+
+        this.other4ImgUrl = other4ImgUrl;
+    }
+
+    public String getOther5ImgUrl() {
+
+        return other5ImgUrl;
+    }
+
+    public void setOther5ImgUrl(String other5ImgUrl) {
+
+        this.other5ImgUrl = other5ImgUrl;
+    }
+
+    public String getUpdateType() {
+
+        return updateType;
+    }
+
+    public void setUpdateType(String updateType) {
+
+        this.updateType = updateType;
     }
 }

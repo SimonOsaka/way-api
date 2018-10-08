@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
         List<UserLogin> userLoginList = userLoginMapper.selectByCondition(condition, pageable);
         if (CollectionUtils.isEmpty(userLoginList)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         return BeanMapper.mapAsList(userLoginList, UserLoginBo.class);

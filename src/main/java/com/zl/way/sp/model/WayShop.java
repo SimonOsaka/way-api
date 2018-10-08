@@ -49,6 +49,10 @@ public class WayShop implements Serializable {
 
     private List<WayCommodity> commodityList;
 
+    private List<WayShopLog> shopLogList;
+
+    private WayShopQualification wayShopQualification;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -259,5 +263,25 @@ public class WayShop implements Serializable {
     public void setWayShopCateRoot(WayShopCateRoot wayShopCateRoot) {
 
         this.wayShopCateRoot = wayShopCateRoot;
+    }
+
+    public List<WayShopLog> getShopLogList() {
+
+        return shopLogList;
+    }
+
+    public void setShopLogList(List<WayShopLog> shopLogList) {
+
+        this.shopLogList = shopLogList;
+    }
+
+    public WayShopQualification getWayShopQualification() {
+
+        return wayShopQualification;
+    }
+
+    public void setWayShopQualification(WayShopQualification wayShopQualification) {
+
+        this.wayShopQualification = wayShopQualification;
     }
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.sp.mapper.WayShopLogMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.sp.model.WayShopLog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="source" jdbcType="TINYINT" property="source"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, shop_id, content, type, source, create_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_shop_log
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from way_shop_log
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.sp.model.WayShopLog" useGeneratedKeys="true">
+        insert into way_shop_log (shop_id, content, type,
+        source, create_time)
+        values (#{shopId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT},
+        #{source,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.sp.model.WayShopLog" useGeneratedKeys="true">
+        insert into way_shop_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">
+                #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.sp.model.WayShopLog">
+        update way_shop_log
+        <set>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.sp.model.WayShopLog">
+        update way_shop_log
+        set shop_id = #{shopId,jdbcType=BIGINT},
+        content = #{content,jdbcType=VARCHAR},
+        type = #{type,jdbcType=TINYINT},
+        source = #{source,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_shop_log
+        <where>
+            <if test="condition.shopId != null">
+                and shop_id = #{condition.shopId,jdbcType=BIGINT}
+            </if>
+            <if test="condition.source != null and condition.source != ''">
+                and source = #{condition.source, jdbcType=TINYINT}
+            </if>
+            <if test="condition.type != null and condition.type != ''">
+                and type = #{condition.type, jdbcType=TINYINT}
+            </if>
+        </where>
+        order by id desc
+    </select>
+</mapper>

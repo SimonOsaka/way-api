@@ -1,6 +1,8 @@
 package com.zl.way.mp.enums;
 
-public enum WayShopStatusEnum {
+import com.zl.way.base.BaseEnum;
+
+public enum WayShopStatusEnum implements BaseEnum {
     NORMAL((byte) 0, "上线"), DELETED((byte) 1, "删除"), AUDITTING((byte) 2, "审核中"), DRAFT((byte) 3,
             "草稿"), OFFLINE((byte) 4, "下线"), PENDING((byte) 5, "待上线");
 
@@ -8,31 +10,22 @@ public enum WayShopStatusEnum {
 
     private String desc;
 
-    private WayShopStatusEnum(byte status, String desc) {
+    WayShopStatusEnum(byte status, String desc) {
 
         this.status = status;
         this.desc = desc;
     }
 
-    public byte getStatus() {
+    @Override
+    public Byte getValue() {
 
         return status;
     }
 
+    @Override
     public String getDesc() {
 
         return desc;
     }
 
-    public static WayShopStatusEnum getStatus(byte val) {
-
-        WayShopStatusEnum[] wayShopStatuses = WayShopStatusEnum.values();
-        for (WayShopStatusEnum shopStatus : wayShopStatuses) {
-            if (shopStatus.getStatus() == val) {
-                return shopStatus;
-            }
-        }
-
-        return null;
-    }
 }

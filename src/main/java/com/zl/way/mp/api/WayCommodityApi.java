@@ -1,6 +1,7 @@
 package com.zl.way.mp.api;
 
 import com.zl.way.mp.api.validation.WayCommodityApiValidation;
+import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayCommodityBo;
 import com.zl.way.mp.model.WayCommodityParam;
 import com.zl.way.mp.model.WayCommodityRequest;
@@ -175,7 +176,11 @@ public class WayCommodityApi {
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 
-        commodityService.updateCommodityStatus(commodityParam);
+        try {
+            commodityService.updateCommodityStatus(commodityParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapNotExistResponseResult("商品不存在");
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 }

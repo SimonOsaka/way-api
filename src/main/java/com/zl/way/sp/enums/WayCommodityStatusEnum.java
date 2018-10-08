@@ -1,38 +1,31 @@
 package com.zl.way.sp.enums;
 
-public enum WayCommodityStatusEnum {
+import com.zl.way.base.BaseEnum;
+
+public enum WayCommodityStatusEnum implements BaseEnum {
     NORMAL((byte) 0, "上架"), DELETED((byte) 1, "删除"), AUDITTING((byte) 2, "审核中"), DRAFT((byte) 3,
-            "草稿"), OFFLINE((byte) 4, "下架"), PENDING((byte) 5, "待上架");
+            "草稿，审核不通过"), OFFLINE((byte) 4, "下架"), PENDING((byte) 5, "待上架");
 
     private byte status;
 
     private String desc;
 
-    private WayCommodityStatusEnum(byte status, String desc) {
+    WayCommodityStatusEnum(byte status, String desc) {
 
         this.status = status;
         this.desc = desc;
     }
 
-    public byte getStatus() {
+    @Override
+    public Byte getValue() {
 
         return status;
     }
 
+    @Override
     public String getDesc() {
 
         return desc;
     }
 
-    public static WayCommodityStatusEnum getStatus(byte val) {
-
-        WayCommodityStatusEnum[] wayCommodityStatusEnums = WayCommodityStatusEnum.values();
-        for (WayCommodityStatusEnum commodityStatusEnum : wayCommodityStatusEnums) {
-            if (commodityStatusEnum.getStatus() == val) {
-                return commodityStatusEnum;
-            }
-        }
-
-        return null;
-    }
 }

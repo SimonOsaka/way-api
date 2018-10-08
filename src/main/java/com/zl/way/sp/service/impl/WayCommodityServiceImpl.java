@@ -3,14 +3,15 @@ package com.zl.way.sp.service.impl;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
+import com.zl.way.sp.enums.WayCommodityLogSourceEnum;
+import com.zl.way.sp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.sp.enums.WayCommodityStatusEnum;
+import com.zl.way.sp.mapper.WayCommodityLogMapper;
 import com.zl.way.sp.mapper.WayCommodityMapper;
-import com.zl.way.sp.model.WayCommodity;
-import com.zl.way.sp.model.WayCommodityBo;
-import com.zl.way.sp.model.WayCommodityCondition;
-import com.zl.way.sp.model.WayCommodityParam;
+import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.WayCommodityService;
 import com.zl.way.util.BeanMapper;
+import com.zl.way.util.EnumUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,6 +30,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Autowired
     private WayCommodityMapper commodityMapper;
+
+    @Autowired
+    private WayCommodityLogMapper commodityLogMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -111,8 +115,19 @@ public class WayCommodityServiceImpl implements WayCommodityService {
                 wayCommodityRecord.setImgUrl4(imgUrl);
             }
         }
-        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getStatus());
+        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getValue());
         commodityMapper.insertSelective(wayCommodityRecord);
+
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = String.format("商品被创建，状态为[%s]",
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),
+                        WayCommodityStatusEnum.class));
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
+        commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.SP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
@@ -153,8 +168,19 @@ public class WayCommodityServiceImpl implements WayCommodityService {
             }
         }
 
-        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getStatus());
+        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.AUDITTING.getValue());
         commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
+
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = String.format("商品被修改，状态为[%s]",
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),
+                        WayCommodityStatusEnum.class));
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
+        commodityLogRecord.setType(WayCommodityLogTypeEnum.INFO.getValue());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.SP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
@@ -162,22 +188,52 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo deleteCommodity(WayCommodityParam commodityParam) {
 
-        WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
-        wayShopRecord.setIsDeleted((byte) 1);
-        commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
-        return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
+        WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
+
+        WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayCommodityRecord.setIsDeleted((byte) 1);
+        commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
+
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = String.format("商品修改状态，状态从[%s]修改为[%s]",
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
+                        WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),
+                        WayCommodityStatusEnum.class));
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
+        commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.SP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
+        return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateStatus(WayCommodityParam commodityParam) {
 
-        WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
-        wayShopRecord.setIsDeleted(commodityParam.getIsDeleted());
-        commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
-        WayCommodityBo wayCommodityBo = BeanMapper.map(wayShopRecord, WayCommodityBo.class);
-        wayCommodityBo.setStatusName(
-                WayCommodityStatusEnum.getStatus(commodityParam.getIsDeleted()).getDesc());
+        WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
+
+        WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayCommodityRecord.setIsDeleted(commodityParam.getIsDeleted());
+        commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
+
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = String.format("商品修改状态，状态从[%s]修改为[%s]",
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
+                        WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),
+                        WayCommodityStatusEnum.class));
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
+        commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.SP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
+        WayCommodityBo wayCommodityBo = BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
+        wayCommodityBo.setStatusName(EnumUtil.getDescByValue(commodityParam.getIsDeleted(),
+                WayCommodityStatusEnum.class));
         return wayCommodityBo;
     }
 }

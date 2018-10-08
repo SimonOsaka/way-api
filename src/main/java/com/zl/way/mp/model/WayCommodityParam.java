@@ -8,6 +8,8 @@ public class WayCommodityParam extends WayCommodity {
 
     private Byte status;
 
+    private String rejectContent;
+
     public List<String> getImgUrlList() {
 
         return imgUrlList;
@@ -26,5 +28,15 @@ public class WayCommodityParam extends WayCommodity {
     public void setStatus(Byte status) {
 
         this.status = status;
+    }
+
+    public String getRejectContent() {
+
+        return rejectContent;
+    }
+
+    public void setRejectContent(String rejectContent) {
+
+        this.rejectContent = rejectContent;
     }
 }

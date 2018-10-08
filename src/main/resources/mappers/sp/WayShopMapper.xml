@@ -24,7 +24,6 @@
     </resultMap>
     <resultMap id="selectByconditionResultMap"
                type="com.zl.way.sp.model.WayShop">
-
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
         <result column="shop_address" jdbcType="VARCHAR" property="shopAddress"/>
@@ -51,6 +50,23 @@
         <association property="wayShopCateRoot" javaType="com.zl.way.sp.model.WayShopCateRoot">
             <id column="shop_cate_root_id" property="id"/>
             <result column="shop_cate_root_name" property="cateName"/>
+        </association>
+        <association property="wayShopQualification"
+                     javaType="com.zl.way.sp.model.WayShopQualification">
+            <id column="sq_id" property="id"/>
+            <result column="sq_shop_id" property="shopId"/>
+            <result column="idcard_front_img_url" property="idcardFrontImgUrl"/>
+            <result column="idcard_back_img_url" property="idcardBackImgUrl"/>
+            <result column="idcard_hand_img_url" property="idcardHandImgUrl"/>
+            <result column="business_license_img_url"
+                    property="businessLicenseImgUrl"/>
+            <result column="shop_outside_img_url" property="shopOutsideImgUrl"/>
+            <result column="shop_inside_img_url" property="shopInsideImgUrl"/>
+            <result column="other1_img_url" property="other1ImgUrl"/>
+            <result column="other2_img_url" property="other2ImgUrl"/>
+            <result column="other3_img_url" property="other3ImgUrl"/>
+            <result column="other4_img_url" property="other4ImgUrl"/>
+            <result column="other5_img_url" property="other5ImgUrl"/>
         </association>
         <collection property="commodityList"
                     ofType="com.zl.way.sp.model.WayCommodity"
@@ -313,12 +329,26 @@
         commodity.name as 'commodityName',
         commodity.id as 'commodityId',
         commodity.price as 'commodityPrice',
-        commodity.img_url as 'commodityImgUrl'
+        commodity.img_url as 'commodityImgUrl',
+        sq.id as 'sq_id',
+        sq.shop_id as 'sq_shop_id',
+        sq.idcard_front_img_url,
+        sq.idcard_back_img_url,
+        sq.idcard_hand_img_url,
+        sq.business_license_img_url,
+        sq.shop_outside_img_url,
+        sq.shop_inside_img_url,
+        sq.other1_img_url,
+        sq.other2_img_url,
+        sq.other3_img_url,
+        sq.other4_img_url,
+        sq.other5_img_url
         from way_shop shop
         left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
         left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
         left join way_commodity commodity on shop.id = commodity.shop_id and commodity.is_deleted =
         0
+        left join way_shop_qualification sq on sq.shop_id = shop.id
         where shop.is_deleted != 1
         <if test="condition.id != null">
             and shop.id = #{condition.id, jdbcType=BIGINT}
@@ -336,7 +366,7 @@
                 shop.shop_py like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
             </if>
         </trim>
-        order by shop.update_time desc
+        <!-- order by shop.update_time desc -->
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>

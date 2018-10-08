@@ -327,7 +327,7 @@
         <include refid="Base_CateLeaf_Column_List"/>,
         commodity.name as 'commodityName',
         commodity.id as 'commodityId',
-        commodity.price as 'commodityPrice',
+        <!--commodity.price as 'commodityPrice',-->
         commodity.img_url as 'commodityImgUrl',
         <trim prefixOverrides="," suffixOverrides=",">
             <if test="condition.clientLng != null and condition.clientLat != null">

@@ -1,13 +1,15 @@
 package com.zl.way.mp.service.impl;
 
+import com.zl.way.mp.enums.WayCommodityLogSourceEnum;
+import com.zl.way.mp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.mp.enums.WayCommodityStatusEnum;
+import com.zl.way.mp.exception.BusinessException;
+import com.zl.way.mp.mapper.WayCommodityLogMapper;
 import com.zl.way.mp.mapper.WayCommodityMapper;
-import com.zl.way.mp.model.WayCommodity;
-import com.zl.way.mp.model.WayCommodityBo;
-import com.zl.way.mp.model.WayCommodityCondition;
-import com.zl.way.mp.model.WayCommodityParam;
+import com.zl.way.mp.model.*;
 import com.zl.way.mp.service.WayCommodityService;
 import com.zl.way.util.BeanMapper;
+import com.zl.way.util.EnumUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,6 +29,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Autowired
     private WayCommodityMapper commodityMapper;
+
+    @Autowired
+    private WayCommodityLogMapper commodityLogMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -174,7 +179,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
         Map<String, String> commodityStatusMap = new HashMap<>(commodityStatusEnums.length);
         for (WayCommodityStatusEnum commodityStatusEnum : commodityStatusEnums) {
-            byte status = commodityStatusEnum.getStatus();
+            byte status = commodityStatusEnum.getValue();
             String desc = commodityStatusEnum.getDesc();
             commodityStatusMap.put(String.valueOf(status), desc);
         }
@@ -184,11 +189,39 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) {
+    public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam)
+            throws BusinessException {
 
+        //获取商品对象
+        WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
+        if (null == existCommodity) {
+            throw new BusinessException("商品不存在");
+        }
+
+        //修改状态
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayShopRecord.setIsDeleted(commodityParam.getStatus());
         commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
+
+        //记录日志
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = null;
+        if (WayCommodityStatusEnum.DRAFT.getValue().equals(commodityParam.getStatus())) {
+            logContent = commodityParam.getRejectContent();
+            commodityLogRecord.setType(WayCommodityLogTypeEnum.REJECT.getValue());
+        } else {
+            logContent = String.format("商品状态从[%s]修改为[%s]",
+                    EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
+                            WayCommodityStatusEnum.class),
+                    EnumUtil.getDescByValue(commodityParam.getStatus(),
+                            WayCommodityStatusEnum.class));
+            commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
+        }
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayShopRecord.getId());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.MP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
     }
 

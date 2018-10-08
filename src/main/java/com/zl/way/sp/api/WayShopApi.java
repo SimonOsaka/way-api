@@ -5,10 +5,7 @@ import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.sp.api.validation.WayShopApiValidation;
 import com.zl.way.sp.exception.BusinessException;
-import com.zl.way.sp.model.WayShopBo;
-import com.zl.way.sp.model.WayShopParam;
-import com.zl.way.sp.model.WayShopRequest;
-import com.zl.way.sp.model.WayShopResponse;
+import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.ApiValidationService;
 import com.zl.way.sp.service.WayShopService;
 import com.zl.way.util.*;
@@ -96,13 +93,16 @@ public class WayShopApi {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl().shopName()
                 .shopCateLeafId().shopAddress().shopTel().shopBusinessTime1().shopLocation()
-                .shopInfo();
+                .shopInfo().qualificationIdcard().qualificationShopInOut().qualificationLicense();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
         shopParam.setSpUserLoginId(request.getUserLoginId());
+        WayShopQualificationParam shopQualificationParam = BeanMapper
+                .map(request, WayShopQualificationParam.class);
+        shopParam.setShopQualificationParam(shopQualificationParam);
         try {
             shopParam.setShopPinyin(PinyinHelper
                     .convertToPinyinString(request.getShopName(), StringUtils.EMPTY,
@@ -124,9 +124,10 @@ public class WayShopApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayShopApiValidation validation = new WayShopApiValidation(request).shopName().shopTel()
-                .shopAddress().shopBusinessTime1().shopLocation().shopLogoUrl().shopId()
-                .shopCateLeafId().shopInfo();
+        WayShopApiValidation validation = new WayShopApiValidation(request).updateType().shopName()
+                .shopTel().shopAddress().shopBusinessTime1().shopLocation().shopLogoUrl().shopId()
+                .shopCateLeafId().shopInfo().qualificationIdcard().qualificationShopInOut()
+                .qualificationLicense();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -138,6 +139,9 @@ public class WayShopApi {
         }
 
         WayShopParam shopParam = BeanMapper.map(request, WayShopParam.class);
+        WayShopQualificationParam shopQualificationParam = BeanMapper
+                .map(request, WayShopQualificationParam.class);
+        shopParam.setShopQualificationParam(shopQualificationParam);
         try {
             shopParam.setShopPinyin(PinyinHelper
                     .convertToPinyinString(request.getShopName(), StringUtils.EMPTY,

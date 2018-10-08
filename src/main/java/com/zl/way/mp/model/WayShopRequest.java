@@ -36,6 +36,8 @@ public class WayShopRequest extends PageParam {
 
     private Byte shopStatus;
 
+    private String rejectContent;
+
     public Long getId() {
 
         return id;
@@ -184,5 +186,15 @@ public class WayShopRequest extends PageParam {
     public void setShopStatus(Byte shopStatus) {
 
         this.shopStatus = shopStatus;
+    }
+
+    public String getRejectContent() {
+
+        return rejectContent;
+    }
+
+    public void setRejectContent(String rejectContent) {
+
+        this.rejectContent = rejectContent;
     }
 }

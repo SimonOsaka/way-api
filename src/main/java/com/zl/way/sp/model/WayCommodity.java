@@ -3,6 +3,7 @@ package com.zl.way.sp.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class WayCommodity implements Serializable {
 
@@ -33,6 +34,8 @@ public class WayCommodity implements Serializable {
     private String namePinyin;
 
     private String namePy;
+
+    private List<WayCommodityLog> commodityLogList;
 
     private static final long serialVersionUID = 1L;
 
@@ -174,5 +177,15 @@ public class WayCommodity implements Serializable {
     public void setNamePy(String namePy) {
 
         this.namePy = namePy == null ? null : namePy.trim();
+    }
+
+    public List<WayCommodityLog> getCommodityLogList() {
+
+        return commodityLogList;
+    }
+
+    public void setCommodityLogList(List<WayCommodityLog> commodityLogList) {
+
+        this.commodityLogList = commodityLogList;
     }
 }

@@ -1,5 +1,6 @@
 package com.zl.way.mp.service;
 
+import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayShopBo;
 import com.zl.way.mp.model.WayShopParam;
 import com.zl.way.util.PageParam;
@@ -26,4 +27,6 @@ public interface WayShopService {
     Map<String, String> getAllShopStatus();
 
     Long queryShopCount(WayShopParam shopParam);
+
+    WayShopBo updateShopStatus(WayShopParam shopParam) throws BusinessException;
 }

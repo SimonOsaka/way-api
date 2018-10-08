@@ -2,6 +2,7 @@ package com.zl.way.mp.api.validation;
 
 import com.zl.way.mp.enums.WayShopStatusEnum;
 import com.zl.way.mp.model.WayShopRequest;
+import com.zl.way.util.EnumUtil;
 import com.zl.way.util.SensiWordsUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +35,8 @@ public class WayShopApiValidation {
             return this;
         }
 
-        WayShopStatusEnum shopStatusEnum = WayShopStatusEnum.getStatus(request.getShopStatus());
+        WayShopStatusEnum shopStatusEnum = EnumUtil
+                .getEnumByValue(request.getShopStatus(), WayShopStatusEnum.class);
         if (null == shopStatusEnum) {
             validationMessageList.add("商家状态不正确");
             return this;

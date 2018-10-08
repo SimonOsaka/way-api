@@ -60,11 +60,11 @@ public class WayShopApiValidation {
             return this;
         }
 
-        if (SensiWordsUtil.isSensiWords(request.getShopAddress())) {
-            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopAddress());
-            validationMessageList.add("商家地址包含敏感词汇[" + sensiWords + "]");
-            return this;
-        }
+        //        if (SensiWordsUtil.isSensiWords(request.getShopAddress())) {
+        //            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopAddress());
+        //            validationMessageList.add("商家地址包含敏感词汇[" + sensiWords + "]");
+        //            return this;
+        //        }
 
         if (StringUtils.length(request.getShopAddress()) > 200) {
             validationMessageList.add("商家地址最多200字");
@@ -144,6 +144,67 @@ public class WayShopApiValidation {
                 validationMessageList.add("商家简介最多100字");
                 return this;
             }
+        }
+
+        return this;
+    }
+
+    public WayShopApiValidation qualificationIdcard() {
+
+        if (StringUtils.isEmpty(request.getIdcardFrontImgUrl())) {
+            validationMessageList.add("身份证正面必须上传");
+            return this;
+        }
+
+        if (StringUtils.isEmpty(request.getIdcardBackImgUrl())) {
+            validationMessageList.add("身份证背面必须上传");
+            return this;
+        }
+
+        if (StringUtils.isEmpty(request.getIdcardHandImgUrl())) {
+            validationMessageList.add("手持身份证必须上传");
+            return this;
+        }
+
+        return this;
+    }
+
+    public WayShopApiValidation qualificationShopInOut() {
+
+        if (StringUtils.isEmpty(request.getShopInsideImgUrl())) {
+            validationMessageList.add("商家门店内部必须上传");
+            return this;
+        }
+
+        if (StringUtils.isEmpty(request.getShopOutsideImgUrl())) {
+            validationMessageList.add("商家门店门面必须上传");
+            return this;
+        }
+
+        return this;
+    }
+
+    public WayShopApiValidation qualificationLicense() {
+
+        if (StringUtils.isEmpty(request.getBusinessLicenseImgUrl())) {
+            validationMessageList.add("营业执照必须上传");
+            return this;
+        }
+
+        return this;
+    }
+
+    public WayShopApiValidation updateType() {
+
+        if (StringUtils.isEmpty(request.getUpdateType())) {
+            validationMessageList.add("请保存或提交");
+            return this;
+        }
+
+        if (!StringUtils.equalsIgnoreCase("save", request.getUpdateType()) && !StringUtils
+                .equalsIgnoreCase("submit", request.getUpdateType())) {
+            validationMessageList.add("请执行保存或提交的一种");
+            return this;
         }
 
         return this;

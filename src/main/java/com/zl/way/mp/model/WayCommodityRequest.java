@@ -19,6 +19,8 @@ public class WayCommodityRequest extends PageParam {
 
     private Byte status;
 
+    private String rejectContent;
+
     public Long getId() {
 
         return id;
@@ -77,5 +79,15 @@ public class WayCommodityRequest extends PageParam {
     public void setStatus(Byte status) {
 
         this.status = status;
+    }
+
+    public String getRejectContent() {
+
+        return rejectContent;
+    }
+
+    public void setRejectContent(String rejectContent) {
+
+        this.rejectContent = rejectContent;
     }
 }

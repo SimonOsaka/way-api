@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayShopQualificationMapper">
+  <resultMap id="BaseResultMap" type="com.zl.way.mp.model.WayShopQualification">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+    <result column="idcard_front_img_url" jdbcType="VARCHAR" property="idcardFrontImgUrl" />
+    <result column="idcard_back_img_url" jdbcType="VARCHAR" property="idcardBackImgUrl" />
+    <result column="idcard_hand_img_url" jdbcType="VARCHAR" property="idcardHandImgUrl" />
+    <result column="business_license_img_url" jdbcType="VARCHAR" property="businessLicenseImgUrl" />
+    <result column="shop_outside_img_url" jdbcType="VARCHAR" property="shopOutsideImgUrl" />
+    <result column="shop_inside_img_url" jdbcType="VARCHAR" property="shopInsideImgUrl" />
+    <result column="other1_img_url" jdbcType="VARCHAR" property="other1ImgUrl" />
+    <result column="other2_img_url" jdbcType="VARCHAR" property="other2ImgUrl" />
+    <result column="other3_img_url" jdbcType="VARCHAR" property="other3ImgUrl" />
+    <result column="other4_img_url" jdbcType="VARCHAR" property="other4ImgUrl" />
+    <result column="other5_img_url" jdbcType="VARCHAR" property="other5ImgUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, shop_id, idcard_front_img_url, idcard_back_img_url, idcard_hand_img_url, business_license_img_url, 
+    shop_outside_img_url, shop_inside_img_url, other1_img_url, other2_img_url, other3_img_url, 
+    other4_img_url, other5_img_url, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from way_shop_qualification
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from way_shop_qualification
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.mp.model.WayShopQualification" useGeneratedKeys="true">
+    insert into way_shop_qualification (shop_id, idcard_front_img_url, idcard_back_img_url, 
+      idcard_hand_img_url, business_license_img_url, 
+      shop_outside_img_url, shop_inside_img_url, other1_img_url, 
+      other2_img_url, other3_img_url, other4_img_url, 
+      other5_img_url, create_time, update_time
+      )
+    values (#{shopId,jdbcType=BIGINT}, #{idcardFrontImgUrl,jdbcType=VARCHAR}, #{idcardBackImgUrl,jdbcType=VARCHAR}, 
+      #{idcardHandImgUrl,jdbcType=VARCHAR}, #{businessLicenseImgUrl,jdbcType=VARCHAR}, 
+      #{shopOutsideImgUrl,jdbcType=VARCHAR}, #{shopInsideImgUrl,jdbcType=VARCHAR}, #{other1ImgUrl,jdbcType=VARCHAR}, 
+      #{other2ImgUrl,jdbcType=VARCHAR}, #{other3ImgUrl,jdbcType=VARCHAR}, #{other4ImgUrl,jdbcType=VARCHAR}, 
+      #{other5ImgUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.mp.model.WayShopQualification" useGeneratedKeys="true">
+    insert into way_shop_qualification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="idcardFrontImgUrl != null">
+        idcard_front_img_url,
+      </if>
+      <if test="idcardBackImgUrl != null">
+        idcard_back_img_url,
+      </if>
+      <if test="idcardHandImgUrl != null">
+        idcard_hand_img_url,
+      </if>
+      <if test="businessLicenseImgUrl != null">
+        business_license_img_url,
+      </if>
+      <if test="shopOutsideImgUrl != null">
+        shop_outside_img_url,
+      </if>
+      <if test="shopInsideImgUrl != null">
+        shop_inside_img_url,
+      </if>
+      <if test="other1ImgUrl != null">
+        other1_img_url,
+      </if>
+      <if test="other2ImgUrl != null">
+        other2_img_url,
+      </if>
+      <if test="other3ImgUrl != null">
+        other3_img_url,
+      </if>
+      <if test="other4ImgUrl != null">
+        other4_img_url,
+      </if>
+      <if test="other5ImgUrl != null">
+        other5_img_url,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="idcardFrontImgUrl != null">
+        #{idcardFrontImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardBackImgUrl != null">
+        #{idcardBackImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardHandImgUrl != null">
+        #{idcardHandImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseImgUrl != null">
+        #{businessLicenseImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shopOutsideImgUrl != null">
+        #{shopOutsideImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shopInsideImgUrl != null">
+        #{shopInsideImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other1ImgUrl != null">
+        #{other1ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other2ImgUrl != null">
+        #{other2ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other3ImgUrl != null">
+        #{other3ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other4ImgUrl != null">
+        #{other4ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other5ImgUrl != null">
+        #{other5ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.WayShopQualification">
+    update way_shop_qualification
+    <set>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="idcardFrontImgUrl != null">
+        idcard_front_img_url = #{idcardFrontImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardBackImgUrl != null">
+        idcard_back_img_url = #{idcardBackImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardHandImgUrl != null">
+        idcard_hand_img_url = #{idcardHandImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseImgUrl != null">
+        business_license_img_url = #{businessLicenseImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shopOutsideImgUrl != null">
+        shop_outside_img_url = #{shopOutsideImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shopInsideImgUrl != null">
+        shop_inside_img_url = #{shopInsideImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other1ImgUrl != null">
+        other1_img_url = #{other1ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other2ImgUrl != null">
+        other2_img_url = #{other2ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other3ImgUrl != null">
+        other3_img_url = #{other3ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other4ImgUrl != null">
+        other4_img_url = #{other4ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="other5ImgUrl != null">
+        other5_img_url = #{other5ImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zl.way.mp.model.WayShopQualification">
+    update way_shop_qualification
+    set shop_id = #{shopId,jdbcType=BIGINT},
+      idcard_front_img_url = #{idcardFrontImgUrl,jdbcType=VARCHAR},
+      idcard_back_img_url = #{idcardBackImgUrl,jdbcType=VARCHAR},
+      idcard_hand_img_url = #{idcardHandImgUrl,jdbcType=VARCHAR},
+      business_license_img_url = #{businessLicenseImgUrl,jdbcType=VARCHAR},
+      shop_outside_img_url = #{shopOutsideImgUrl,jdbcType=VARCHAR},
+      shop_inside_img_url = #{shopInsideImgUrl,jdbcType=VARCHAR},
+      other1_img_url = #{other1ImgUrl,jdbcType=VARCHAR},
+      other2_img_url = #{other2ImgUrl,jdbcType=VARCHAR},
+      other3_img_url = #{other3ImgUrl,jdbcType=VARCHAR},
+      other4_img_url = #{other4ImgUrl,jdbcType=VARCHAR},
+      other5_img_url = #{other5ImgUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

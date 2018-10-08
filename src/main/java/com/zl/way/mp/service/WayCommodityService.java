@@ -1,5 +1,6 @@
 package com.zl.way.mp.service;
 
+import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayCommodityBo;
 import com.zl.way.mp.model.WayCommodityParam;
 import com.zl.way.util.PageParam;
@@ -21,7 +22,7 @@ public interface WayCommodityService {
 
     Map<String, String> getAllCommodityStatus();
 
-    WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam);
+    WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) throws BusinessException;
 
     Long queryCommodityCount(WayCommodityParam shopParam);
 }

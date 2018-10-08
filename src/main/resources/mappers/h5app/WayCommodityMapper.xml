@@ -19,11 +19,11 @@
     </resultMap>
     <sql id="Base_Column_List">
 
-        id, name, price, img_url, shop_id, create_time, update_time, is_deleted, name_pinyin,
+        id, name, <!--price,--> img_url, shop_id, create_time, update_time, is_deleted, name_pinyin,
         name_py
     </sql>
     <sql id="Shop_Commodity_Column_List">
-        commodity.id, commodity.name, commodity.price, commodity.img_url, commodity.shop_id,
+        commodity.id, commodity.name, <!--commodity.price,--> commodity.img_url, commodity.shop_id,
         commodity.create_time, commodity.update_time,
         commodity.is_deleted,
         commodity.name_pinyin,

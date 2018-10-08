@@ -4,6 +4,7 @@ import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.mp.api.validation.WayShopApiValidation;
+import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayShopBo;
 import com.zl.way.mp.model.WayShopParam;
 import com.zl.way.mp.model.WayShopRequest;
@@ -252,7 +253,13 @@ public class WayShopApi {
         WayShopParam shopParam = new WayShopParam();
         shopParam.setId(request.getId());
         shopParam.setIsDeleted(request.getShopStatus());
-        shopService.updateShop(shopParam);
+        shopParam.setRejectContent(request.getRejectContent());
+
+        try {
+            shopService.updateShopStatus(shopParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapWrongParamResponseResult("商家不存在");
+        }
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }

@@ -1,6 +1,7 @@
 package com.zl.way.sp.model;
 
 import com.zl.way.sp.enums.WayCommodityStatusEnum;
+import com.zl.way.util.EnumUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class WayCommodityBo extends WayCommodity {
             return statusName;
         }
 
-        WayCommodityStatusEnum currentCommodityStatus = WayCommodityStatusEnum
-                .getStatus(getIsDeleted());
+        WayCommodityStatusEnum currentCommodityStatus = EnumUtil
+                .getEnumByValue(getIsDeleted(), WayCommodityStatusEnum.class);
         if (null != currentCommodityStatus) {
             return currentCommodityStatus.getDesc();
         }

@@ -230,6 +230,7 @@
         select
         <include refid="Shop_Commodity_Column_List"/>
         <include refid="whereByCondition"/>
+        order by commodity.id desc
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>
