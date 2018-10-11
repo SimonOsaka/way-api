@@ -104,10 +104,12 @@ public class WayShopServiceImpl implements WayShopService {
         wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.insertSelective(wayShopRecord);
 
-        WayShopQualification wayShopQualificationRecord = BeanMapper
-                .map(shopParam.getShopQualificationParam(), WayShopQualification.class);
-        wayShopQualificationRecord.setShopId(wayShopRecord.getId());
-        shopQualificationMapper.insertSelective(wayShopQualificationRecord);
+        if (null != shopParam.getShopQualificationParam()) {
+            WayShopQualification wayShopQualificationRecord = BeanMapper
+                    .map(shopParam.getShopQualificationParam(), WayShopQualification.class);
+            wayShopQualificationRecord.setShopId(wayShopRecord.getId());
+            shopQualificationMapper.insertSelective(wayShopQualificationRecord);
+        }
 
         SpUserShop spUserShopRecord = new SpUserShop();
 

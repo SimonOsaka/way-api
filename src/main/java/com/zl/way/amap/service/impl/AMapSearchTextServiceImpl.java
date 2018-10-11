@@ -3,12 +3,14 @@ package com.zl.way.amap.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zl.way.SymbolConstants;
 import com.zl.way.amap.exception.AMapException;
 import com.zl.way.amap.model.AMapSearchTextModel;
 import com.zl.way.amap.model.AMapSearchTextRequest;
 import com.zl.way.amap.model.AMapSearchTextResponse;
 import com.zl.way.amap.service.AMapSearchTextService;
 import com.zl.way.util.OkHttp3Util;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +39,21 @@ public class AMapSearchTextServiceImpl implements AMapSearchTextService {
         AMapSearchTextResponse searchTextResponse = new AMapSearchTextResponse();
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
-        params.put("keywords", request.getKeywords());
-        params.put("city", request.getCity());
+        if (StringUtils.isNotBlank(request.getKeywords())) {
+            params.put("keywords", request.getKeywords());
+        }
+        if (CollectionUtils.isNotEmpty(request.getTypeList())) {
+            params.put("types", String.join(SymbolConstants.VERTICAL_BAR, request.getTypeList()));
+        }
+        if (null != request.getOffset()) {
+            params.put("offset", request.getOffset().toString());
+        }
+        if (null != request.getPage()) {
+            params.put("page", request.getPage().toString());
+        }
+        if (StringUtils.isNotBlank(request.getCity())) {
+            params.put("city", request.getCity());
+        }
         params.put("extensions", "all");
         String resp = OkHttp3Util.doGet(searchTextUrl, params);
         if (logger.isDebugEnabled()) {
@@ -100,6 +115,12 @@ public class AMapSearchTextServiceImpl implements AMapSearchTextService {
                         adCode = "";
                     }
                     searchTextModel.setAdCode(adCode);
+
+                    String tel = poiJsonObj.getString("tel");
+                    if (StringUtils.isBlank(tel) || tel.contains("[]")) {
+                        tel = StringUtils.EMPTY;
+                    }
+                    searchTextModel.setTel(tel);
 
                     searchTextModelList.add(searchTextModel);
                 }
