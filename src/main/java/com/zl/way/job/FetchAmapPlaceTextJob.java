@@ -43,9 +43,9 @@ public class FetchAmapPlaceTextJob {
     @Autowired
     private WayCommodityService commodityService;
 
-    private static final String[] PROVINCE_CODE = {"0451", "0431", "024", "0471", "0311", "0531",
+    private static final String[] PROVINCE_CODE = {/*"0451", "0431", "024", "0471", "0311", "0531",
             "0351", "029", "0371", "025", "0551", "027", "028", "0871", "0851", "0731", "0791",
-            "0571", "0591", "020", "0771", "0898", "0951", "0931", "0971"};
+            "0571", "0591", "020", "0771", "0898", "0951", "0931", "0971"*/};
 
     //    @Scheduled(fixedDelay = 3600000 * 24)
     public void doJob() throws AMapException, InterruptedException {
@@ -74,7 +74,7 @@ public class FetchAmapPlaceTextJob {
 
         AMapSearchTextRequest aMapSearchTextRequest = new AMapSearchTextRequest();
         aMapSearchTextRequest.setCity(provinceCode);
-        aMapSearchTextRequest.setTypeList(Arrays.asList("儿童用品店"));
+        aMapSearchTextRequest.setTypeList(Arrays.asList("婴儿服务场所", "婴儿游泳馆"));
         aMapSearchTextRequest.setOffset(20);
         aMapSearchTextRequest.setPage(page);
         AMapSearchTextResponse aMapSearchTextResponse = aMapSearchTextService

@@ -1,5 +1,6 @@
 package com.zl.way.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,18 +9,28 @@ public class ResponseResultUtil {
     private static final Logger logger = LoggerFactory.getLogger(ResponseResultUtil.class);
 
     public static final <T> ResponseResult<T> wrapSuccessResponseResult(T data) {
+
         return wrapResponseResult(200, null, data);
     }
 
     public static final <T> ResponseResult<T> wrapWrongParamResponseResult(String msg) {
+
         return wrapResponseResult(800, msg, null);
     }
 
     public static final <T> ResponseResult<T> wrapNotExistResponseResult(String msg) {
+
         return wrapResponseResult(900, msg, null);
     }
 
+    public static final <T> ResponseResult<T> wrapException(Exception e) {
+
+        return wrapResponseResult(700, StringUtils.defaultString(e.getMessage(), StringUtils.EMPTY),
+                null);
+    }
+
     public static final <T> ResponseResult<T> wrapResponseResult(int code, String msg, T data) {
+
         ResponseResult<T> responseResult = new ResponseResult<>();
         responseResult.setCode(code);
         responseResult.setMsg(msg);

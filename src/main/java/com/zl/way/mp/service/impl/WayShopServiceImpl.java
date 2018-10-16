@@ -6,6 +6,7 @@ import com.zl.way.mp.enums.WayShopStatusEnum;
 import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.mapper.WayShopLogMapper;
 import com.zl.way.mp.mapper.WayShopMapper;
+import com.zl.way.mp.mapper.WayShopQualificationMapper;
 import com.zl.way.mp.model.*;
 import com.zl.way.mp.service.WayShopService;
 import com.zl.way.util.BeanMapper;
@@ -32,6 +33,9 @@ public class WayShopServiceImpl implements WayShopService {
 
     @Autowired
     private WayShopLogMapper shopLogMapper;
+
+    @Autowired
+    private WayShopQualificationMapper shopQualificationMapper;
 
     //    @Autowired
     //    private SpUserShopMapper spUserShopMapper;
@@ -66,6 +70,12 @@ public class WayShopServiceImpl implements WayShopService {
         wayShopBo.setShopStatusName(
                 EnumUtil.getEnumByValue(wayShopBo.getIsDeleted(), WayShopStatusEnum.class)
                         .getDesc());
+
+        WayShopQualification wayShopQualification = shopQualificationMapper
+                .selectByPrimaryKey(wayShopBo.getWayShopQualification().getId());
+        if (null != wayShopQualification) {
+            wayShopBo.setWayShopQualification(wayShopQualification);
+        }
         //        String cityCode = wayShopBo.getCityCode();
         //        String adCode = wayShopBo.getAdCode();
         //        WayCityCondition wayCityCondition = new WayCityCondition();

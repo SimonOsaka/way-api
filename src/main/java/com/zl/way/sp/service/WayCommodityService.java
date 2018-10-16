@@ -19,4 +19,6 @@ public interface WayCommodityService {
     WayCommodityBo deleteCommodity(WayCommodityParam commodityParam);
 
     WayCommodityBo updateStatus(WayCommodityParam commodityParam);
+
+    WayCommodityBo offlineCommodity(WayCommodityParam commodityParam);
 }

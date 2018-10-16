@@ -8,6 +8,7 @@ import com.zl.way.sp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.sp.enums.WayCommodityStatusEnum;
 import com.zl.way.sp.mapper.WayCommodityLogMapper;
 import com.zl.way.sp.mapper.WayCommodityMapper;
+import com.zl.way.sp.mapper.WayDiscountMapper;
 import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.WayCommodityService;
 import com.zl.way.util.BeanMapper;
@@ -33,6 +34,9 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Autowired
     private WayCommodityLogMapper commodityLogMapper;
+
+    @Autowired
+    private WayDiscountMapper discountMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -234,6 +238,46 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         WayCommodityBo wayCommodityBo = BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
         wayCommodityBo.setStatusName(EnumUtil.getDescByValue(commodityParam.getIsDeleted(),
                 WayCommodityStatusEnum.class));
+        return wayCommodityBo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    public WayCommodityBo offlineCommodity(WayCommodityParam commodityParam) {
+
+        WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
+
+        WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayCommodityRecord.setIsDeleted(WayCommodityStatusEnum.PENDING.getValue());
+        commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
+
+        // 商品下架：将关联的优惠下架
+        WayDiscountCondition wayDiscountCondition = new WayDiscountCondition();
+        wayDiscountCondition.setLimitTimeExpireEnable(true);
+        wayDiscountCondition.setCommodityId(commodityParam.getId());
+        List<WayDiscount> discountList = discountMapper
+                .selectByCondition(wayDiscountCondition, WayPageRequest.ONE);
+        if (CollectionUtils.isNotEmpty(discountList)) {
+            WayDiscount wayDiscount = new WayDiscount();
+            wayDiscount.setId(discountList.get(0).getId());
+            wayDiscount.setIsDeleted((byte) 1);//删除
+            discountMapper.updateByPrimaryKeySelective(wayDiscount);
+        }
+
+        WayCommodityLog commodityLogRecord = new WayCommodityLog();
+        String logContent = String.format("商品下架操作，状态从[%s]修改为[%s]",
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
+                        WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),
+                        WayCommodityStatusEnum.class));
+        commodityLogRecord.setContent(logContent);
+        commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
+        commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
+        commodityLogRecord.setSource(WayCommodityLogSourceEnum.SP.getValue());
+        commodityLogMapper.insertSelective(commodityLogRecord);
+
+        WayCommodityBo wayCommodityBo = BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
+        wayCommodityBo.setStatusName(WayCommodityStatusEnum.PENDING.getDesc());
         return wayCommodityBo;
     }
 }

@@ -169,7 +169,7 @@ public class WayCommodityApi {
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
         commodityParam.setIsDeleted((byte) 0);
-        
+
         WayCommodityBo commodityBo = commodityService.updateStatus(commodityParam);
 
         WayCommodityResponse response = new WayCommodityResponse();
@@ -188,8 +188,7 @@ public class WayCommodityApi {
         }
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-        commodityParam.setIsDeleted((byte) 5);
-        WayCommodityBo commodityBo = commodityService.updateStatus(commodityParam);
+        WayCommodityBo commodityBo = commodityService.offlineCommodity(commodityParam);
 
         WayCommodityResponse response = new WayCommodityResponse();
         response.setCommodityBo(commodityBo);

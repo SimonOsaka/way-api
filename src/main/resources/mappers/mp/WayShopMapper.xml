@@ -89,7 +89,7 @@
         shop.shop_tel,
         shop.shop_business_time1,
         shop.shop_business_time2,
-        shop.shop_cate_leaf_id,
+        <!--shop.shop_cate_leaf_id,-->
         shop.shop_info,
         shop.create_time,
         shop.update_time,
@@ -104,20 +104,7 @@
         leaf.cate_name as 'shop_cate_leaf_name',
         leaf.id as 'shop_cate_leaf_id',
         root.cate_name as 'shop_cate_root_name',
-        root.id as 'shop_cate_root_id',
-        sq.id as 'sq_id',
-        sq.shop_id as 'sq_shop_id',
-        sq.idcard_front_img_url,
-        sq.idcard_back_img_url,
-        sq.idcard_hand_img_url,
-        sq.business_license_img_url,
-        sq.shop_outside_img_url,
-        sq.shop_inside_img_url,
-        sq.other1_img_url,
-        sq.other2_img_url,
-        sq.other3_img_url,
-        sq.other4_img_url,
-        sq.other5_img_url
+        root.id as 'shop_cate_root_id'
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -335,13 +322,12 @@
         shop_py = #{shopPy,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <sql id="whereByCondition">
+    <sql id="fromByCondition">
         from way_shop shop
         left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
         left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
-        left join way_commodity commodity on shop.id = commodity.shop_id and commodity.is_deleted =
-        0
-        left join way_shop_qualification sq on sq.shop_id = shop.id
+    </sql>
+    <sql id="whereByCondition">
         where shop.is_deleted != 1
         <if test="condition.id != null">
             and shop.id = #{condition.id, jdbcType=BIGINT}
@@ -361,21 +347,35 @@
         </trim>
     </sql>
     <select id="selectByCondition" resultMap="selectByconditionResultMap">
+        select t.*,
+        sq.id as 'sq_id',
+        sq.shop_id as 'sq_shop_id',
+        sq.idcard_front_img_url,
+        sq.idcard_back_img_url,
+        sq.idcard_hand_img_url,
+        sq.business_license_img_url,
+        sq.shop_outside_img_url,
+        sq.shop_inside_img_url,
+        sq.other1_img_url,
+        sq.other2_img_url,
+        sq.other3_img_url,
+        sq.other4_img_url,
+        sq.other5_img_url
+        from (
         select
-        <include refid="Base_CateLeaf_Column_List"/>,
-        commodity.name as 'commodityName',
-        commodity.id as 'commodityId',
-        commodity.price as 'commodityPrice',
-        commodity.img_url as 'commodityImgUrl'
+        <include refid="Base_CateLeaf_Column_List"/>
+        <include refid="fromByCondition"/>
         <include refid="whereByCondition"/>
         order by shop.update_time desc
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>
+        ) t left join way_shop_qualification sq on sq.shop_id = t.id
     </select>
     <select id="countByCondition" resultType="java.lang.Long">
         select
         count(*)
+        from way_shop shop
         <include refid="whereByCondition"/>
     </select>
 </mapper>
