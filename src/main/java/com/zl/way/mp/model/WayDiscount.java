@@ -40,6 +40,8 @@ public class WayDiscount implements Serializable {
 
     private Byte commodityApprove;
 
+    private Long commodityId;
+
     private WayDiscountReal wayDiscountReal;
 
     private static final long serialVersionUID = 1L;
@@ -212,6 +214,16 @@ public class WayDiscount implements Serializable {
     public void setCommodityApprove(Byte commodityApprove) {
 
         this.commodityApprove = commodityApprove;
+    }
+
+    public Long getCommodityId() {
+
+        return commodityId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+
+        this.commodityId = commodityId;
     }
 
     public WayDiscountReal getWayDiscountReal() {

@@ -43,6 +43,7 @@ public class WayShopApi {
 
         WayShopParam shopParam = new WayShopParam();
         shopParam.setShopName(request.getShopName());
+        shopParam.setId(request.getId());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(request.getPageNum());

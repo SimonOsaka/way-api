@@ -20,11 +20,12 @@
         <result column="ad_code" jdbcType="VARCHAR" property="adCode"/>
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="commodity_approve" jdbcType="TINYINT" property="commodityApprove"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
     </resultMap>
     <sql id="Base_Column_List">
         id, commodity_name, commodity_cate, commodity_price, shop_position, shop_lng, shop_lat,
         user_login_id, commodity_real, commodity_unreal, limit_time_expire, create_time,
-        update_time, is_deleted, ad_code, city_code, commodity_approve
+        update_time, is_deleted, ad_code, city_code, commodity_approve, commodity_id
     </sql>
     <sql id="condition_Column_List">
         discount.id,
@@ -44,6 +45,7 @@
         discount.ad_code,
         discount.city_code,
         discount.commodity_approve,
+        discount.commodity_id,
         discount_real.id as 'discount_real_id',
         discount_real.user_login_id as 'real_user_login_id',
         discount_real.discount_id,
@@ -269,6 +271,9 @@
         </if>
         <if test="condition.cityCode != null">
             and discount.city_code = #{condition.cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="condition.commodityId != null">
+            and discount.commodity_id = #{condition.commodityId,jdbcType=BIGINT}
         </if>
     </sql>
     <select id="selectByCondition" resultMap="BaseResultMap">

@@ -32,6 +32,8 @@ public class WayDiscountRequest extends PageParam {
 
     private String realType;
 
+    private Long commodityId;
+
     public String getDiscountCate() {
 
         return discountCate;
@@ -160,5 +162,15 @@ public class WayDiscountRequest extends PageParam {
     public void setRealType(String realType) {
 
         this.realType = realType;
+    }
+
+    public Long getCommodityId() {
+
+        return commodityId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+
+        this.commodityId = commodityId;
     }
 }

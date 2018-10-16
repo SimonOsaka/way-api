@@ -33,6 +33,7 @@ public class WayDiscountApi {
         WayDiscountParam wayDiscountParam = new WayDiscountParam();
         wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
         wayDiscountParam.setCityCode(wayDiscountRequest.getCityCode());
+        wayDiscountParam.setCommodityId(wayDiscountRequest.getCommodityId());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(wayDiscountRequest.getPageNum());

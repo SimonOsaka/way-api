@@ -43,10 +43,11 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
         condition.setClientLat(wayDiscountParam.getClientLat());
         condition.setClientLng(wayDiscountParam.getClientLng());
-        condition.setDiscountId(wayDiscountParam.getDiscountId());
+        condition.setId(wayDiscountParam.getDiscountId());
         condition.setLimitTimeExpireEnable(wayDiscountParam.getLimitTimeExpireEnable());
         condition.setCityCode(wayDiscountParam.getCityCode());
         condition.setRealUserLoginId(wayDiscountParam.getRealUserLoginId());
+        condition.setCommodityId(wayDiscountParam.getCommodityId());
 
         Pageable pageable = WayPageRequest.of(pageParam);
         logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
