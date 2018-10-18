@@ -2,7 +2,7 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
     <!-- 缓存存放目录(此目录为放入系统默认缓存目录) -->
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="/apps/cache/ehcache"/>
     <!-- <diskStore path="/usr/web/apache-tomcat-8.5.16/temp"/> -->
     <!-- <diskStore path="D:/cache" /> -->
     <defaultCache
