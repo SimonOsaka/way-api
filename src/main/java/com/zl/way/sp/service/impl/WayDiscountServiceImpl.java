@@ -49,6 +49,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         WayDiscountCondition condition = BeanMapper.map(param, WayDiscountCondition.class);
         Pageable pageable = WayPageRequest.ONE;
+        condition.setLimitTimeExpireEnable(true);
         List<WayDiscount> discountList = discountMapper.selectByCondition(condition, pageable);
         if (CollectionUtils.isEmpty(discountList)) {
             return null;
