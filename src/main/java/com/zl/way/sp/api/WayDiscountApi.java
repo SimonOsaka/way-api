@@ -99,4 +99,5 @@ public class WayDiscountApi {
         response.setDiscountBo(discountBo);
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
+
 }

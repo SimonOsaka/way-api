@@ -257,15 +257,17 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         wayDiscountCondition.setCommodityId(commodityParam.getId());
         List<WayDiscount> discountList = discountMapper
                 .selectByCondition(wayDiscountCondition, WayPageRequest.ONE);
+        StringBuilder logFormat = new StringBuilder("商品下架操作，状态从[%s]修改为[%s]");
         if (CollectionUtils.isNotEmpty(discountList)) {
             WayDiscount wayDiscount = new WayDiscount();
             wayDiscount.setId(discountList.get(0).getId());
             wayDiscount.setIsDeleted((byte) 1);//删除
             discountMapper.updateByPrimaryKeySelective(wayDiscount);
+            logFormat.append("，对应优惠信息同时删除");
         }
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
-        String logContent = String.format("商品下架操作，状态从[%s]修改为[%s]",
+        String logContent = String.format(logFormat.append("。").toString(),
                 EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
                         WayCommodityStatusEnum.class),
                 EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(),

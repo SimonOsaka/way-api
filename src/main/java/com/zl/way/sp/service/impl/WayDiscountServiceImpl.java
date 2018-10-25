@@ -1,5 +1,7 @@
 package com.zl.way.sp.service.impl;
 
+import com.zl.way.sp.enums.WayCommodityStatusEnum;
+import com.zl.way.sp.enums.WayShopStatusEnum;
 import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.mapper.WayCommodityMapper;
 import com.zl.way.sp.mapper.WayDiscountMapper;
@@ -72,6 +74,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         }
 
         WayCommodity wayCommodity = commodityMapper.selectByPrimaryKey(commodityId);
+        if (!WayCommodityStatusEnum.NORMAL.getValue().equals(wayCommodity.getIsDeleted())) {
+            throw new BusinessException("商品未上线，无法发布优惠");
+        }
 
         if (param.getCommodityPrice().compareTo(wayCommodity.getPrice()) >= 0) {
             throw new BusinessException("优惠价格应低于商品价格");
@@ -79,6 +84,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         Long shopId = wayCommodity.getShopId();
         WayShop wayShop = shopMapper.selectByPrimaryKey(shopId);
+        if (!WayShopStatusEnum.NORMAL.getValue().equals(wayShop.getIsDeleted())) {
+            throw new BusinessException("商家未上线，无法发布优惠");
+        }
 
         WayDiscount record = BeanMapper.map(param, WayDiscount.class);
         record.setCommodityName(wayCommodity.getName());

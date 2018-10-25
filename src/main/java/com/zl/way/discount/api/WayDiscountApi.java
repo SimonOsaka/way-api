@@ -49,18 +49,8 @@ public class WayDiscountApi {
             return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
         }
 
-        List<WayDiscountResponse> wayDiscountResponseList = new ArrayList<>();
-        for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
-            WayDiscountResponse wayDiscountResponse = BeanMapper
-                    .map(wayDiscountBo, WayDiscountResponse.class);
-            if (null != wayDiscountBo.getWayDiscountReal()) {
-                wayDiscountResponse
-                        .setDiscountId(wayDiscountBo.getWayDiscountReal().getDiscountId());
-                wayDiscountResponse
-                        .setRealUserLoginId(wayDiscountBo.getWayDiscountReal().getUserLoginId());
-            }
-            wayDiscountResponseList.add(wayDiscountResponse);
-        }
+        List<WayDiscountResponse> wayDiscountResponseList = convertDiscountResponseList(
+                wayDiscountBoList);
 
         return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponseList);
     }
@@ -205,4 +195,52 @@ public class WayDiscountApi {
 
     }
 
+    @RequestMapping(value = "user", method = RequestMethod.POST)
+    public ResponseResult<List<WayDiscountResponse>> userDiscountList(
+            @RequestBody WayDiscountRequest wayDiscountRequest,
+            @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil
+                .validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
+                    userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayDiscountParam wayDiscountParam = new WayDiscountParam();
+        wayDiscountParam.setRealUserLoginId(wayDiscountRequest.getRealUserLoginId());
+
+        PageParam pageParam = new PageParam();
+        pageParam.setPageNum(wayDiscountRequest.getPageNum());
+        pageParam.setPageSize(wayDiscountRequest.getPageSize());
+
+        List<WayDiscountBo> wayDiscountBoList = wayDiscountService
+                .selectByCondition(wayDiscountParam, pageParam);
+        if (CollectionUtils.isEmpty(wayDiscountBoList)) {
+            return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
+        }
+
+        List<WayDiscountResponse> wayDiscountResponseList = convertDiscountResponseList(
+                wayDiscountBoList);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponseList);
+    }
+
+    private List<WayDiscountResponse> convertDiscountResponseList(
+            List<WayDiscountBo> wayDiscountBoList) {
+
+        List<WayDiscountResponse> wayDiscountResponseList = new ArrayList<>();
+        for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
+            WayDiscountResponse wayDiscountResponse = BeanMapper
+                    .map(wayDiscountBo, WayDiscountResponse.class);
+            if (null != wayDiscountBo.getWayDiscountReal()) {
+                wayDiscountResponse
+                        .setDiscountId(wayDiscountBo.getWayDiscountReal().getDiscountId());
+                wayDiscountResponse
+                        .setRealUserLoginId(wayDiscountBo.getWayDiscountReal().getUserLoginId());
+            }
+            wayDiscountResponseList.add(wayDiscountResponse);
+        }
+        return wayDiscountResponseList;
+    }
 }
