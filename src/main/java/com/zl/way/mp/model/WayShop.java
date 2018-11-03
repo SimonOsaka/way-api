@@ -43,6 +43,8 @@ public class WayShop implements Serializable {
 
     private String shopPy;
 
+    private String shopHeadTel;
+
     private WayShopCateLeaf wayShopCateLeaf;
 
     private WayShopCateRoot wayShopCateRoot;
@@ -231,6 +233,16 @@ public class WayShop implements Serializable {
     public void setShopPy(String shopPy) {
 
         this.shopPy = shopPy == null ? null : shopPy.trim();
+    }
+
+    public String getShopHeadTel() {
+
+        return shopHeadTel;
+    }
+
+    public void setShopHeadTel(String shopHeadTel) {
+
+        this.shopHeadTel = shopHeadTel;
     }
 
     public WayShopCateLeaf getWayShopCateLeaf() {

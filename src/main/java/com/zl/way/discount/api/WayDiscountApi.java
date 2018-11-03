@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.List;
 public class WayDiscountApi {
 
     private final Logger logger = LoggerFactory.getLogger(WayDiscountApi.class);
+
+    private static final BigDecimal ONE_MILLION = new BigDecimal(1000000);
 
     @Autowired
     private WayDiscountService wayDiscountService;
@@ -108,6 +111,10 @@ public class WayDiscountApi {
 
         if (!NumberUtils.isCreatable(wayDiscountRequest.getCommodityPrice().toString())) {
             return ResponseResultUtil.wrapWrongParamResponseResult("商品价格格式不正确[整数或小数]");
+        }
+
+        if (wayDiscountRequest.getCommodityPrice().compareTo(ONE_MILLION) >= 0) {
+            return ResponseResultUtil.wrapWrongParamResponseResult("商品价格必须小于100万");
         }
 
         WayDiscountParam wayDiscountParam = BeanMapper

@@ -21,6 +21,7 @@
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="shop_pinyin" jdbcType="VARCHAR" property="shopPinyin"/>
         <result column="shop_py" jdbcType="VARCHAR" property="shopPy"/>
+        <result column="shop_head_tel" jdbcType="VARCHAR" property="shopHeadTel"/>
     </resultMap>
     <resultMap id="selectByconditionResultMap"
                type="com.zl.way.mp.model.WayShop">
@@ -43,6 +44,7 @@
         <result column="shop_logo_url" jdbcType="VARCHAR" property="shopLogoUrl"/>
         <result column="shop_pinyin" jdbcType="VARCHAR" property="shopPinyin"/>
         <result column="shop_py" jdbcType="VARCHAR" property="shopPy"/>
+        <result column="shop_head_tel" jdbcType="VARCHAR" property="shopHeadTel"/>
         <association property="wayShopCateLeaf"
                      javaType="com.zl.way.mp.model.WayShopCateLeaf">
             <id column="shop_cate_leaf_id" property="id"/>
@@ -80,7 +82,7 @@
     <sql id="Base_Column_List">
         id, shop_name, shop_address, shop_tel, shop_business_time1, shop_business_time2,
         shop_cate_leaf_id, shop_info, shop_lat, shop_lng, shop_logo_url, create_time, update_time,
-        is_deleted, ad_code, city_code, shop_pinyin, shop_py
+        is_deleted, ad_code, city_code, shop_pinyin, shop_py, shop_head_tel
     </sql>
     <sql id="Base_CateLeaf_Column_List">
         shop.id,
@@ -101,6 +103,7 @@
         shop.city_code,
         shop.shop_pinyin,
         shop.shop_py,
+        shop.shop_head_tel,
         leaf.cate_name as 'shop_cate_leaf_name',
         leaf.id as 'shop_cate_leaf_id',
         root.cate_name as 'shop_cate_root_name',
@@ -123,7 +126,7 @@
         shop_info, shop_lat, shop_lng,
         shop_logo_url, create_time, update_time,
         is_deleted, ad_code, city_code,
-        shop_pinyin, shop_py)
+        shop_pinyin, shop_py, shop_head_tel)
         values (#{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR},
         #{shopTel,jdbcType=VARCHAR},
         #{shopBusinessTime1,jdbcType=VARCHAR}, #{shopBusinessTime2,jdbcType=VARCHAR},
@@ -132,7 +135,7 @@
         #{shopLogoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP},
         #{isDeleted,jdbcType=TINYINT}, #{adCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR},
-        #{shopPinyin,jdbcType=VARCHAR}, #{shopPy,jdbcType=VARCHAR})
+        #{shopPinyin,jdbcType=VARCHAR}, #{shopPy,jdbcType=VARCHAR}, #{shopHeadTel,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="com.zl.way.mp.model.WayShop" useGeneratedKeys="true">
@@ -189,6 +192,9 @@
             <if test="shopPy != null">
                 shop_py,
             </if>
+            <if test="shopHeadTel != null">
+                shop_head_tel,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="shopName != null">
@@ -241,6 +247,9 @@
             </if>
             <if test="shopPy != null">
                 #{shopPy,jdbcType=VARCHAR},
+            </if>
+            <if test="shopHeadTel != null">
+                #{shopHeadTel,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -298,6 +307,9 @@
             <if test="shopPy != null">
                 shop_py = #{shopPy,jdbcType=VARCHAR},
             </if>
+            <if test="shopHeadTel != null">
+                shop_head_tel = #{shopHeadTel,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -319,7 +331,8 @@
         ad_code = #{adCode,jdbcType=VARCHAR},
         city_code = #{cityCode,jdbcType=VARCHAR},
         shop_pinyin = #{shopPinyin,jdbcType=VARCHAR},
-        shop_py = #{shopPy,jdbcType=VARCHAR}
+        shop_py = #{shopPy,jdbcType=VARCHAR},
+        shop_head_tel = #{shopHeadTel,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
     <sql id="fromByCondition">

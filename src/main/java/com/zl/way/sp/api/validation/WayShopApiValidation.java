@@ -3,6 +3,7 @@ package com.zl.way.sp.api.validation;
 import com.zl.way.sp.model.WayShopRequest;
 import com.zl.way.util.SensiWordsUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,6 +205,26 @@ public class WayShopApiValidation {
         if (!StringUtils.equalsIgnoreCase("save", request.getUpdateType()) && !StringUtils
                 .equalsIgnoreCase("submit", request.getUpdateType())) {
             validationMessageList.add("请执行保存或提交的一种");
+            return this;
+        }
+
+        return this;
+    }
+
+    public WayShopApiValidation shopHeadTel() {
+
+        if (StringUtils.isBlank(request.getShopHeadTel())) {
+            validationMessageList.add("请输入商家负责人手机号码");
+            return this;
+        }
+
+        if (!NumberUtils.isCreatable(request.getShopHeadTel())) {
+            validationMessageList.add("商家负责人手机号码格式不正确");
+            return this;
+        }
+
+        if (StringUtils.length(request.getShopHeadTel()) != 11) {
+            validationMessageList.add("商家负责人手机号码应为11位");
             return this;
         }
 

@@ -91,9 +91,10 @@ public class WayShopApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl().shopName()
-                .shopCateLeafId().shopAddress().shopTel().shopBusinessTime1().shopLocation()
-                .shopInfo().qualificationIdcard().qualificationShopInOut().qualificationLicense();
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl()
+                .shopHeadTel().shopName().shopCateLeafId().shopAddress().shopTel()
+                .shopBusinessTime1().shopLocation().shopInfo().qualificationIdcard()
+                .qualificationShopInOut().qualificationLicense();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -124,10 +125,10 @@ public class WayShopApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayShopApiValidation validation = new WayShopApiValidation(request).updateType().shopName()
-                .shopTel().shopAddress().shopBusinessTime1().shopLocation().shopLogoUrl().shopId()
-                .shopCateLeafId().shopInfo().qualificationIdcard().qualificationShopInOut()
-                .qualificationLicense();
+        WayShopApiValidation validation = new WayShopApiValidation(request).shopHeadTel()
+                .updateType().shopName().shopTel().shopAddress().shopBusinessTime1().shopLocation()
+                .shopLogoUrl().shopId().shopCateLeafId().shopInfo().qualificationIdcard()
+                .qualificationShopInOut().qualificationLicense();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }

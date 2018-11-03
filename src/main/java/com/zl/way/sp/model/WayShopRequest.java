@@ -34,6 +34,8 @@ public class WayShopRequest extends PageParam {
 
     private Long userLoginId;
 
+    private String shopHeadTel;
+
     //商家资质开始
     private String idcardFrontImgUrl;
 
@@ -189,6 +191,16 @@ public class WayShopRequest extends PageParam {
     public void setUserLoginId(Long userLoginId) {
 
         this.userLoginId = userLoginId;
+    }
+
+    public String getShopHeadTel() {
+
+        return shopHeadTel;
+    }
+
+    public void setShopHeadTel(String shopHeadTel) {
+
+        this.shopHeadTel = shopHeadTel;
     }
 
     public String getAdCode() {

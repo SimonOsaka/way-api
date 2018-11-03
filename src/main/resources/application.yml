@@ -35,4 +35,4 @@ custom:
   discount:
     imageUrl: http://h5.jicu.vip/images/%s.jpg
   user:
-    agreementsUrl: //h5.jicu.vip/user_agreements.html
+    agreementsUrl: http://h5.jicu.vip/user_agreements.html

@@ -23,59 +23,61 @@ import java.util.List;
 @Service
 public class WayShopServiceImpl implements WayShopService {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private WayShopMapper wayShopMapper;
+    @Autowired
+    private WayShopMapper wayShopMapper;
 
-	@Override
-	@Transactional(rollbackFor = Exception.class, readOnly = true)
-	public WayShop getPromoShopDetail(Long id) {
-		if (NumberUtil.isNotLongKey(id)) {
-			logger.info("商铺详情不正确id={}", id);
-			return null;
-		}
-		WayShop wayShop = wayShopMapper.selectByPrimaryKey(id);
-		if (logger.isDebugEnabled()) {
-			logger.debug("商铺详情sql结果={}", JSON.toJSONString(wayShop));
-		}
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public WayShop getPromoShopDetail(Long id) {
 
-		return wayShop;
-	}
+        if (NumberUtil.isNotLongKey(id)) {
+            logger.info("商家详情不正确id={}", id);
+            return null;
+        }
+        WayShop wayShop = wayShopMapper.selectByPrimaryKey(id);
+        if (logger.isDebugEnabled()) {
+            logger.debug("商家详情sql结果={}", JSON.toJSONString(wayShop));
+        }
 
-	@Override
-	@Transactional(rollbackFor = Exception.class, readOnly = true)
-	public List<WayShopBo> pageWayShopByCondition(WayShopParam wayShopParam, PageParam pageParam) {
-		if (null == wayShopParam) {
-			return Collections.emptyList();
-		}
+        return wayShop;
+    }
 
-		WayShopQueryCondition condition = BeanMapper.map(wayShopParam, WayShopQueryCondition.class);
-		Pageable pageable = WayPageRequest.of(pageParam);
-		logger.info("商铺列表sql条件{}{}", condition, pageable);
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<WayShopBo> pageWayShopByCondition(WayShopParam wayShopParam, PageParam pageParam) {
 
-		List<WayShop> wayShopList = wayShopMapper.selectByCondition(condition, pageable);
-		if (logger.isDebugEnabled()) {
-			logger.debug("商铺列表结果={}", wayShopList);
-		}
-		if (CollectionUtils.isEmpty(wayShopList)) {
-			return Collections.emptyList();
-		}
+        if (null == wayShopParam) {
+            return Collections.emptyList();
+        }
 
-		List<WayShopBo> wayShopBoList = BeanMapper.mapAsList(wayShopList, WayShopBo.class);
-		for (WayShopBo wayShopBo : wayShopBoList) {
-			if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat() && null != wayShopBo
-					.getShopLng() && null != wayShopBo.getShopLat()) {
-				BigDecimal distance = GeoUtil
-						.getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(), wayShopBo.getShopLng(),
-								wayShopBo.getShopLat());
-				wayShopBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
-			}
-		}
+        WayShopQueryCondition condition = BeanMapper.map(wayShopParam, WayShopQueryCondition.class);
+        Pageable pageable = WayPageRequest.of(pageParam);
+        logger.info("商铺列表sql条件{}{}", condition, pageable);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("商铺列表组装结果={}", JSON.toJSONString(wayShopBoList));
-		}
-		return wayShopBoList;
-	}
+        List<WayShop> wayShopList = wayShopMapper.selectByCondition(condition, pageable);
+        if (logger.isDebugEnabled()) {
+            logger.debug("商铺列表结果={}", wayShopList);
+        }
+        if (CollectionUtils.isEmpty(wayShopList)) {
+            return Collections.emptyList();
+        }
+
+        List<WayShopBo> wayShopBoList = BeanMapper.mapAsList(wayShopList, WayShopBo.class);
+        for (WayShopBo wayShopBo : wayShopBoList) {
+            if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat()
+                    && null != wayShopBo.getShopLng() && null != wayShopBo.getShopLat()) {
+                BigDecimal distance = GeoUtil
+                        .getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(),
+                                wayShopBo.getShopLng(), wayShopBo.getShopLat());
+                wayShopBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
+            }
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("商铺列表组装结果={}", JSON.toJSONString(wayShopBoList));
+        }
+        return wayShopBoList;
+    }
 }
