@@ -84,10 +84,11 @@ public class WeixinShareController {
         }
 
         WeixinShareResponse response = new WeixinShareResponse();
-        response.setDesc("优惠价：" + discountBo.getCommodityPrice() + "元");
+        response.setDesc(discountBo.getShopPosition());
         response.setImageUrl(discountBo.getCommodityImageUrl());
         response.setShareType(request.getShareType());
-        response.setTitle(discountBo.getCommodityName());
+        response.setTitle(
+                discountBo.getCommodityName() + " " + discountBo.getCommodityPrice() + "元");
         response.setWebpageUrl(
                 "http://h5.jicu.vip/views/discount/detail.html?discountId=" + discountBo.getId());
 

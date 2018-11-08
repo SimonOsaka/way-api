@@ -1,6 +1,7 @@
 package com.zl.way.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.zl.way.user.mapper.UserDeviceMapper;
 import com.zl.way.user.mapper.UserLoginMapper;
 import com.zl.way.user.mapper.UserProfileMapper;
 import com.zl.way.user.model.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserProfileMapper userProfileMapper;
+
+    @Autowired
+    private UserDeviceMapper userDeviceMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
@@ -327,6 +332,30 @@ public class UserServiceImpl implements UserService {
             logger.debug("手机号={}，验证码={}", userTel, validCode);
         }
         return validCode;
+    }
+
+    @Override
+    public boolean saveOrUpdateUserDevice(UserDeviceParam param) {
+
+        UserDevice userDevice = new UserDevice();
+        userDevice.setUserLoginId(param.getUserLoginId());
+        userDevice.setDeviceToken(StringUtils.defaultIfBlank(param.getDeviceToken(), null));
+        userDevice.setJpushRegId(StringUtils.defaultIfBlank(param.getJpushRegId(), null));
+        if (null != param.getLatitude() && !param.getLatitude().equals(BigDecimal.ZERO)) {
+            userDevice.setLatitude(param.getLatitude());
+        }
+        if (null != param.getLongitude() && !param.getLongitude().equals(BigDecimal.ZERO)) {
+            userDevice.setLongitude(param.getLongitude());
+        }
+        Long userLoginId = param.getUserLoginId();
+        UserDevice existUserDevice = userDeviceMapper.selectByPrimaryKey(userLoginId);
+        if (null == existUserDevice) {
+            userDeviceMapper.insertSelective(userDevice);
+        } else {
+            userDevice.setUpdateTime(DateTime.now().toDate());
+            userDeviceMapper.updateByPrimaryKeySelective(userDevice);
+        }
+        return Boolean.TRUE;
     }
 
     private String genNickName(String str) {

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/ios")
 public class AppVersionController {
 
-    private static final String CURRENT_APP_VERSION = "1.0.1";
+    private static final String CURRENT_APP_VERSION = "1.0.0";
 
     private static final String OPERATION_FORCE = "force";
 

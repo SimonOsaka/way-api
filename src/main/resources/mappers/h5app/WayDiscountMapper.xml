@@ -329,9 +329,14 @@
         <if test="condition.cityCode != null">
             and discount.city_code = #{condition.cityCode,jdbcType=VARCHAR}
         </if>
-        <if test="condition.clientLng != null and condition.clientLat != null">
-            order by s_distance
-        </if>
+        <choose>
+            <when test="condition.clientLng != null and condition.clientLat != null">
+                order by s_distance
+            </when>
+            <otherwise>
+                order by discount.limit_time_expire desc
+            </otherwise>
+        </choose>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>

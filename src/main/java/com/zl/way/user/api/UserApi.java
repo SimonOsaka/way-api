@@ -1,7 +1,9 @@
 package com.zl.way.user.api;
 
+import com.zl.way.user.api.model.UserDeviceRequest;
 import com.zl.way.user.api.model.UserRequest;
 import com.zl.way.user.api.model.UserResponse;
+import com.zl.way.user.model.UserDeviceParam;
 import com.zl.way.user.model.UserLoginParam;
 import com.zl.way.user.model.UserProfile;
 import com.zl.way.user.model.UserProfileBo;
@@ -137,6 +139,18 @@ public class UserApi {
             return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
         }
         return ResponseResultUtil.wrapWrongParamResponseResult("用户登录异常");
+    }
+
+    @PostMapping("/device/sync")
+    public ResponseResult<Void> syncUserDevice(@RequestBody UserDeviceRequest request) {
+
+        if (null == request.getUserLoginId()) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(null);
+        }
+
+        UserDeviceParam param = BeanMapper.map(request, UserDeviceParam.class);
+        userService.saveOrUpdateUserDevice(param);
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
 }
