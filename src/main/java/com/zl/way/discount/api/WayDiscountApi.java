@@ -208,14 +208,14 @@ public class WayDiscountApi {
             @RequestHeader("token") String userToken) {
 
         if (!TokenUtil
-                .validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
+                .validToken(String.valueOf(wayDiscountRequest.getUserLoginId()), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
                     userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
         WayDiscountParam wayDiscountParam = new WayDiscountParam();
-        wayDiscountParam.setRealUserLoginId(wayDiscountRequest.getRealUserLoginId());
+        wayDiscountParam.setUserLoginId(wayDiscountRequest.getUserLoginId());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(wayDiscountRequest.getPageNum());

@@ -329,6 +329,9 @@
         <if test="condition.cityCode != null">
             and discount.city_code = #{condition.cityCode,jdbcType=VARCHAR}
         </if>
+        <if test="condition.userLoginId != null">
+            and discount.user_login_id = #{condition.userLoginId, jdbcType=BIGINT}
+        </if>
         <choose>
             <when test="condition.clientLng != null and condition.clientLat != null">
                 order by s_distance

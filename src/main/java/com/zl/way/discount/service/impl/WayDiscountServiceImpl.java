@@ -66,6 +66,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         condition.setLimitTimeExpireEnable(wayDiscountParam.getLimitTimeExpireEnable());
         condition.setCityCode(wayDiscountParam.getCityCode());
         condition.setRealUserLoginId(wayDiscountParam.getRealUserLoginId());
+        condition.setUserLoginId(wayDiscountParam.getUserLoginId());
 
         Pageable pageable = WayPageRequest.of(pageParam);
         logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
