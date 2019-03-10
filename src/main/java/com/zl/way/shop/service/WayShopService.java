@@ -18,6 +18,15 @@ public interface WayShopService {
     WayShop getPromoShopDetail(Long id);
 
     /**
+     * 获取商家信息
+     *
+     * @param id
+     * @param userLoginId
+     * @return
+     */
+    WayShop getPromoShopDetail(Long id, Long userLoginId);
+
+    /**
      * 根据条件查询商家信息
      *
      * @param wayShopParam

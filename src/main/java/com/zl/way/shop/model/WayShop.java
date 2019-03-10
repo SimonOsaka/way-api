@@ -50,6 +50,8 @@ public class WayShop {
 
     private String shopPy;
 
+    private WayShopFollow follow;
+
     public String getCommodityName() {
 
         return commodityName;
@@ -258,5 +260,15 @@ public class WayShop {
     public void setCityCode(String cityCode) {
 
         this.cityCode = cityCode;
+    }
+
+    public WayShopFollow getFollow() {
+
+        return follow;
+    }
+
+    public void setFollow(WayShopFollow follow) {
+
+        this.follow = follow;
     }
 }

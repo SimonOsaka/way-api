@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.shop.mapper.WayShopFollowMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.shop.model.WayShopFollow">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="has_followed" jdbcType="TINYINT" property="hasFollowed"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <resultMap id="selectByConditionResultMap" type="com.zl.way.shop.model.WayShopFollowBo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="has_followed" jdbcType="TINYINT" property="hasFollowed"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <association property="shop" javaType="com.zl.way.shop.model.WayShop">
+            <result property="shopName" column="shop_name"/>
+            <result property="shopAddress" column="shop_address"/>
+            <result property="shopLogoUrl" column="shop_logo_url"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, shop_id, user_login_id, has_followed, is_deleted, create_time, update_time
+    </sql>
+    <sql id="selectByConditionColumnList">
+        f.id, f.shop_id, f.user_login_id, f.has_followed,
+        s.shop_name, s.shop_logo_url, s.shop_address
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_shop_follow
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from way_shop_follow
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.shop.model.WayShopFollow" useGeneratedKeys="true">
+        insert into way_shop_follow (shop_id, user_login_id, has_followed,
+        is_deleted, create_time, update_time
+        )
+        values (#{shopId,jdbcType=BIGINT}, #{userLoginId,jdbcType=BIGINT},
+        #{hasFollowed,jdbcType=TINYINT},
+        #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.shop.model.WayShopFollow" useGeneratedKeys="true">
+        insert into way_shop_follow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="userLoginId != null">
+                user_login_id,
+            </if>
+            <if test="hasFollowed != null">
+                has_followed,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">
+                #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="userLoginId != null">
+                #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="hasFollowed != null">
+                #{hasFollowed,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.shop.model.WayShopFollow">
+        update way_shop_follow
+        <set>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="userLoginId != null">
+                user_login_id = #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="hasFollowed != null">
+                has_followed = #{hasFollowed,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zl.way.shop.model.WayShopFollow">
+        update way_shop_follow
+        set shop_id = #{shopId,jdbcType=BIGINT},
+        user_login_id = #{userLoginId,jdbcType=BIGINT},
+        has_followed = #{hasFollowed,jdbcType=TINYINT},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByCondition" resultMap="selectByConditionResultMap">
+        select
+        <include refid="selectByConditionColumnList"/>
+        from way_shop_follow f
+        left join way_shop s on f.shop_id = s.id
+        where f.is_deleted = 0 and s.is_deleted = 0
+        <if test="condition.id != null">
+            and f.id = #{condition.id,jdbcType=BIGINT}
+        </if>
+        <if test="condition.shopId != null">
+            and f.shop_id = #{condition.shopId,jdbcType=BIGINT}
+        </if>
+        <if test="condition.userLoginId != null">
+            and f.user_login_id = #{condition.userLoginId,jdbcType=BIGINT}
+        </if>
+        <if test="condition.hasFollowed != null">
+            and f.has_followed = #{condition.hasFollowed,jdbcType=TINYINT}
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

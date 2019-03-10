@@ -1,11 +1,9 @@
 package com.zl.way.shop.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.zl.way.shop.mapper.WayShopFollowMapper;
 import com.zl.way.shop.mapper.WayShopMapper;
-import com.zl.way.shop.model.WayShop;
-import com.zl.way.shop.model.WayShopBo;
-import com.zl.way.shop.model.WayShopParam;
-import com.zl.way.shop.model.WayShopQueryCondition;
+import com.zl.way.shop.model.*;
 import com.zl.way.shop.service.WayShopService;
 import com.zl.way.util.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,15 +26,44 @@ public class WayShopServiceImpl implements WayShopService {
     @Autowired
     private WayShopMapper wayShopMapper;
 
+    @Autowired
+    private WayShopFollowMapper shopFollowMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShop getPromoShopDetail(Long id) {
+
+        return getPromoShopDetail(id, null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public WayShop getPromoShopDetail(Long id, Long userLoginId) {
 
         if (NumberUtil.isNotLongKey(id)) {
             logger.info("商家详情不正确id={}", id);
             return null;
         }
         WayShop wayShop = wayShopMapper.selectByPrimaryKey(id);
+        if (null != wayShop) {
+            WayShopFollow follow = new WayShopFollow();
+            if (null == userLoginId) {
+                follow.setHasFollowed((byte) 1);
+            } else {
+                WayShopFollowQueryCondition followQueryCondition = new WayShopFollowQueryCondition();
+                followQueryCondition.setUserLoginId(userLoginId);
+                followQueryCondition.setShopId(id);
+                List<WayShopFollowBo> shopFollowBoList = shopFollowMapper
+                        .selectByCondition(followQueryCondition, WayPageRequest.ONE);
+
+                if (CollectionUtils.isEmpty(shopFollowBoList)) {
+                    follow.setHasFollowed((byte) 1);
+                } else {
+                    follow.setHasFollowed(shopFollowBoList.get(0).getHasFollowed());
+                }
+            }
+            wayShop.setFollow(follow);
+        }
         if (logger.isDebugEnabled()) {
             logger.debug("商家详情sql结果={}", JSON.toJSONString(wayShop));
         }
