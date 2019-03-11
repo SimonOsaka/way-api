@@ -30,7 +30,7 @@ public class WayShopApi {
 
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResponseResult<WayShopResponse> getShopDetail(@RequestBody WayShopRequest wayShopRequest,
-            @RequestHeader("token") String userToken) {
+            @RequestHeader(value = "token", defaultValue = "") String userToken) {
 
         if (null != wayShopRequest.getUserLoginId() && !TokenUtil
                 .validToken(String.valueOf(wayShopRequest.getUserLoginId()), userToken)) {
