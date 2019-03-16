@@ -8,6 +8,7 @@ import com.zl.way.amap.model.AMapStaticMapRequest;
 import com.zl.way.amap.model.AMapStaticMapResponse;
 import com.zl.way.amap.service.AMapRegeoService;
 import com.zl.way.amap.service.AMapStaticMapService;
+import com.zl.way.discount.mapper.WayDiscountJpushMapper;
 import com.zl.way.discount.mapper.WayDiscountMapper;
 import com.zl.way.discount.mapper.WayDiscountRealMapper;
 import com.zl.way.discount.model.*;
@@ -32,32 +33,37 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@Service
-public class WayDiscountServiceImpl implements WayDiscountService {
+@Service public class WayDiscountServiceImpl implements WayDiscountService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     //	private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
 
-    @Autowired
-    private WayDiscountMapper wayDiscountMapper;
+    private final WayDiscountMapper wayDiscountMapper;
+
+    private final WayDiscountRealMapper wayDiscountRealMapper;
+
+    private final AMapStaticMapService aMapStaticMapService;
+
+    private final AMapRegeoService aMapRegeoService;
+
+    private final WayDiscountJpushMapper wayDiscountJpushMapper;
 
     @Autowired
-    private WayDiscountRealMapper wayDiscountRealMapper;
+    public WayDiscountServiceImpl(WayDiscountMapper wayDiscountMapper, WayDiscountJpushMapper wayDiscountJpushMapper,
+        WayDiscountRealMapper wayDiscountRealMapper, AMapStaticMapService aMapStaticMapService,
+        AMapRegeoService aMapRegeoService) {
+        this.wayDiscountMapper = wayDiscountMapper;
+        this.wayDiscountJpushMapper = wayDiscountJpushMapper;
+        this.wayDiscountRealMapper = wayDiscountRealMapper;
+        this.aMapStaticMapService = aMapStaticMapService;
+        this.aMapRegeoService = aMapRegeoService;
+    }
 
-    @Autowired
-    private AMapStaticMapService aMapStaticMapService;
+    @Value("${custom.discount.imageUrl}") private String discountImageUrl;
 
-    @Autowired
-    private AMapRegeoService aMapRegeoService;
-
-    @Value("${custom.discount.imageUrl}")
-    private String discountImageUrl;
-
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam,
-            PageParam pageParam) {
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam, PageParam pageParam) {
 
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
         condition.setClientLat(wayDiscountParam.getClientLat());
@@ -69,11 +75,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         condition.setUserLoginId(wayDiscountParam.getUserLoginId());
 
         Pageable pageable = WayPageRequest.of(pageParam);
-        logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
-                JSON.toJSONString(pageable));
+        logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
 
-        List<WayDiscount> wayDiscountList = wayDiscountMapper
-                .selectByCondition(condition, pageable);
+        List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, pageable);
         if (CollectionUtils.isEmpty(wayDiscountList)) {
             return Collections.emptyList();
         }
@@ -81,19 +85,17 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         //		Date now = DateTime.now().toDate();
         //		long nowMills = now.getTime();
 
-        List<WayDiscountBo> wayDiscountBoList = BeanMapper
-                .mapAsList(wayDiscountList, WayDiscountBo.class);
+        List<WayDiscountBo> wayDiscountBoList = BeanMapper.mapAsList(wayDiscountList, WayDiscountBo.class);
         for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
             if (null != wayDiscountParam.getClientLng() && null != wayDiscountParam.getClientLat()
-                    && null != wayDiscountBo.getShopLng() && null != wayDiscountBo.getShopLat()) {
-                BigDecimal distance = GeoUtil.getDistance(wayDiscountParam.getClientLng(),
-                        wayDiscountParam.getClientLat(), wayDiscountBo.getShopLng(),
-                        wayDiscountBo.getShopLat());
+                && null != wayDiscountBo.getShopLng() && null != wayDiscountBo.getShopLat()) {
+                BigDecimal distance = GeoUtil
+                    .getDistance(wayDiscountParam.getClientLng(), wayDiscountParam.getClientLat(),
+                        wayDiscountBo.getShopLng(), wayDiscountBo.getShopLat());
                 wayDiscountBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
             }
 
-            wayDiscountBo.setCommodityImageUrl(
-                    String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
+            wayDiscountBo.setCommodityImageUrl(String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
 
             //			if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
             //					.after(now)) {
@@ -111,8 +113,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return wayDiscountBoList;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayDiscountBo selectOne(WayDiscountParam wayDiscountParam) {
 
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
@@ -122,8 +123,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         Pageable pageable = WayPageRequest.of(1, 1);
         logger.info("优惠条件查询sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
 
-        List<WayDiscount> wayDiscountList = wayDiscountMapper
-                .selectByCondition(condition, pageable);
+        List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, pageable);
         if (logger.isDebugEnabled()) {
             logger.debug("优惠条件sql查询结果={}", JSON.toJSONString(wayDiscountList, true));
         }
@@ -131,8 +131,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         if (CollectionUtils.isNotEmpty(wayDiscountList)) {
             WayDiscount wayDiscount = wayDiscountList.get(0);
             WayDiscountBo wayDiscountBo = BeanMapper.map(wayDiscount, WayDiscountBo.class);
-            wayDiscountBo.setCommodityImageUrl(
-                    String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
+            wayDiscountBo.setCommodityImageUrl(String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
             wayDiscountBo.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
 
             if (null != wayDiscount.getWayDiscountReal()) {
@@ -143,10 +142,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
                 AMapStaticMapRequest aMapStaticMapRequest = new AMapStaticMapRequest();
                 aMapStaticMapRequest.setLocation(location);
                 aMapStaticMapRequest.setSize("700*300");
-                AMapStaticMapResponse aMapStaticMapResponse = aMapStaticMapService
-                        .getStaticMap(aMapStaticMapRequest);
-                wayDiscountBo.setStaticMapUrl(
-                        aMapStaticMapResponse.getaMapStaticMapModel().getStaticMapUrl());
+                AMapStaticMapResponse aMapStaticMapResponse = aMapStaticMapService.getStaticMap(aMapStaticMapRequest);
+                wayDiscountBo.setStaticMapUrl(aMapStaticMapResponse.getaMapStaticMapModel().getStaticMapUrl());
             } catch (AMapException e) {
                 logger.warn("请求静态地图异常", e);
             }
@@ -155,22 +152,19 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return null;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public void createDiscount(WayDiscountParam wayDiscountParam) {
 
         WayDiscount wayDiscount = BeanMapper.map(wayDiscountParam, WayDiscount.class);
         wayDiscount.setShopLng(wayDiscountParam.getClientLng());
         wayDiscount.setShopLat(wayDiscountParam.getClientLat());
         if (wayDiscountParam.getExpireDays() != null) {
-            Date limitTimeExpire = DateUtils
-                    .addDays(DateTime.now().toDate(), wayDiscountParam.getExpireDays());
+            Date limitTimeExpire = DateUtils.addDays(DateTime.now().toDate(), wayDiscountParam.getExpireDays());
             wayDiscount.setLimitTimeExpire(limitTimeExpire);
         }
 
         AMapRegeoRequest aMapRegeoRequest = new AMapRegeoRequest();
-        aMapRegeoRequest.setLocation(
-                wayDiscountParam.getClientLng() + "," + wayDiscountParam.getClientLat());
+        aMapRegeoRequest.setLocation(wayDiscountParam.getClientLng() + "," + wayDiscountParam.getClientLat());
         try {
             AMapRegeoResponse aMapRegeoResponse = aMapRegeoService.getRegeo(aMapRegeoRequest);
             if (aMapRegeoResponse.getCode() == 200) {
@@ -183,8 +177,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             logger.warn("获取逆地理发生异常，入参={}", aMapRegeoRequest, e);
         }
 
-        wayDiscount.setIsDeleted((byte) 0);
-        wayDiscount.setCommodityApprove((byte) 0);
+        wayDiscount.setIsDeleted((byte)0);
+        wayDiscount.setCommodityApprove((byte)0);
 
         if (logger.isDebugEnabled()) {
             logger.debug("创建优惠信息sql条件={}", JSON.toJSONString(wayDiscount, true));
@@ -192,10 +186,17 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         wayDiscountMapper.insertSelective(wayDiscount);
 
+        try {
+            WayDiscountJpush discountJpushRecord = new WayDiscountJpush();
+            discountJpushRecord.setDiscountId(wayDiscount.getId());
+            wayDiscountJpushMapper.insertSelective(discountJpushRecord);
+        } catch (Exception e) {
+            logger.error("创建jpush异常", e);
+        }
+
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
@@ -210,8 +211,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         condition.setDiscountId(discountId);
         condition.setRealUserLoginId(realUserLoginId);
 
-        WayDiscountReal selectReal = wayDiscountRealMapper
-                .selectByDiscountIdAndRealUserLoginId(condition);
+        WayDiscountReal selectReal = wayDiscountRealMapper.selectByDiscountIdAndRealUserLoginId(condition);
 
         int commodityReal = wayDiscount.getCommodityReal();
         commodityReal = commodityReal + 1;
@@ -223,7 +223,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             WayDiscountReal record = new WayDiscountReal();
             record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
             record.setDiscountId(discountId);
-            record.setRealType((byte) 0);
+            record.setRealType((byte)0);
             wayDiscountRealMapper.insertSelective(record);
 
             if (logger.isDebugEnabled()) {
@@ -247,8 +247,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
@@ -276,8 +275,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
         condition.setDiscountId(discountId);
         condition.setRealUserLoginId(realUserLoginId);
-        WayDiscountReal selectReal = wayDiscountRealMapper
-                .selectByDiscountIdAndRealUserLoginId(condition);
+        WayDiscountReal selectReal = wayDiscountRealMapper.selectByDiscountIdAndRealUserLoginId(condition);
         if (null == selectReal) {
             logger.info("优惠real不存在={}", JSON.toJSONString(condition));
             throw new RuntimeException("还没有投过");
@@ -285,7 +283,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         WayDiscountReal updateRecord = new WayDiscountReal();
         updateRecord.setId(selectReal.getId());
-        updateRecord.setIsDeleted((byte) 1);
+        updateRecord.setIsDeleted((byte)1);
         wayDiscountRealMapper.updateByPrimaryKeySelective(updateRecord);
 
         if (logger.isDebugEnabled()) {
@@ -295,8 +293,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override
-    public WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam) {
+    @Override public WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
         WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
@@ -310,8 +307,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         condition.setDiscountId(discountId);
         condition.setRealUserLoginId(realUserLoginId);
 
-        WayDiscountReal selectReal = wayDiscountRealMapper
-                .selectByDiscountIdAndRealUserLoginId(condition);
+        WayDiscountReal selectReal = wayDiscountRealMapper.selectByDiscountIdAndRealUserLoginId(condition);
 
         int commodityUnreal = wayDiscount.getCommodityUnreal();
         commodityUnreal = commodityUnreal + 1;
@@ -323,7 +319,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             WayDiscountReal record = new WayDiscountReal();
             record.setUserLoginId(wayDiscountParam.getRealUserLoginId());
             record.setDiscountId(discountId);
-            record.setRealType((byte) 1);
+            record.setRealType((byte)1);
             wayDiscountRealMapper.insertSelective(record);
 
             if (logger.isDebugEnabled()) {
@@ -347,8 +343,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override
-    public WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam) {
+    @Override public WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
         WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
@@ -375,8 +370,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         WayDiscountRealQueryCondition condition = new WayDiscountRealQueryCondition();
         condition.setDiscountId(discountId);
         condition.setRealUserLoginId(realUserLoginId);
-        WayDiscountReal selectReal = wayDiscountRealMapper
-                .selectByDiscountIdAndRealUserLoginId(condition);
+        WayDiscountReal selectReal = wayDiscountRealMapper.selectByDiscountIdAndRealUserLoginId(condition);
         if (null == selectReal) {
             logger.info("优惠real不存在={}", JSON.toJSONString(condition));
             throw new RuntimeException("还没有投过");
@@ -384,7 +378,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         WayDiscountReal updateRecord = new WayDiscountReal();
         updateRecord.setId(selectReal.getId());
-        updateRecord.setIsDeleted((byte) 1);
+        updateRecord.setIsDeleted((byte)1);
         wayDiscountRealMapper.updateByPrimaryKeySelective(updateRecord);
 
         if (logger.isDebugEnabled()) {

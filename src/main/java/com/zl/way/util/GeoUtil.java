@@ -7,7 +7,7 @@ public final class GeoUtil {
     public static BigDecimal getDistance(BigDecimal clientLng, BigDecimal clientLat, BigDecimal shopLng,
                                          BigDecimal shopLat) {
         double distance = getDistance(clientLng.doubleValue(), clientLat.doubleValue(), shopLng.doubleValue(), shopLat.doubleValue());
-        return new BigDecimal(distance);
+        return BigDecimal.valueOf(distance);
     }
 
     /**
@@ -15,12 +15,13 @@ public final class GeoUtil {
      * @param lat1 维度1
      * @param lng2 经度2
      * @param lat2 纬度2
-     * @return
+     * @return 距离
      */
-    public static double getDistance(double lng1, double lat1, double lng2,
-                                     double lat2) {
+    private static double getDistance(double lng1, double lat1, double lng2,
+                                      double lat2) {
         double a, b, R;
-        R = 6378137; // 地球半径
+        // 地球半径
+        R = 6378137;
         lat1 = lat1 * Math.PI / 180.0;
         lat2 = lat2 * Math.PI / 180.0;
         a = lat1 - lat2;
@@ -62,6 +63,12 @@ public final class GeoUtil {
         System.out.println(dtDesc);
 
         dt = getDistance(102.221415, 31.900402, 102.221374, 31.899792);
+        System.out.println(dt);
+
+        dtDesc = getDistanceDesc(dt);
+        System.out.println(dtDesc);
+
+        dt = getDistance(102.221415, 31.900402, 102.238027, 31.900402);
         System.out.println(dt);
 
         dtDesc = getDistanceDesc(dt);

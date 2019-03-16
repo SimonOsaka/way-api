@@ -4,6 +4,7 @@ import com.zl.way.sp.enums.WayCommodityStatusEnum;
 import com.zl.way.sp.enums.WayShopStatusEnum;
 import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.mapper.WayCommodityMapper;
+import com.zl.way.sp.mapper.WayDiscountJpushMapper;
 import com.zl.way.sp.mapper.WayDiscountMapper;
 import com.zl.way.sp.mapper.WayShopMapper;
 import com.zl.way.sp.model.*;
@@ -12,6 +13,8 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,20 +23,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
-@Service("spWayDiscountService")
-public class WayDiscountServiceImpl implements WayDiscountService {
+@Service("spWayDiscountService") public class WayDiscountServiceImpl implements WayDiscountService {
 
-    @Autowired
-    private WayDiscountMapper discountMapper;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final WayDiscountMapper discountMapper;
 
-    @Autowired
-    private WayCommodityMapper commodityMapper;
+    private final WayCommodityMapper commodityMapper;
 
-    @Autowired
-    private WayShopMapper shopMapper;
+    private final WayShopMapper shopMapper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    private final WayDiscountJpushMapper discountJpushMapper;
+
+    @Autowired public WayDiscountServiceImpl(WayDiscountMapper discountMapper, WayCommodityMapper commodityMapper,
+        WayShopMapper shopMapper, WayDiscountJpushMapper discountJpushMapper) {
+        this.discountMapper = discountMapper;
+        this.commodityMapper = commodityMapper;
+        this.shopMapper = shopMapper;
+        this.discountJpushMapper = discountJpushMapper;
+    }
+
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayDiscountBo> queryDiscountList(WayDiscountParam param, PageParam pageParam) {
 
         WayDiscountCondition condition = BeanMapper.map(param, WayDiscountCondition.class);
@@ -45,8 +54,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return BeanMapper.mapAsList(discountList, WayDiscountBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayDiscountBo getDiscount(WayDiscountParam param) {
 
         WayDiscountCondition condition = BeanMapper.map(param, WayDiscountCondition.class);
@@ -59,16 +67,14 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         return BeanMapper.map(discountList.get(0), WayDiscountBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public WayDiscountBo createDiscount(WayDiscountParam param) throws BusinessException {
+    @Override @Transactional(rollbackFor = Exception.class) public WayDiscountBo createDiscount(WayDiscountParam param)
+        throws BusinessException {
 
         Long commodityId = param.getCommodityId();
         WayDiscountCondition discountCondition = new WayDiscountCondition();
         discountCondition.setCommodityId(commodityId);
         discountCondition.setLimitTimeExpireEnable(true);//未过期
-        List<WayDiscount> discountList = discountMapper
-                .selectByCondition(discountCondition, WayPageRequest.ONE);
+        List<WayDiscount> discountList = discountMapper.selectByCondition(discountCondition, WayPageRequest.ONE);
         if (CollectionUtils.isNotEmpty(discountList)) {
             throw new BusinessException("此商品优惠已存在");
         }
@@ -102,6 +108,14 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         record.setCommodityId(commodityId);
 
         discountMapper.insertSelective(record);
+
+        try {
+            WayDiscountJpush discountJpushRecord = new WayDiscountJpush();
+            discountJpushRecord.setDiscountId(record.getId());
+            discountJpushMapper.insertSelective(discountJpushRecord);
+        } catch (Exception e) {
+            logger.error("sp创建jpush异常", e);
+        }
         return BeanMapper.map(record, WayDiscountBo.class);
     }
 }
