@@ -17,12 +17,16 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
 
     private static final String HEADER_REFERER = "referer";
 
-    @Value("${custom.security.host:''}")
-    private String host;
+    private static final String METHOD_GET = "get";
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-            Object handler) throws Exception {
+    @Value("${custom.security.host:''}") private String host;
+
+    @Override public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+        if (METHOD_GET.equalsIgnoreCase(request.getMethod())) {
+            logger.info("请求get方法，通过：{}", request.getRequestURL());
+            return true;
+        }
 
         String referer = request.getHeader(HEADER_REFERER);
         String env = EnvUtil.getAppEnv();
@@ -31,7 +35,7 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
         }
 
         if (StringUtils.equalsIgnoreCase(env, EnvUtil.ENV_TEST) || StringUtils
-                .equalsIgnoreCase(env, EnvUtil.ENV_PRODUCTION)) {
+            .equalsIgnoreCase(env, EnvUtil.ENV_PRODUCTION)) {
             if (StringUtils.indexOf(referer, host) == -1) {
                 logger.warn("安全校验不通过，环境={}，referer={}，host={}", env, referer, host);
                 return false;
@@ -40,15 +44,14 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            ModelAndView modelAndView) throws Exception {
+    @Override public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+        ModelAndView modelAndView) throws Exception {
 
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-            Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+        throws Exception {
 
     }
 
