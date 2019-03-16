@@ -19,17 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/user")
-public class UserApi {
+@RestController @RequestMapping("/user") public class UserApi {
 
     private final Logger logger = LoggerFactory.getLogger(UserApi.class);
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Value("${custom.user.agreementsUrl}")
-    private String agreementsUrl;
+    @Value("${custom.user.agreementsUrl}") private String agreementsUrl;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
@@ -43,8 +39,7 @@ public class UserApi {
                 UserProfileBo userProfileBo = userService.getUserByTel(userRequest.getUserTel());
                 UserProfile userProfile = BeanMapper.map(userProfileBo, UserProfile.class);
                 UserResponse userResponse = BeanMapper.map(userProfile, UserResponse.class);
-                userResponse.setToken(
-                        TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
+                userResponse.setToken(TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
                 return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
             }
         } catch (RuntimeException re) {
@@ -56,11 +51,10 @@ public class UserApi {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseResult<UserResponse> userLogout(@RequestBody UserRequest userRequest,
-            @RequestHeader("token") String userToken) {
+        @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
@@ -114,11 +108,11 @@ public class UserApi {
     public ResponseResult<UserResponse> userSignin(@RequestBody UserRequest userRequest) {
 
         if (StringUtils.isBlank(userRequest.getUserLoginName())) {
-            return ResponseResultUtil.wrapWrongParamResponseResult("用户名必须填写");
+            return ResponseResultUtil.wrapWrongParamResponseResult("手机号必须填写");
         }
 
         if (StringUtils.isBlank(userRequest.getUserLoginPassword())) {
-            return ResponseResultUtil.wrapWrongParamResponseResult("用户密码必须填写");
+            return ResponseResultUtil.wrapWrongParamResponseResult("密码必须填写");
         }
 
         UserLoginParam userLoginParam = new UserLoginParam();
@@ -127,12 +121,10 @@ public class UserApi {
 
         try {
             if (userService.userNameLogin(userLoginParam)) {
-                UserProfileBo userProfileBo = userService
-                        .getUserByName(userRequest.getUserLoginName());
+                UserProfileBo userProfileBo = userService.getUserByName(userRequest.getUserLoginName());
                 UserProfile userProfile = BeanMapper.map(userProfileBo, UserProfile.class);
                 UserResponse userResponse = BeanMapper.map(userProfile, UserResponse.class);
-                userResponse.setToken(
-                        TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
+                userResponse.setToken(TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
                 return ResponseResultUtil.wrapSuccessResponseResult(userResponse);
             }
         } catch (Exception e) {
@@ -141,8 +133,7 @@ public class UserApi {
         return ResponseResultUtil.wrapWrongParamResponseResult("用户登录异常");
     }
 
-    @PostMapping("/device/sync")
-    public ResponseResult<Void> syncUserDevice(@RequestBody UserDeviceRequest request) {
+    @PostMapping("/device/sync") public ResponseResult<Void> syncUserDevice(@RequestBody UserDeviceRequest request) {
 
         if (null == request.getUserLoginId()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(null);

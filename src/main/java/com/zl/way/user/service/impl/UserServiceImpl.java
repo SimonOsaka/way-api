@@ -23,22 +23,17 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
-public class UserServiceImpl implements UserService {
+@Service public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Autowired
-    private UserLoginMapper userLoginMapper;
+    @Autowired private UserLoginMapper userLoginMapper;
 
-    @Autowired
-    private UserProfileMapper userProfileMapper;
+    @Autowired private UserProfileMapper userProfileMapper;
 
-    @Autowired
-    private UserDeviceMapper userDeviceMapper;
+    @Autowired private UserDeviceMapper userDeviceMapper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userTelLogin(UserLoginParam userLoginParam) {
 
         String userLoginTel = userLoginParam.getLoginTel();
@@ -85,8 +80,7 @@ public class UserServiceImpl implements UserService {
         return Boolean.TRUE;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userNameLogin(UserLoginParam userLoginParam) {
 
         String userLoginName = userLoginParam.getLoginName();
@@ -100,14 +94,10 @@ public class UserServiceImpl implements UserService {
         Date now = DateTime.now().toDate();
 
         if (null == userLogin) {
-            if (StringUtils.length(userLoginName) < 4 || StringUtils.length(userLoginName) > 16) {
-                throw new RuntimeException("用户名长度在4-16个字符内");
-            }
-
-            Pattern pattern = Pattern.compile("^[0-9A-Za-z]+$");
+            Pattern pattern = Pattern.compile("^1[3456789]\\d{9}$");
             Matcher matcher = pattern.matcher(userLoginName);
             if (!matcher.matches()) {
-                throw new RuntimeException("用户名只能包含字母和数字");
+                throw new RuntimeException("手机号格式不正确");
             }
 
             if (StringUtils.length(userLoginParam.getLoginPassword()) < 6) {
@@ -116,14 +106,14 @@ public class UserServiceImpl implements UserService {
 
             UserLogin userLoginRecord = new UserLogin();
             userLoginRecord.setLoginName(userLoginName);
-            userLoginRecord
-                    .setLoginPassword(md5UserLoginPassword(userLoginParam.getLoginPassword()));
+            userLoginRecord.setLoginPassword(md5UserLoginPassword(userLoginParam.getLoginPassword()));
             userLoginRecord.setLoginTime(now);
+            userLoginRecord.setLoginTel(userLoginName);
             userLoginMapper.insertSelective(userLoginRecord);
 
             UserProfile userProfileRecord = new UserProfile();
             userProfileRecord.setUserLoginId(userLoginRecord.getId());
-            userProfileRecord.setUserNickName("w_" + genNickName(userLoginRecord.getId() + ""));
+            userProfileRecord.setUserNickName("用户w_" + genNickName(userLoginRecord.getId() + ""));
             userProfileMapper.insertSelective(userProfileRecord);
             if (logger.isDebugEnabled()) {
                 logger.debug("用户创建成功{}", JSON.toJSONString(userProfileRecord));
@@ -131,8 +121,7 @@ public class UserServiceImpl implements UserService {
         } else {
 
             final String userLoginPassword = userLoginParam.getLoginPassword();
-            if (!md5UserLoginPassword(userLoginPassword)
-                    .equalsIgnoreCase(userLogin.getLoginPassword())) {
+            if (!md5UserLoginPassword(userLoginPassword).equalsIgnoreCase(userLogin.getLoginPassword())) {
                 logger.warn("用户密码不正确,{}", JSON.toJSONString(condition));
                 throw new RuntimeException("用户密码不正确");
             }
@@ -158,8 +147,7 @@ public class UserServiceImpl implements UserService {
         return Boolean.TRUE;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userLogout(UserLoginParam userlogoutParam) {
 
         Long userLoginId = userlogoutParam.getId();
@@ -196,8 +184,7 @@ public class UserServiceImpl implements UserService {
         return Boolean.TRUE;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public UserProfileBo getUserById(Long userLoginId) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
@@ -208,8 +195,7 @@ public class UserServiceImpl implements UserService {
         return getUser(userLogin);
     }
 
-    @Override
-    public UserProfileBo getUserByTel(String userTel) {
+    @Override public UserProfileBo getUserByTel(String userTel) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginTel(userTel);
@@ -219,8 +205,7 @@ public class UserServiceImpl implements UserService {
         return getUser(userLogin);
     }
 
-    @Override
-    public UserProfileBo getUserByName(String userLoginName) {
+    @Override public UserProfileBo getUserByName(String userLoginName) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginName(userLoginName);
@@ -263,8 +248,7 @@ public class UserServiceImpl implements UserService {
         return userProfileBo;
     }
 
-    @Override
-    public String getUserValidCode(String userTel) {
+    @Override public String getUserValidCode(String userTel) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginTel(userTel);
@@ -303,7 +287,7 @@ public class UserServiceImpl implements UserService {
             }
 
             if (null == userLogin.getValidCodeExpire() || now
-                    .after(userLogin.getValidCodeExpire())) {//当前时间大于过期时间，需要重新生成验证码
+                .after(userLogin.getValidCodeExpire())) {//当前时间大于过期时间，需要重新生成验证码
                 validCode = String.valueOf(RandomUtils.nextInt(113494, 984920));
                 UserLogin updateUserLogin = new UserLogin();
                 updateUserLogin.setId(userLogin.getId());
@@ -334,8 +318,7 @@ public class UserServiceImpl implements UserService {
         return validCode;
     }
 
-    @Override
-    public boolean saveOrUpdateUserDevice(UserDeviceParam param) {
+    @Override public boolean saveOrUpdateUserDevice(UserDeviceParam param) {
 
         UserDevice userDevice = new UserDevice();
         userDevice.setUserLoginId(param.getUserLoginId());
@@ -364,7 +347,7 @@ public class UserServiceImpl implements UserService {
         char[] ca = str.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ca.length; i++) {
-            sb.append((char) (ca[i] + 49 + offset[i]));
+            sb.append((char)(ca[i] + 49 + offset[i]));
         }
         return sb.toString();
     }
