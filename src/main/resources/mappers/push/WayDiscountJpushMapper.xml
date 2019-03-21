@@ -71,6 +71,7 @@
         select device.jpush_reg_id, discount.shop_lng, discount.shop_lat, discount.commodity_name,
         discount.commodity_price, jpush.id
         from user_device device
+        left join user_profile profile on profile.user_login_id = device.user_login_id
         left join way_shop_follow follow on follow.user_login_id = device.user_login_id
         left join way_shop shop on follow.shop_id = shop.id
         left join way_commodity commodity on commodity.shop_id = shop.id
@@ -79,17 +80,17 @@
         where jpush.has_pushed = 0
         and discount.commodity_id > 0
         and discount.is_deleted = 0
-        and follow.has_followed=0
-        and follow.is_deleted=0
+        and follow.has_followed = 0
+        and follow.is_deleted = 0
         and shop.is_deleted = 0
         and commodity.is_deleted = 0
-        and device.longitude > 0
-        and device.latitude > 0
+        and profile.address_longitude > 0
+        and profile.address_latitude > 0
         <if test="condition.radius != null">
-            and device.longitude <![CDATA[ > ]]> discount.shop_lng - #{condition.radius, jdbcType=DECIMAL}
-            and device.longitude <![CDATA[ < ]]> discount.shop_lng + #{condition.radius, jdbcType=DECIMAL}
-            and device.latitude <![CDATA[ > ]]> discount.shop_lat - #{condition.radius, jdbcType=DECIMAL}
-            and device.latitude <![CDATA[ < ]]> discount.shop_lat + #{condition.radius, jdbcType=DECIMAL}
+            and profile.address_longitude <![CDATA[ > ]]> discount.shop_lng - #{condition.radius, jdbcType=DECIMAL}
+            and profile.address_longitude <![CDATA[ < ]]> discount.shop_lng + #{condition.radius, jdbcType=DECIMAL}
+            and profile.address_latitude <![CDATA[ > ]]> discount.shop_lat - #{condition.radius, jdbcType=DECIMAL}
+            and profile.address_latitude <![CDATA[ < ]]> discount.shop_lat + #{condition.radius, jdbcType=DECIMAL}
         </if>
         <if test="condition.startTime != null and condition.endTime != null">
             and discount.create_time <![CDATA[ > ]]> #{condition.startTime, jdbcType=TIMESTAMP}
