@@ -6,3 +6,4 @@ amap:
   staticMapUrl: http://restapi.amap.com/v3/staticmap
   regeoUrl: http://restapi.amap.com/v3/geocode/regeo
   searchTextUrl: https://restapi.amap.com/v3/place/text
+  coordinateConvertUrl: https://restapi.amap.com/v3/assistant/coordinate/convert

@@ -1,6 +1,7 @@
 package com.zl.way.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.zl.way.user.mapper.UserAddressMapper;
 import com.zl.way.user.mapper.UserDeviceMapper;
 import com.zl.way.user.mapper.UserLoginMapper;
 import com.zl.way.user.mapper.UserProfileMapper;
@@ -16,10 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,11 +31,21 @@ import java.util.regex.Pattern;
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Autowired private UserLoginMapper userLoginMapper;
+    private final UserLoginMapper userLoginMapper;
 
-    @Autowired private UserProfileMapper userProfileMapper;
+    private final UserProfileMapper userProfileMapper;
 
-    @Autowired private UserDeviceMapper userDeviceMapper;
+    private final UserDeviceMapper userDeviceMapper;
+
+    private final UserAddressMapper userAddressMapper;
+
+    @Autowired public UserServiceImpl(UserLoginMapper userLoginMapper, UserProfileMapper userProfileMapper,
+        UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
+        this.userLoginMapper = userLoginMapper;
+        this.userProfileMapper = userProfileMapper;
+        this.userDeviceMapper = userDeviceMapper;
+        this.userAddressMapper = userAddressMapper;
+    }
 
     @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userTelLogin(UserLoginParam userLoginParam) {
@@ -339,6 +353,39 @@ import java.util.regex.Pattern;
             userDeviceMapper.updateByPrimaryKeySelective(userDevice);
         }
         return Boolean.TRUE;
+    }
+
+    @Override @Transactional(rollbackFor = Exception.class) public void updateProfileAddress(UserProfileParam param) {
+
+        UserProfile record = BeanMapper.map(param, UserProfile.class);
+        record.setUpdateTime(DateTime.now().toDate());
+        userProfileMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<UserAddressBo> queryUserAddressList(UserAddressParam param) {
+        UserAddressQueryCondition condition = new UserAddressQueryCondition();
+        condition.setUserLoginId(param.getUserLoginId());
+        List<UserAddress> userAddressList = userAddressMapper.selectByCondition(condition);
+        if (CollectionUtils.isEmpty(userAddressList)) {
+            return Collections.emptyList();
+        }
+        return BeanMapper.mapAsList(userAddressList, UserAddressBo.class);
+    }
+
+    @Override @Transactional(rollbackFor = Exception.class) public void saveUserAddress(UserAddressParam param) {
+        UserAddress record = BeanMapper.map(param, UserAddress.class);
+        userAddressMapper.insertSelective(record);
+    }
+
+    @Override public void updateUserAddress(UserAddressParam param) {
+        UserAddress record = BeanMapper.map(param, UserAddress.class);
+        record.setUpdateTime(DateTime.now().toDate());
+        userAddressMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override public void deleteUserAddress(UserAddressParam param) {
+        userAddressMapper.deleteByPrimaryKey(param.getId());
     }
 
     private String genNickName(String str) {

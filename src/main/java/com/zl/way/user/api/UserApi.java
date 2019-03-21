@@ -1,12 +1,7 @@
 package com.zl.way.user.api;
 
-import com.zl.way.user.api.model.UserDeviceRequest;
-import com.zl.way.user.api.model.UserRequest;
-import com.zl.way.user.api.model.UserResponse;
-import com.zl.way.user.model.UserDeviceParam;
-import com.zl.way.user.model.UserLoginParam;
-import com.zl.way.user.model.UserProfile;
-import com.zl.way.user.model.UserProfileBo;
+import com.zl.way.user.api.model.*;
+import com.zl.way.user.model.*;
 import com.zl.way.user.service.UserService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
@@ -18,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController @RequestMapping("/user") public class UserApi {
 
@@ -144,4 +141,92 @@ import org.springframework.web.bind.annotation.*;
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
+    @PostMapping("/profile/address/update")
+    public ResponseResult<Void> updateProfileAddress(@RequestBody UserProfileRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserProfileParam param = BeanMapper.map(request, UserProfileParam.class);
+
+        userService.updateProfileAddress(param);
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping("/address/list")
+    public ResponseResult<UserAddressResponse> queryUserAddressList(@RequestBody UserAddressRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserAddressParam param = new UserAddressParam();
+        param.setUserLoginId(request.getUserLoginId());
+        List<UserAddressBo> userAddressBoList = userService.queryUserAddressList(param);
+
+        UserAddressResponse response = new UserAddressResponse();
+        response.setUserAddressBoList(userAddressBoList);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/address/create")
+    public ResponseResult<Void> createUserAddress(@RequestBody UserAddressRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserAddressParam param = new UserAddressParam();
+        param.setName(request.getAddressName());
+        param.setTag(request.getAddressTag());
+        param.setLongitude(request.getAddressLongitude());
+        param.setLatitude(request.getAddressLatitude());
+        param.setUserLoginId(request.getUserLoginId());
+        userService.saveUserAddress(param);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping("/address/update")
+    public ResponseResult<Void> updateUserAddress(@RequestBody UserAddressRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserAddressParam param = new UserAddressParam();
+        param.setName(request.getAddressName());
+        param.setTag(request.getAddressTag());
+        param.setLongitude(request.getAddressLongitude());
+        param.setLatitude(request.getAddressLatitude());
+        param.setId(request.getId());
+        userService.updateUserAddress(param);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping("/address/delete")
+    public ResponseResult<Void> deleteUserAddress(@RequestBody UserAddressRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserAddressParam param = new UserAddressParam();
+        param.setId(request.getId());
+        userService.deleteUserAddress(param);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
 }

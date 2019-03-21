@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.user.mapper.UserAddressMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.user.model.UserAddress">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="longitude" jdbcType="DECIMAL" property="longitude"/>
+        <result column="latitude" jdbcType="DECIMAL" property="latitude"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_login_id, name, longitude, latitude, tag, is_deleted, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_address
+        where id = #{id,jdbcType=BIGINT} and is_deleted = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update user_address set is_deleted = 1, update_time = now()
+        where id = #{id,jdbcType=BIGINT} and is_deleted = 0
+    </delete>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.user.model.UserAddress"
+            useGeneratedKeys="true">
+        insert into user_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userLoginId != null">
+                user_login_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="tag != null">
+                tag,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userLoginId != null">
+                #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="tag != null">
+                #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.user.model.UserAddress">
+        update user_address
+        <set>
+            <if test="userLoginId != null">
+                user_login_id = #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT} and is_deleted = 0
+    </update>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_address
+        where is_deleted = 0
+        <if test="condition.userLoginId != null">
+            and user_login_id = #{condition.userLoginId,jdbcType=BIGINT}
+        </if>
+    </select>
+</mapper>

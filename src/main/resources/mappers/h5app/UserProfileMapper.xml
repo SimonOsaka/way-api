@@ -2,19 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zl.way.user.mapper.UserProfileMapper">
     <resultMap id="BaseResultMap" type="com.zl.way.user.model.UserProfile">
-
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
         <result column="user_nick_name" jdbcType="VARCHAR" property="userNickName"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="address_name" jdbcType="VARCHAR" property="addressName"/>
+        <result column="address_longitude" jdbcType="DECIMAL" property="addressLongitude"/>
+        <result column="address_latitude" jdbcType="DECIMAL" property="addressLatitude"/>
     </resultMap>
     <sql id="Base_Column_List">
-        
-        id, user_login_id, user_nick_name, create_time, update_time
+        id, user_login_id, user_nick_name, create_time, update_time, address_name, address_longitude,
+        address_latitude
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap">
-
         select
         <include refid="Base_Column_List"/>
         from user_profile
@@ -31,21 +32,11 @@
         </if>
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        
         delete from user_profile
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zl.way.user.model.UserProfile"
-            useGeneratedKeys="true">
-        
-        insert into user_profile (user_login_id, user_nick_name, create_time,
-        update_time)
-        values (#{userLoginId,jdbcType=BIGINT}, #{userNickName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP})
-    </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.user.model.UserProfile"
             useGeneratedKeys="true">
-
         insert into user_profile
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userLoginId != null">
@@ -59,6 +50,15 @@
             </if>
             <if test="updateTime != null">
                 update_time,
+            </if>
+            <if test="addressName != null">
+                address_name,
+            </if>
+            <if test="addressLongitude != null">
+                address_longitude,
+            </if>
+            <if test="addressLatitude != null">
+                address_latitude,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -74,15 +74,20 @@
             <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="addressName != null">
+                #{addressName,jdbcType=VARCHAR},
+            </if>
+            <if test="addressLongitude != null">
+                #{addressLongitude,jdbcType=DECIMAL},
+            </if>
+            <if test="addressLatitude != null">
+                #{addressLatitude,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.user.model.UserProfile">
-
         update user_profile
         <set>
-            <if test="userLoginId != null">
-                user_login_id = #{userLoginId,jdbcType=BIGINT},
-            </if>
             <if test="userNickName != null">
                 user_nick_name = #{userNickName,jdbcType=VARCHAR},
             </if>
@@ -92,16 +97,26 @@
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="addressName != null">
+                address_name = #{addressName,jdbcType=VARCHAR},
+            </if>
+            <if test="addressLongitude != null">
+                address_longitude = #{addressLongitude,jdbcType=DECIMAL},
+            </if>
+            <if test="addressLatitude != null">
+                address_latitude = #{addressLatitude,jdbcType=DECIMAL},
+            </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="com.zl.way.user.model.UserProfile">
-        
-        update user_profile
-        set user_login_id = #{userLoginId,jdbcType=BIGINT},
-        user_nick_name = #{userNickName,jdbcType=VARCHAR},
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-        update_time = #{updateTime,jdbcType=TIMESTAMP}
-        where id = #{id,jdbcType=BIGINT}
+        where
+        <choose>
+            <when test="id != null">
+                id = #{id,jdbcType=BIGINT}
+            </when>
+            <when test="userLoginId != null">
+                user_login_id = #{userLoginId,jdbcType=BIGINT}
+            </when>
+        </choose>
+
+
     </update>
 </mapper>
