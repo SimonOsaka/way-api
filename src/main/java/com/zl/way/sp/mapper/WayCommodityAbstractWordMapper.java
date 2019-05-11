@@ -20,6 +20,8 @@ public interface WayCommodityAbstractWordMapper {
 
     int updateByPrimaryKey(WayCommodityAbstractWord record);
 
+    int updateLeafByPrimaryKey(WayCommodityAbstractWord record);
+
     List<WayCommodityAbstractWord> selectByCondition(@Param("condition") WayCommodityAbstractWordCondition condition,
         @Param("pageable") Pageable pageable);
 }

@@ -20,6 +20,8 @@ public class WayCommodityAbstractWord implements Serializable {
 
     private Byte leaf;
 
+    private Integer pid;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -84,5 +86,13 @@ public class WayCommodityAbstractWord implements Serializable {
 
     public void setLeaf(Byte leaf) {
         this.leaf = leaf;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 }
