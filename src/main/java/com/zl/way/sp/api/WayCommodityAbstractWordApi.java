@@ -38,6 +38,7 @@ public class WayCommodityAbstractWordApi {
         param.setShopCateLeafId(request.getShopCateLeafId());
         param.setPid(request.getPid());
         param.setPathPid(request.getPathPid());
+        param.setLeaf(request.getLeaf());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(request.getPageNum());

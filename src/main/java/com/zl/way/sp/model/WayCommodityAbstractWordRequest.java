@@ -8,6 +8,15 @@ public class WayCommodityAbstractWordRequest extends PageParam {
     private Integer pid;
     private Integer pathPid;
     private String name;
+    private Byte leaf;
+
+    public Byte getLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(Byte leaf) {
+        this.leaf = leaf;
+    }
 
     public Integer getId() {
         return id;

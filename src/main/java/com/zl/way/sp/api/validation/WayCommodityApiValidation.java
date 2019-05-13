@@ -83,6 +83,18 @@ public class WayCommodityApiValidation {
         return this;
     }
 
+    public WayCommodityApiValidation abstractWordId() {
+        if (null == request.getAbstractWordId()) {
+            validationMessageList.add("关联词不能为空");
+            return this;
+        }
+
+        if (request.getAbstractWordId() < 1) {
+            validationMessageList.add("关联词不正确");
+        }
+        return this;
+    }
+
     public boolean hasErrors() {
 
         return !validationMessageList.isEmpty();
