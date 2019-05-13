@@ -37,6 +37,7 @@ import java.util.Map;
         condition.setShopCateLeafId(param.getShopCateLeafId());
         condition.setPid(param.getPid());
         condition.setPathPid(param.getPathPid());
+        condition.setLeaf(param.getLeaf());
         List<WayCommodityAbstractWord> commodityAbstractWordList =
             commodityAbstractWordMapper.selectByCondition(condition, WayPageRequest.of(pageParam));
 
