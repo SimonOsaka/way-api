@@ -1,14 +1,14 @@
-package com.zl.way.sp.mapper;
+package com.zl.way.mp.mapper;
 
-import com.zl.way.sp.model.WayCommodityAbstractWord;
-import com.zl.way.sp.model.WayCommodityAbstractWordCondition;
+import com.zl.way.mp.model.WayCommodityAbstractWord;
+import com.zl.way.mp.model.WayCommodityAbstractWordCondition;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("spWayCommodityAbstractWordMapper") public interface WayCommodityAbstractWordMapper {
+@Repository("mpWayCommodityAbstractWordMapper") public interface WayCommodityAbstractWordMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(WayCommodityAbstractWord record);
