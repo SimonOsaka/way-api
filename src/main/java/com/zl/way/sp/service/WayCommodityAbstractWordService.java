@@ -20,35 +20,4 @@ public interface WayCommodityAbstractWordService {
      */
     WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param, PageParam pageParam);
 
-    /**
-     * 增加抽象词
-     *
-     * @param param 入参
-     * @return
-     */
-    WayCommodityAbstractWordBo createAbstractWord(WayCommodityAbstractWordParam param);
-
-    /**
-     * 更新抽象词
-     *
-     * @param param 入参
-     * @return
-     */
-    WayCommodityAbstractWordBo updateAbstractWord(WayCommodityAbstractWordParam param);
-
-    /**
-     * 删除抽象词
-     *
-     * @param param 入参
-     * @return
-     */
-    WayCommodityAbstractWordBo deleteAbstractWord(WayCommodityAbstractWordParam param) throws Exception;
-
-    /**
-     * 移动抽象词
-     *
-     * @param param 入参
-     * @return
-     */
-    WayCommodityAbstractWordBo moveAbstractWord(WayCommodityAbstractWordParam param) throws Exception;
 }

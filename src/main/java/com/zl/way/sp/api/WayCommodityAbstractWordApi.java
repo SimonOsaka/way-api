@@ -5,7 +5,10 @@ import com.zl.way.sp.model.WayCommodityAbstractWordParam;
 import com.zl.way.sp.model.WayCommodityAbstractWordRequest;
 import com.zl.way.sp.model.WayCommodityAbstractWordResponse;
 import com.zl.way.sp.service.WayCommodityAbstractWordService;
-import com.zl.way.util.*;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
+import com.zl.way.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,75 +56,4 @@ public class WayCommodityAbstractWordApi {
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
-    @PostMapping(value = "/create") public ResponseResult<WayCommodityAbstractWordResponse> createCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
-
-        WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
-
-        commodityAbstractWordService.createAbstractWord(param);
-
-        return ResponseResultUtil.wrapSuccessResponseResult(null);
-    }
-
-    @PostMapping(value = "/update") public ResponseResult<WayCommodityAbstractWordResponse> updateCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
-
-        WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
-
-        commodityAbstractWordService.updateAbstractWord(param);
-
-        return ResponseResultUtil.wrapSuccessResponseResult(null);
-    }
-
-    @PostMapping(value = "/delete") public ResponseResult<WayCommodityAbstractWordResponse> deleteCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
-
-        WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
-
-        try {
-            commodityAbstractWordService.deleteAbstractWord(param);
-        } catch (Exception e) {
-            return ResponseResultUtil.wrapException(e);
-        }
-
-        return ResponseResultUtil.wrapSuccessResponseResult(null);
-    }
-
-    @PostMapping(value = "/move") public ResponseResult<WayCommodityAbstractWordResponse> moveCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
-
-        WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
-
-        try {
-            commodityAbstractWordService.moveAbstractWord(param);
-        } catch (Exception e) {
-            return ResponseResultUtil.wrapException(e);
-        }
-
-        return ResponseResultUtil.wrapSuccessResponseResult(null);
-    }
 }
