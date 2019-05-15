@@ -1,6 +1,9 @@
 package com.zl.way.shop.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.zl.way.commodity.mapper.WayCommodityAbstractWordMapper;
+import com.zl.way.commodity.mapper.model.WayCommodityAbstractWordCondition;
+import com.zl.way.commodity.model.WayCommodityAbstractWord;
 import com.zl.way.shop.mapper.WayShopFollowMapper;
 import com.zl.way.shop.mapper.WayShopMapper;
 import com.zl.way.shop.model.*;
@@ -18,26 +21,23 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-@Service
-public class WayShopServiceImpl implements WayShopService {
+@Service public class WayShopServiceImpl implements WayShopService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private WayShopMapper wayShopMapper;
+    @Autowired private WayShopMapper wayShopMapper;
 
-    @Autowired
-    private WayShopFollowMapper shopFollowMapper;
+    @Autowired private WayShopFollowMapper shopFollowMapper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Autowired private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
+
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShop getPromoShopDetail(Long id) {
 
         return getPromoShopDetail(id, null);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShop getPromoShopDetail(Long id, Long userLoginId) {
 
         if (NumberUtil.isNotLongKey(id)) {
@@ -48,16 +48,16 @@ public class WayShopServiceImpl implements WayShopService {
         if (null != wayShop) {
             WayShopFollow follow = new WayShopFollow();
             if (null == userLoginId) {
-                follow.setHasFollowed((byte) 1);
+                follow.setHasFollowed((byte)1);
             } else {
                 WayShopFollowQueryCondition followQueryCondition = new WayShopFollowQueryCondition();
                 followQueryCondition.setUserLoginId(userLoginId);
                 followQueryCondition.setShopId(id);
-                List<WayShopFollowBo> shopFollowBoList = shopFollowMapper
-                        .selectByCondition(followQueryCondition, WayPageRequest.ONE);
+                List<WayShopFollowBo> shopFollowBoList =
+                    shopFollowMapper.selectByCondition(followQueryCondition, WayPageRequest.ONE);
 
                 if (CollectionUtils.isEmpty(shopFollowBoList)) {
-                    follow.setHasFollowed((byte) 1);
+                    follow.setHasFollowed((byte)1);
                 } else {
                     follow.setHasFollowed(shopFollowBoList.get(0).getHasFollowed());
                 }
@@ -71,8 +71,7 @@ public class WayShopServiceImpl implements WayShopService {
         return wayShop;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopBo> pageWayShopByCondition(WayShopParam wayShopParam, PageParam pageParam) {
 
         if (null == wayShopParam) {
@@ -83,7 +82,18 @@ public class WayShopServiceImpl implements WayShopService {
         Pageable pageable = WayPageRequest.of(pageParam);
         logger.info("商铺列表sql条件{}{}", condition, pageable);
 
-        List<WayShop> wayShopList = wayShopMapper.selectByCondition(condition, pageable);
+        WayCommodityAbstractWordCondition wordCondition = new WayCommodityAbstractWordCondition();
+        wordCondition.setName(wayShopParam.getCommodityName());
+        List<WayCommodityAbstractWord> wordList =
+            commodityAbstractWordMapper.selectByCondition(wordCondition, WayPageRequest.ONE);
+
+        List<WayShop> wayShopList;
+        if (CollectionUtils.isNotEmpty(wordList)) {
+            condition.setPathPid(wordList.get(0).getId());
+            wayShopList = wayShopMapper.selectByAbstractWord(condition, pageable);
+        } else {
+            wayShopList = wayShopMapper.selectByCondition(condition, pageable);
+        }
         if (logger.isDebugEnabled()) {
             logger.debug("商铺列表结果={}", wayShopList);
         }
@@ -93,11 +103,11 @@ public class WayShopServiceImpl implements WayShopService {
 
         List<WayShopBo> wayShopBoList = BeanMapper.mapAsList(wayShopList, WayShopBo.class);
         for (WayShopBo wayShopBo : wayShopBoList) {
-            if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat()
-                    && null != wayShopBo.getShopLng() && null != wayShopBo.getShopLat()) {
+            if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat() && null != wayShopBo
+                .getShopLng() && null != wayShopBo.getShopLat()) {
                 BigDecimal distance = GeoUtil
-                        .getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(),
-                                wayShopBo.getShopLng(), wayShopBo.getShopLat());
+                    .getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(), wayShopBo.getShopLng(),
+                        wayShopBo.getShopLat());
                 wayShopBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
             }
         }

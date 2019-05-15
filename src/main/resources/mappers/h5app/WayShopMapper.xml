@@ -94,6 +94,23 @@
         shop.shop_py,
         leaf.cate_name
     </sql>
+    <sql id="SELECT_CONDITION_RESULT_MAP">
+        <include refid="Base_CateLeaf_Column_List"/>,
+        commodity.name as 'commodityName',
+        commodity.id as 'commodityId',
+        <!--commodity.price as 'commodityPrice',-->
+        commodity.img_url as 'commodityImgUrl',
+        <trim prefixOverrides="," suffixOverrides=",">
+            <if test="condition.clientLng != null and condition.clientLat != null">
+                abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) as lng_distance,
+                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) as lat_distance,
+                sqrt(abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) * abs(shop_lng -
+                #{condition.clientLng, jdbcType=DECIMAL}) +
+                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) * abs(shop_lat -
+                #{condition.clientLat, jdbcType=DECIMAL})) as s_distance,
+            </if>
+        </trim>
+    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_CateLeaf_Column_List"/>
@@ -322,23 +339,21 @@
         where id = #{id,jdbcType=BIGINT} and is_deleted = 0
     </update>
 
+    <sql id="WHERE_CONDITION">
+        <if test="condition.cityCode != null">
+            and shop.city_code = #{condition.cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="condition.clientLng != null and condition.clientLat != null">
+            order by s_distance
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </sql>
+
     <select id="selectByCondition" resultMap="selectByconditionResultMap">
         select
-        <include refid="Base_CateLeaf_Column_List"/>,
-        commodity.name as 'commodityName',
-        commodity.id as 'commodityId',
-        <!--commodity.price as 'commodityPrice',-->
-        commodity.img_url as 'commodityImgUrl',
-        <trim prefixOverrides="," suffixOverrides=",">
-            <if test="condition.clientLng != null and condition.clientLat != null">
-                abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) as lng_distance,
-                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) as lat_distance,
-                sqrt(abs(shop_lng - #{condition.clientLng, jdbcType=DECIMAL}) * abs(shop_lng -
-                #{condition.clientLng, jdbcType=DECIMAL}) +
-                abs(shop_lat - #{condition.clientLat, jdbcType=DECIMAL}) * abs(shop_lat -
-                #{condition.clientLat, jdbcType=DECIMAL})) as s_distance,
-            </if>
-        </trim>
+        <include refid="SELECT_CONDITION_RESULT_MAP"/>
         from way_shop shop
         left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
         left join way_commodity commodity on shop.id = commodity.shop_id
@@ -348,9 +363,6 @@
         </if>
         <if test="condition.shopCateLeafId != null">
             and shop.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
-        </if>
-        <if test="condition.cityCode != null">
-            and shop.city_code = #{condition.cityCode,jdbcType=VARCHAR}
         </if>
         <trim prefix="and (" suffix=")" suffixOverrides="or">
             <if test="condition.shopName != null and condition.shopName != ''">
@@ -368,11 +380,20 @@
                 '%') or
             </if>
         </trim>
-        <if test="condition.clientLng != null and condition.clientLat != null">
-            order by s_distance
-        </if>
-        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
-            limit ${pageable.offset}, ${pageable.pageSize}
-        </if>
+        <include refid="WHERE_CONDITION"/>
+    </select>
+
+    <select id="selectByAbstractWord" resultMap="selectByconditionResultMap">
+        SELECT
+        <include refid="SELECT_CONDITION_RESULT_MAP"/>
+        FROM way_shop shop
+        LEFT JOIN way_shop_cate_leaf leaf ON shop.shop_cate_leaf_id = leaf.id
+        LEFT JOIN way_commodity commodity ON shop.id = commodity.shop_id
+        LEFT JOIN way_commodity_abstract_word word ON word.id = commodity.abstract_word_id
+        WHERE shop.is_deleted = 0 AND commodity.is_deleted = 0 AND word.is_deleted = 0
+        AND (JSON_CONTAINS(word.json_data->'$.path[*]', CONVERT(#{condition.pathPid, jdbcType=INTEGER}, CHAR)) OR
+        word.id=#{condition.pathPid, jdbcType=INTEGER}) AND
+        word.leaf = 1
+        <include refid="WHERE_CONDITION"/>
     </select>
 </mapper>
