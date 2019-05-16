@@ -16,6 +16,9 @@ spring:
     favicon:
       enabled: false
 
+  pid:
+    file: /apps/pid/api.pid
+
 server:
   port: 8080
   servlet:
