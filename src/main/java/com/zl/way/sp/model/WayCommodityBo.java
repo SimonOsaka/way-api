@@ -12,6 +12,8 @@ public class WayCommodityBo extends WayCommodity {
 
     private String statusName;
 
+    private String abstractWordName;
+
     public List<String> getImgUrlList() {
 
         return imgUrlList;
@@ -28,8 +30,8 @@ public class WayCommodityBo extends WayCommodity {
             return statusName;
         }
 
-        WayCommodityStatusEnum currentCommodityStatus = EnumUtil
-                .getEnumByValue(getIsDeleted(), WayCommodityStatusEnum.class);
+        WayCommodityStatusEnum currentCommodityStatus =
+            EnumUtil.getEnumByValue(getIsDeleted(), WayCommodityStatusEnum.class);
         if (null != currentCommodityStatus) {
             return currentCommodityStatus.getDesc();
         }
@@ -39,5 +41,13 @@ public class WayCommodityBo extends WayCommodity {
     public void setStatusName(String statusName) {
 
         this.statusName = statusName;
+    }
+
+    public String getAbstractWordName() {
+        return abstractWordName;
+    }
+
+    public void setAbstractWordName(String abstractWordName) {
+        this.abstractWordName = abstractWordName;
     }
 }

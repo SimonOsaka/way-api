@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.commodity.mapper.WayCommodityAbstractWordMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.commodity.model.WayCommodityAbstractWord">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="shop_cate_leaf_id" jdbcType="INTEGER" property="shopCateLeafId"/>
+        <result column="json_data" jdbcType="CHAR" property="jsonData"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="leaf" jdbcType="TINYINT" property="leaf"/>
+        <result column="pid" jdbcType="INTEGER" property="pid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, shop_cate_leaf_id, json_data, create_time, update_time, is_deleted, leaf,
+        pid
+    </sql>
+    <sql id="Less_Column_List">
+        id, name, shop_cate_leaf_id, leaf, pid
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_commodity_abstract_word
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Less_Column_List"/>
+        from
+        way_commodity_abstract_word word
+        where word.is_deleted = 0
+        <if test="condition.name != null and condition.name != ''">
+            and word.name = #{condition.name, jdbcType=VARCHAR}
+        </if>
+        <if test="condition.shopCateLeafId != null">
+            and word.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
+        </if>
+        <if test="condition.leaf != null">
+            and word.leaf = #{condition.leaf, jdbcType=TINYINT}
+        </if>
+        <if test="condition.pid != null">
+            and word.pid = #{condition.pid, jdbcType=TINYINT}
+        </if>
+        <if test="condition.pathPid != null">
+            and JSON_CONTAINS(word.json_data->'$.path[*]', CONVERT(#{condition.pathPid, jdbcType=INTEGER}, CHAR))
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

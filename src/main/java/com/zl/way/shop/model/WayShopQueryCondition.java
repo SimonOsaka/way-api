@@ -3,33 +3,40 @@ package com.zl.way.shop.model;
 import java.math.BigDecimal;
 
 public class WayShopQueryCondition extends WayShop {
-	private String commodityName;
+    /**
+     * 纬度
+     */
+    private BigDecimal clientLat;
+    /**
+     * 经度
+     */
+    private BigDecimal clientLng;
+    /**
+     * 抽象词id
+     */
+    private Integer pathPid;
 
-	private BigDecimal clientLat;//纬度
-	private BigDecimal clientLng;//经度
+    public BigDecimal getClientLat() {
+        return clientLat;
+    }
 
-	public String getCommodityName() {
-		return commodityName;
-	}
+    public void setClientLat(BigDecimal clientLat) {
+        this.clientLat = clientLat;
+    }
 
-	public void setCommodityName(String commodityName) {
-		this.commodityName = commodityName;
-	}
+    public BigDecimal getClientLng() {
+        return clientLng;
+    }
 
-	public BigDecimal getClientLat() {
-		return clientLat;
-	}
+    public void setClientLng(BigDecimal clientLng) {
+        this.clientLng = clientLng;
+    }
 
-	public void setClientLat(BigDecimal clientLat) {
-		this.clientLat = clientLat;
-	}
+    public Integer getPathPid() {
+        return pathPid;
+    }
 
-	public BigDecimal getClientLng() {
-		return clientLng;
-	}
-
-	public void setClientLng(BigDecimal clientLng) {
-		this.clientLng = clientLng;
-	}
-
+    public void setPathPid(Integer pathPid) {
+        this.pathPid = pathPid;
+    }
 }

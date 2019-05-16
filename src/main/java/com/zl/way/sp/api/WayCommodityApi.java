@@ -16,22 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("spWayCommodityApi")
-@RequestMapping("/sp/commodity")
-public class WayCommodityApi {
+@RestController("spWayCommodityApi") @RequestMapping("/sp/commodity") public class WayCommodityApi {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private WayCommodityService commodityService;
+    @Autowired private WayCommodityService commodityService;
 
-    @Autowired
-    private ApiValidationService apiValidationService;
+    @Autowired private ApiValidationService apiValidationService;
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayCommodityResponse> queryCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> queryCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -44,17 +39,15 @@ public class WayCommodityApi {
         pageParam.setPageNum(request.getPageNum());
         pageParam.setPageSize(request.getPageSize());
 
-        List<WayCommodityBo> commodityBoList = commodityService
-                .queryCommodityList(commodityParam, pageParam);
+        List<WayCommodityBo> commodityBoList = commodityService.queryCommodityList(commodityParam, pageParam);
         WayCommodityResponse response = new WayCommodityResponse();
         response.setCommodityBoList(commodityBoList);
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
     @PostMapping(value = "/get")
-    public ResponseResult<WayCommodityResponse> getCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> getCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -81,17 +74,16 @@ public class WayCommodityApi {
     }
 
     @PostMapping(value = "/create")
-    public ResponseResult<WayCommodityResponse> createCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> createCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).shopId()
-                .name().price().imgUrl();
+        WayCommodityApiValidation validation =
+            new WayCommodityApiValidation(request).shopId().name().price().imgUrl().abstractWordId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -103,17 +95,16 @@ public class WayCommodityApi {
     }
 
     @PostMapping(value = "/update")
-    public ResponseResult<WayCommodityResponse> updateCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> updateCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId()
-                .shopId().name().price().imgUrl();
+        WayCommodityApiValidation validation =
+            new WayCommodityApiValidation(request).commodityId().shopId().name().price().imgUrl().abstractWordId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -131,9 +122,8 @@ public class WayCommodityApi {
     }
 
     @PostMapping(value = "/delete")
-    public ResponseResult<WayCommodityResponse> deleteCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> deleteCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -158,9 +148,8 @@ public class WayCommodityApi {
     }
 
     @PostMapping("/online")
-    public ResponseResult<WayCommodityResponse> onlineCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> onlineCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -168,7 +157,7 @@ public class WayCommodityApi {
         }
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-        commodityParam.setIsDeleted((byte) 0);
+        commodityParam.setIsDeleted((byte)0);
 
         WayCommodityBo commodityBo = commodityService.updateStatus(commodityParam);
 
@@ -178,9 +167,8 @@ public class WayCommodityApi {
     }
 
     @PostMapping("/offline")
-    public ResponseResult<WayCommodityResponse> offlineCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> offlineCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
