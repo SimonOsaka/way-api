@@ -35,7 +35,7 @@ public class WayCommodity implements Serializable {
 
     private String namePy;
 
-    private Integer abstractWordId;
+    private String abstractWordIds;
 
     private List<WayCommodityLog> commodityLogList;
 
@@ -181,12 +181,12 @@ public class WayCommodity implements Serializable {
         this.namePy = namePy == null ? null : namePy.trim();
     }
 
-    public Integer getAbstractWordId() {
-        return abstractWordId;
+    public String getAbstractWordIds() {
+        return abstractWordIds;
     }
 
-    public void setAbstractWordId(Integer abstractWordId) {
-        this.abstractWordId = abstractWordId;
+    public void setAbstractWordIds(String abstractWordIds) {
+        this.abstractWordIds = abstractWordIds;
     }
 
     public List<WayCommodityLog> getCommodityLogList() {

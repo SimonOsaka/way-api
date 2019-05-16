@@ -17,7 +17,7 @@ public class WayCommodityRequest extends PageParam {
 
     private List<String> imgUrlList;
 
-    private Integer abstractWordId;
+    private List<Integer> abstractWordIdList;
 
     public Long getId() {
 
@@ -69,11 +69,11 @@ public class WayCommodityRequest extends PageParam {
         this.imgUrlList = imgUrlList;
     }
 
-    public Integer getAbstractWordId() {
-        return abstractWordId;
+    public List<Integer> getAbstractWordIdList() {
+        return abstractWordIdList;
     }
 
-    public void setAbstractWordId(Integer abstractWordId) {
-        this.abstractWordId = abstractWordId;
+    public void setAbstractWordIdList(List<Integer> abstractWordIdList) {
+        this.abstractWordIdList = abstractWordIdList;
     }
 }

@@ -153,6 +153,11 @@
         <if test="condition.pathPid != null">
             and JSON_CONTAINS(word.json_data->'$.path[*]', CONVERT(#{condition.pathPid, jdbcType=INTEGER}, CHAR))
         </if>
+        <if test="condition.ids != null and condition.ids.size > 0">
+            <foreach collection="condition.ids" item="item" separator="," open="and word.id in (" close=")">
+                #{item, jdbcType=INTEGER}
+            </foreach>
+        </if>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>
