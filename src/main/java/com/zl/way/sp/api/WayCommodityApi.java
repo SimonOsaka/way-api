@@ -83,7 +83,7 @@ import java.util.List;
         }
 
         WayCommodityApiValidation validation =
-            new WayCommodityApiValidation(request).shopId().name().price().imgUrl().abstractWordId();
+            new WayCommodityApiValidation(request).shopId().name().price().imgUrl().abstractWordIds();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -104,7 +104,7 @@ import java.util.List;
         }
 
         WayCommodityApiValidation validation =
-            new WayCommodityApiValidation(request).commodityId().shopId().name().price().imgUrl().abstractWordId();
+            new WayCommodityApiValidation(request).commodityId().shopId().name().price().imgUrl().abstractWordIds();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
