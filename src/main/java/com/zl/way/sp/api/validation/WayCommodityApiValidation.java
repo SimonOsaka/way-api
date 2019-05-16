@@ -83,14 +83,17 @@ public class WayCommodityApiValidation {
         return this;
     }
 
-    public WayCommodityApiValidation abstractWordId() {
-        if (null == request.getAbstractWordId()) {
+    public WayCommodityApiValidation abstractWordIds() {
+        if (CollectionUtils.isEmpty(request.getAbstractWordIdList())) {
             validationMessageList.add("关联词不能为空");
             return this;
         }
 
-        if (request.getAbstractWordId() < 1) {
-            validationMessageList.add("关联词不正确");
+        for (Integer abstractWordId : request.getAbstractWordIdList()) {
+            if (null == abstractWordId || abstractWordId.intValue() < 1) {
+                validationMessageList.add("关联词参数不正确");
+                return this;
+            }
         }
         return this;
     }

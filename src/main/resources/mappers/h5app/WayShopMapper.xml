@@ -389,11 +389,20 @@
         FROM way_shop shop
         LEFT JOIN way_shop_cate_leaf leaf ON shop.shop_cate_leaf_id = leaf.id
         LEFT JOIN way_commodity commodity ON shop.id = commodity.shop_id
-        LEFT JOIN way_commodity_abstract_word word ON word.id = commodity.abstract_word_id
+        LEFT JOIN way_commodity_abstract_word word ON JSON_CONTAINS(commodity.abstract_word_ids, JSON_ARRAY(word.id))
         WHERE shop.is_deleted = 0 AND commodity.is_deleted = 0 AND word.is_deleted = 0
         AND (JSON_CONTAINS(word.json_data->'$.path[*]', CONVERT(#{condition.pathPid, jdbcType=INTEGER}, CHAR)) OR
         word.id=#{condition.pathPid, jdbcType=INTEGER}) AND
         word.leaf = 1
-        <include refid="WHERE_CONDITION"/>
+        <if test="condition.cityCode != null">
+            and shop.city_code = #{condition.cityCode,jdbcType=VARCHAR}
+        </if>
+        GROUP BY commodity.id
+        <if test="condition.clientLng != null and condition.clientLat != null">
+            order by s_distance
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
     </select>
 </mapper>

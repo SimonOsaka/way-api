@@ -17,12 +17,12 @@
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
         <result column="name_pinyin" jdbcType="VARCHAR" property="namePinyin"/>
         <result column="name_py" jdbcType="VARCHAR" property="namePy"/>
-        <result column="abstract_word_id" jdbcType="INTEGER" property="abstractWordId"/>
+        <result column="abstract_word_ids" jdbcType="CHAR" property="abstractWordIds"/>
     </resultMap>
     <sql id="Base_Column_List">
         id, name, price, img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
         update_time, is_deleted, name_pinyin,
-        name_py, abstract_word_id
+        name_py, abstract_word_ids
     </sql>
     <sql id="Shop_Commodity_Column_List">
         commodity.id, commodity.name, commodity.price,
@@ -36,7 +36,7 @@
         commodity.is_deleted,
         commodity.name_pinyin,
         commodity.name_py,
-        commodity.abstract_word_id,
+        commodity.abstract_word_ids,
         shop.id, shop.shop_name
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -107,8 +107,8 @@
             <if test="namePy != null">
                 name_py,
             </if>
-            <if test="abstractWordId != null">
-                abstract_word_id,
+            <if test="abstractWordIds != null">
+                abstract_word_ids,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -151,8 +151,8 @@
             <if test="namePy != null">
                 #{namePy,jdbcType=VARCHAR},
             </if>
-            <if test="abstractWordId != null">
-                #{abstractWordId,jdbcType=INTEGER},
+            <if test="abstractWordIds != null">
+                #{abstractWordIds,jdbcType=CHAR},
             </if>
         </trim>
     </insert>
@@ -198,8 +198,8 @@
             <if test="namePy != null">
                 name_py = #{namePy,jdbcType=VARCHAR},
             </if>
-            <if test="abstractWordId != null">
-                abstract_word_id = #{abstractWordId,jdbcType=INTEGER},
+            <if test="abstractWordIds != null">
+                abstract_word_ids = #{abstractWordIds,jdbcType=CHAR},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}

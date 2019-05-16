@@ -12,7 +12,8 @@ public class WayCommodityBo extends WayCommodity {
 
     private String statusName;
 
-    private String abstractWordName;
+    private String abstractWordNames;
+    private List<Integer> abstractWordIdList;
 
     public List<String> getImgUrlList() {
 
@@ -43,11 +44,19 @@ public class WayCommodityBo extends WayCommodity {
         this.statusName = statusName;
     }
 
-    public String getAbstractWordName() {
-        return abstractWordName;
+    public String getAbstractWordNames() {
+        return abstractWordNames;
     }
 
-    public void setAbstractWordName(String abstractWordName) {
-        this.abstractWordName = abstractWordName;
+    public void setAbstractWordNames(String abstractWordNames) {
+        this.abstractWordNames = abstractWordNames;
+    }
+
+    public List<Integer> getAbstractWordIdList() {
+        return abstractWordIdList;
+    }
+
+    public void setAbstractWordIdList(List<Integer> abstractWordIdList) {
+        this.abstractWordIdList = abstractWordIdList;
     }
 }

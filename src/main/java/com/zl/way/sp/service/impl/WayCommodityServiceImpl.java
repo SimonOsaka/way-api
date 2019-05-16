@@ -1,5 +1,6 @@
 package com.zl.way.sp.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
@@ -78,10 +79,26 @@ import java.util.List;
         }
         wayCommodityBo.setImgUrlList(imgUrlList);
 
-        if (null != wayCommodityBo.getAbstractWordId() && wayCommodityBo.getAbstractWordId() > 0) {
-            WayCommodityAbstractWord word =
-                commodityAbstractWordMapper.selectByPrimaryKey(shopList.get(0).getAbstractWordId());
-            wayCommodityBo.setAbstractWordName(word.getName());
+        if (!StringUtils.equalsIgnoreCase("[]", wayCommodityBo.getAbstractWordIds())) {
+            String abstractWordIds = shopList.get(0).getAbstractWordIds();
+            WayCommodityAbstractWordCondition abstractWordCondition = new WayCommodityAbstractWordCondition();
+
+            JSONArray jsonArray = JSONArray.parseArray(abstractWordIds);
+            List<Integer> ids = new ArrayList<>(jsonArray.size());
+            for (Object obj : jsonArray) {
+                ids.add((Integer)obj);
+            }
+            abstractWordCondition.setIds(ids);
+            List<WayCommodityAbstractWord> wordList =
+                commodityAbstractWordMapper.selectByCondition(abstractWordCondition, WayPageRequest.of(1, 5));
+            if (CollectionUtils.isNotEmpty(wordList)) {
+                String[] wordStr = new String[wordList.size()];
+                for (int i = 0; i < wordList.size(); i++) {
+                    wordStr[i] = wordList.get(i).getName();
+                }
+                wayCommodityBo.setAbstractWordNames(StringUtils.join(wordStr, ","));
+            }
+            wayCommodityBo.setAbstractWordIdList(ids);
         }
         return wayCommodityBo;
     }
@@ -98,6 +115,8 @@ import java.util.List;
         }
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayCommodityRecord
+            .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
                 .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
@@ -138,6 +157,8 @@ import java.util.List;
     public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
+        wayCommodityRecord
+            .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
                 .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
