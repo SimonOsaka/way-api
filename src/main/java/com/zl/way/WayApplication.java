@@ -9,9 +9,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -21,23 +21,19 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-@SpringBootApplication
-@MapperScan(basePackages = {"com.zl.way.**.mapper"})
-@EnableAutoConfiguration
-@EnableTransactionManagement
-@EnableAspectJAutoProxy
-@EnableScheduling
-public class WayApplication {
+@SpringBootApplication @MapperScan(basePackages = {"com.zl.way.**.mapper"}) @EnableTransactionManagement
+@EnableAspectJAutoProxy @EnableScheduling public class WayApplication {
 
     private final Logger logger = LoggerFactory.getLogger(WayApplication.class);
 
     public static void main(String[] args) {
 
-        SpringApplication.run(WayApplication.class, args);
+        SpringApplication application = new SpringApplication(WayApplication.class);
+        application.addListeners(new ApplicationPidFileWriter());
+        application.run(args);
     }
 
-    @Bean
-    public HttpMessageConverters fastJsonHttpMessageConverters() {
+    @Bean public HttpMessageConverters fastJsonHttpMessageConverters() {
 
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
@@ -64,8 +60,7 @@ public class WayApplication {
         return corsConfiguration;
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
+    @Bean public CorsFilter corsFilter() {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig());
