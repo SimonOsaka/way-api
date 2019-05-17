@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("mpWayCommodityMapper")
-public interface WayCommodityMapper {
+@Repository("mpWayCommodityMapper") public interface WayCommodityMapper {
 
     int deleteByPrimaryKey(Long id);
 
@@ -24,7 +23,9 @@ public interface WayCommodityMapper {
     int updateByPrimaryKey(WayCommodity record);
 
     List<WayCommodity> selectByCondition(@Param("condition") WayCommodityCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 
     Long countByCondition(@Param("condition") WayCommodityCondition condition);
+
+    Long countAllOnline();
 }

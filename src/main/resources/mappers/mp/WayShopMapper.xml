@@ -391,4 +391,10 @@
         from way_shop shop
         <include refid="whereByCondition"/>
     </select>
+    <select id="countAllOnline" resultType="java.lang.Long">
+        select
+        count(*)
+        from way_shop shop
+        where shop.is_deleted = 0
+    </select>
 </mapper>

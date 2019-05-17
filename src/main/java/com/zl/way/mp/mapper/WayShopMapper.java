@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("mpWayShopMapper")
-public interface WayShopMapper {
+@Repository("mpWayShopMapper") public interface WayShopMapper {
 
     int deleteByPrimaryKey(Long id);
 
@@ -24,7 +23,9 @@ public interface WayShopMapper {
     int updateByPrimaryKey(WayShop record);
 
     List<WayShop> selectByCondition(@Param("condition") WayShopCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 
     Long countByCondition(@Param("condition") WayShopCondition condition);
+
+    Long countAllOnline();
 }

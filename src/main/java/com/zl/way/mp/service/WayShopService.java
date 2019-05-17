@@ -30,4 +30,5 @@ public interface WayShopService {
 
     WayShopBo updateShopStatus(WayShopParam shopParam) throws BusinessException;
 
+    Long queryOnlineCount();
 }
