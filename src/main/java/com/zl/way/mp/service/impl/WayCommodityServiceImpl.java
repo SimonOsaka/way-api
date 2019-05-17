@@ -24,19 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("mpWayCommodityService")
-public class WayCommodityServiceImpl implements WayCommodityService {
+@Service("mpWayCommodityService") public class WayCommodityServiceImpl implements WayCommodityService {
 
-    @Autowired
-    private WayCommodityMapper commodityMapper;
+    @Autowired private WayCommodityMapper commodityMapper;
 
-    @Autowired
-    private WayCommodityLogMapper commodityLogMapper;
+    @Autowired private WayCommodityLogMapper commodityLogMapper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam,
-            PageParam pageParam) {
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam, PageParam pageParam) {
 
         Pageable pageable = WayPageRequest.of(pageParam);
         WayCommodityCondition condition = BeanMapper.map(shopParam, WayCommodityCondition.class);
@@ -169,8 +164,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
     }*/
 
-    @Override
-    public Map<String, String> getAllCommodityStatus() {
+    @Override public Map<String, String> getAllCommodityStatus() {
 
         WayCommodityStatusEnum[] commodityStatusEnums = WayCommodityStatusEnum.values();
         if (commodityStatusEnums.length < 1) {
@@ -187,10 +181,8 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         return commodityStatusMap;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam)
-            throws BusinessException {
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) throws BusinessException {
 
         //获取商品对象
         WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
@@ -211,10 +203,8 @@ public class WayCommodityServiceImpl implements WayCommodityService {
             commodityLogRecord.setType(WayCommodityLogTypeEnum.REJECT.getValue());
         } else {
             logContent = String.format("商品状态从[%s]修改为[%s]",
-                    EnumUtil.getDescByValue(existCommodity.getIsDeleted(),
-                            WayCommodityStatusEnum.class),
-                    EnumUtil.getDescByValue(commodityParam.getStatus(),
-                            WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(commodityParam.getStatus(), WayCommodityStatusEnum.class));
             commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
         }
         commodityLogRecord.setContent(logContent);
@@ -225,12 +215,14 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Long queryCommodityCount(WayCommodityParam commodityParam) {
 
-        WayCommodityCondition condition = BeanMapper
-                .map(commodityParam, WayCommodityCondition.class);
+        WayCommodityCondition condition = BeanMapper.map(commodityParam, WayCommodityCondition.class);
         return commodityMapper.countByCondition(condition);
+    }
+
+    @Override public Long queryOnlineCount() {
+        return commodityMapper.countAllOnline();
     }
 }

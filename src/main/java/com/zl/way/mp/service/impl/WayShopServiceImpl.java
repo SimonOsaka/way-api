@@ -25,17 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("mpWayShopService")
-public class WayShopServiceImpl implements WayShopService {
+@Service("mpWayShopService") public class WayShopServiceImpl implements WayShopService {
 
-    @Autowired
-    private WayShopMapper shopMapper;
+    @Autowired private WayShopMapper shopMapper;
 
-    @Autowired
-    private WayShopLogMapper shopLogMapper;
+    @Autowired private WayShopLogMapper shopLogMapper;
 
-    @Autowired
-    private WayShopQualificationMapper shopQualificationMapper;
+    @Autowired private WayShopQualificationMapper shopQualificationMapper;
 
     //    @Autowired
     //    private SpUserShopMapper spUserShopMapper;
@@ -43,8 +39,7 @@ public class WayShopServiceImpl implements WayShopService {
     //    @Autowired
     //    private WayCommodityMapper commodityMapper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopBo> queryShopList(WayShopParam shopParam, PageParam pageParam) {
 
         Pageable pageable = WayPageRequest.of(pageParam);
@@ -56,8 +51,7 @@ public class WayShopServiceImpl implements WayShopService {
         return BeanMapper.mapAsList(shopList, WayShopBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShopBo getShop(WayShopParam shopParam) {
 
         Pageable pageable = WayPageRequest.of(1, 1);
@@ -67,12 +61,11 @@ public class WayShopServiceImpl implements WayShopService {
             return null;
         }
         WayShopBo wayShopBo = BeanMapper.map(shopList.get(0), WayShopBo.class);
-        wayShopBo.setShopStatusName(
-                EnumUtil.getEnumByValue(wayShopBo.getIsDeleted(), WayShopStatusEnum.class)
-                        .getDesc());
+        wayShopBo
+            .setShopStatusName(EnumUtil.getEnumByValue(wayShopBo.getIsDeleted(), WayShopStatusEnum.class).getDesc());
 
-        WayShopQualification wayShopQualification = shopQualificationMapper
-                .selectByPrimaryKey(wayShopBo.getWayShopQualification().getId());
+        WayShopQualification wayShopQualification =
+            shopQualificationMapper.selectByPrimaryKey(wayShopBo.getWayShopQualification().getId());
         if (null != wayShopQualification) {
             wayShopBo.setWayShopQualification(wayShopQualification);
         }
@@ -127,8 +120,7 @@ public class WayShopServiceImpl implements WayShopService {
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }*/
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo updateShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
@@ -136,8 +128,7 @@ public class WayShopServiceImpl implements WayShopService {
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo deleteShop(WayShopParam shopParam) {
 
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
@@ -175,8 +166,7 @@ public class WayShopServiceImpl implements WayShopService {
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
     }*/
 
-    @Override
-    public Map<String, String> getAllShopStatus() {
+    @Override public Map<String, String> getAllShopStatus() {
 
         WayShopStatusEnum[] shopStatusEnums = WayShopStatusEnum.values();
         if (shopStatusEnums.length < 1) {
@@ -193,16 +183,14 @@ public class WayShopServiceImpl implements WayShopService {
         return shopStatusMap;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Long queryShopCount(WayShopParam shopParam) {
 
         WayShopCondition condition = BeanMapper.map(shopParam, WayShopCondition.class);
         return shopMapper.countByCondition(condition);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo updateShopStatus(WayShopParam shopParam) throws BusinessException {
 
         //查询商家是否存在
@@ -223,8 +211,8 @@ public class WayShopServiceImpl implements WayShopService {
             shopLogRecord.setType(WayShopLogTypeEnum.REJECT.getValue());
         } else {
             logContent = String.format("商家状态从[%s]修改为[%s]",
-                    EnumUtil.getDescByValue(existWayShop.getIsDeleted(), WayShopStatusEnum.class),
-                    EnumUtil.getDescByValue(shopParam.getIsDeleted(), WayShopStatusEnum.class));
+                EnumUtil.getDescByValue(existWayShop.getIsDeleted(), WayShopStatusEnum.class),
+                EnumUtil.getDescByValue(shopParam.getIsDeleted(), WayShopStatusEnum.class));
             shopLogRecord.setType(WayShopLogTypeEnum.STATUS.getValue());
         }
         shopLogRecord.setContent(logContent);
@@ -232,5 +220,9 @@ public class WayShopServiceImpl implements WayShopService {
         shopLogRecord.setSource(WayShopLogSourceEnum.MP.getValue());
         shopLogMapper.insertSelective(shopLogRecord);
         return BeanMapper.map(wayShopRecord, WayShopBo.class);
+    }
+
+    @Override @Transactional(rollbackFor = Exception.class, readOnly = true) public Long queryOnlineCount() {
+        return shopMapper.countAllOnline();
     }
 }

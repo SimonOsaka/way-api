@@ -25,4 +25,6 @@ public interface WayCommodityService {
     WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) throws BusinessException;
 
     Long queryCommodityCount(WayCommodityParam shopParam);
+
+    Long queryOnlineCount();
 }
