@@ -1,6 +1,8 @@
 package com.zl.way.sp.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
@@ -28,17 +30,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Service("spWayCommodityService") public class WayCommodityServiceImpl implements WayCommodityService {
+@Service("spWayCommodityService")
+public class WayCommodityServiceImpl implements WayCommodityService {
 
-    @Autowired private WayCommodityMapper commodityMapper;
+    @Autowired
+    private WayCommodityMapper commodityMapper;
 
-    @Autowired private WayCommodityLogMapper commodityLogMapper;
+    @Autowired
+    private WayCommodityLogMapper commodityLogMapper;
 
-    @Autowired private WayDiscountMapper discountMapper;
+    @Autowired
+    private WayDiscountMapper discountMapper;
 
-    @Autowired private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
+    @Autowired
+    private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam, PageParam pageParam) {
 
         Pageable pageable = WayPageRequest.of(pageParam);
@@ -50,7 +58,8 @@ import java.util.List;
         return BeanMapper.mapAsList(commodityList, WayCommodityBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayCommodityBo getCommodity(WayCommodityParam commodityParam) {
 
         Pageable pageable = WayPageRequest.of(1, 1);
@@ -86,15 +95,23 @@ import java.util.List;
             JSONArray jsonArray = JSONArray.parseArray(abstractWordIds);
             List<Integer> ids = new ArrayList<>(jsonArray.size());
             for (Object obj : jsonArray) {
-                ids.add((Integer)obj);
+                ids.add((Integer) obj);
             }
             abstractWordCondition.setIds(ids);
-            List<WayCommodityAbstractWord> wordList =
-                commodityAbstractWordMapper.selectByCondition(abstractWordCondition, WayPageRequest.of(1, 5));
-            if (CollectionUtils.isNotEmpty(wordList)) {
-                String[] wordStr = new String[wordList.size()];
-                for (int i = 0; i < wordList.size(); i++) {
-                    wordStr[i] = wordList.get(i).getName();
+            List<WayCommodityAbstractWord> fiveWordList =
+                    commodityAbstractWordMapper.selectByCondition(abstractWordCondition, WayPageRequest.of(1, 5));
+            abstractWordCondition = new WayCommodityAbstractWordCondition();
+            List<WayCommodityAbstractWord> allAbstractWordList =
+                    commodityAbstractWordMapper.selectByCondition(abstractWordCondition, null);
+            if (CollectionUtils.isNotEmpty(fiveWordList)) {
+                String[] wordStr = new String[fiveWordList.size()];
+                for (int i = 0; i < fiveWordList.size(); i++) {
+                    JSONObject jsonObject = JSON.parseObject(fiveWordList.get(i).getJsonData());
+                    if (jsonObject.containsKey("path")) {
+                        JSONArray jsonPathArray = jsonObject.getJSONArray("path");
+                        List<Integer> wordPathIdList = jsonPathArray.toJavaList(Integer.class);
+                        wordStr[i] = getWordPathName(wordPathIdList, allAbstractWordList) + fiveWordList.get(i).getName();
+                    }
                 }
                 wayCommodityBo.setAbstractWordNames(StringUtils.join(wordStr, ","));
             }
@@ -103,23 +120,38 @@ import java.util.List;
         return wayCommodityBo;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    private String getWordPathName
+            (List<Integer> wordPathIdList, List<WayCommodityAbstractWord> commodityAbstractWordList) {
+        StringBuilder pathNamesSb = new StringBuilder();
+        for (WayCommodityAbstractWord word : commodityAbstractWordList) {
+            for (Integer pathId : wordPathIdList) {
+                if (pathId.equals(word.getId())) {
+                    pathNamesSb.append(word.getName()).append("/");
+                }
+            }
+        }
+
+        return pathNamesSb.toString();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo createCommodity(WayCommodityParam commodityParam) {
         //当前只能增加一个商品，如果已存在商品，返回当前的商品，幂等操作
         WayCommodityCondition getCommodityCondition = new WayCommodityCondition();
         getCommodityCondition.setShopId(commodityParam.getShopId());
         List<WayCommodity> existCommodityList =
-            commodityMapper.selectByCondition(getCommodityCondition, WayPageRequest.of(1, 1));
+                commodityMapper.selectByCondition(getCommodityCondition, WayPageRequest.of(1, 1));
         if (CollectionUtils.isNotEmpty(existCommodityList)) {
             return BeanMapper.map(existCommodityList.get(0), WayCommodityBo.class);
         }
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayCommodityRecord
-            .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
+                .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
-                .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
+                    .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
             wayCommodityRecord.setNamePy(PinyinHelper.getShortPinyin(wayCommodityRecord.getName()));
         } catch (PinyinException e) {
         }
@@ -143,7 +175,7 @@ import java.util.List;
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = String.format("商品被创建，状态为[%s]",
-            EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
         commodityLogRecord.setContent(logContent);
         commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
         commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
@@ -153,15 +185,16 @@ import java.util.List;
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayCommodityRecord
-            .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
+                .setAbstractWordIds("[" + StringUtils.join(commodityParam.getAbstractWordIdList(), ",") + "]");
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
-                .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
+                    .convertToPinyinString(wayCommodityRecord.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
             wayCommodityRecord.setNamePy(PinyinHelper.getShortPinyin(wayCommodityRecord.getName()));
         } catch (PinyinException e) {
         }
@@ -191,7 +224,7 @@ import java.util.List;
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = String.format("商品被修改，状态为[%s]",
-            EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
         commodityLogRecord.setContent(logContent);
         commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
         commodityLogRecord.setType(WayCommodityLogTypeEnum.INFO.getValue());
@@ -201,19 +234,20 @@ import java.util.List;
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo deleteCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
-        wayCommodityRecord.setIsDeleted((byte)1);
+        wayCommodityRecord.setIsDeleted((byte) 1);
         commodityMapper.updateByPrimaryKeySelective(wayCommodityRecord);
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = String.format("商品修改状态，状态从[%s]修改为[%s]",
-            EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
-            EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
         commodityLogRecord.setContent(logContent);
         commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
         commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
@@ -223,7 +257,8 @@ import java.util.List;
         return BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateStatus(WayCommodityParam commodityParam) {
 
         WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
@@ -234,8 +269,8 @@ import java.util.List;
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = String.format("商品修改状态，状态从[%s]修改为[%s]",
-            EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
-            EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
         commodityLogRecord.setContent(logContent);
         commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
         commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());
@@ -244,11 +279,12 @@ import java.util.List;
 
         WayCommodityBo wayCommodityBo = BeanMapper.map(wayCommodityRecord, WayCommodityBo.class);
         wayCommodityBo
-            .setStatusName(EnumUtil.getDescByValue(commodityParam.getIsDeleted(), WayCommodityStatusEnum.class));
+                .setStatusName(EnumUtil.getDescByValue(commodityParam.getIsDeleted(), WayCommodityStatusEnum.class));
         return wayCommodityBo;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo offlineCommodity(WayCommodityParam commodityParam) {
 
         WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
@@ -266,15 +302,15 @@ import java.util.List;
         if (CollectionUtils.isNotEmpty(discountList)) {
             WayDiscount wayDiscount = new WayDiscount();
             wayDiscount.setId(discountList.get(0).getId());
-            wayDiscount.setIsDeleted((byte)1);//删除
+            wayDiscount.setIsDeleted((byte) 1);//删除
             discountMapper.updateByPrimaryKeySelective(wayDiscount);
             logFormat.append("，对应优惠信息同时删除");
         }
 
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = String.format(logFormat.append("。").toString(),
-            EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
-            EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
+                EnumUtil.getDescByValue(existCommodity.getIsDeleted(), WayCommodityStatusEnum.class),
+                EnumUtil.getDescByValue(wayCommodityRecord.getIsDeleted(), WayCommodityStatusEnum.class));
         commodityLogRecord.setContent(logContent);
         commodityLogRecord.setCommodityId(wayCommodityRecord.getId());
         commodityLogRecord.setType(WayCommodityLogTypeEnum.STATUS.getValue());

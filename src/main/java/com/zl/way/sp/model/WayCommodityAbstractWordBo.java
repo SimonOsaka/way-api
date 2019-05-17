@@ -3,14 +3,22 @@ package com.zl.way.sp.model;
 import java.util.List;
 
 public class WayCommodityAbstractWordBo extends WayCommodityAbstractWord {
-    private List<WayCommodityAbstractWord> commodityAbstractWordList;
+    private String abstractWordPathName;
+    private List<WayCommodityAbstractWordBo> commodityAbstractWordBoList;
 
-    public List<WayCommodityAbstractWord> getCommodityAbstractWordList() {
-        return commodityAbstractWordList;
+    public String getAbstractWordPathName() {
+        return abstractWordPathName;
     }
 
-    public void setCommodityAbstractWordList(List<WayCommodityAbstractWord> commodityAbstractWordList) {
-        this.commodityAbstractWordList = commodityAbstractWordList;
+    public void setAbstractWordPathName(String abstractWordPathName) {
+        this.abstractWordPathName = abstractWordPathName;
     }
 
+    public List<WayCommodityAbstractWordBo> getCommodityAbstractWordBoList() {
+        return commodityAbstractWordBoList;
+    }
+
+    public void setCommodityAbstractWordBoList(List<WayCommodityAbstractWordBo> commodityAbstractWordBoList) {
+        this.commodityAbstractWordBoList = commodityAbstractWordBoList;
+    }
 }

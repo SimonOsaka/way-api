@@ -17,7 +17,7 @@
         pid
     </sql>
     <sql id="Less_Column_List">
-        id, name, shop_cate_leaf_id, leaf, pid
+        id, name, shop_cate_leaf_id, json_data, leaf, pid
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
