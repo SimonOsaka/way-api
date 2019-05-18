@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service public class UserServiceImpl implements UserService {
+@Service
+public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -39,15 +40,17 @@ import java.util.regex.Pattern;
 
     private final UserAddressMapper userAddressMapper;
 
-    @Autowired public UserServiceImpl(UserLoginMapper userLoginMapper, UserProfileMapper userProfileMapper,
-        UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
+    @Autowired
+    public UserServiceImpl(UserLoginMapper userLoginMapper, UserProfileMapper userProfileMapper,
+                           UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
         this.userLoginMapper = userLoginMapper;
         this.userProfileMapper = userProfileMapper;
         this.userDeviceMapper = userDeviceMapper;
         this.userAddressMapper = userAddressMapper;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userTelLogin(UserLoginParam userLoginParam) {
 
         String userLoginTel = userLoginParam.getLoginTel();
@@ -94,7 +97,8 @@ import java.util.regex.Pattern;
         return Boolean.TRUE;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userNameLogin(UserLoginParam userLoginParam) {
 
         String userLoginName = userLoginParam.getLoginName();
@@ -161,7 +165,8 @@ import java.util.regex.Pattern;
         return Boolean.TRUE;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public boolean userLogout(UserLoginParam userlogoutParam) {
 
         Long userLoginId = userlogoutParam.getId();
@@ -198,7 +203,8 @@ import java.util.regex.Pattern;
         return Boolean.TRUE;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public UserProfileBo getUserById(Long userLoginId) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
@@ -209,7 +215,8 @@ import java.util.regex.Pattern;
         return getUser(userLogin);
     }
 
-    @Override public UserProfileBo getUserByTel(String userTel) {
+    @Override
+    public UserProfileBo getUserByTel(String userTel) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginTel(userTel);
@@ -219,7 +226,8 @@ import java.util.regex.Pattern;
         return getUser(userLogin);
     }
 
-    @Override public UserProfileBo getUserByName(String userLoginName) {
+    @Override
+    public UserProfileBo getUserByName(String userLoginName) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginName(userLoginName);
@@ -255,6 +263,12 @@ import java.util.regex.Pattern;
         }
 
         UserProfileBo userProfileBo = BeanMapper.map(userProfile, UserProfileBo.class);
+        if (StringUtils.isNotBlank(userLogin.getLoginTel())) {
+            userProfileBo.setUserTel(userLogin.getLoginTel());
+        } else if (StringUtils.isNotBlank(userLogin.getLoginName())) {
+            userProfileBo.setUserTel(userLogin.getLoginName());
+        }
+
         if (logger.isDebugEnabled()) {
             logger.debug("获取用户信息={}", userProfileBo);
         }
@@ -262,7 +276,8 @@ import java.util.regex.Pattern;
         return userProfileBo;
     }
 
-    @Override public String getUserValidCode(String userTel) {
+    @Override
+    public String getUserValidCode(String userTel) {
 
         UserLoginQueryCondition condition = new UserLoginQueryCondition();
         condition.setLoginTel(userTel);
@@ -301,7 +316,7 @@ import java.util.regex.Pattern;
             }
 
             if (null == userLogin.getValidCodeExpire() || now
-                .after(userLogin.getValidCodeExpire())) {//当前时间大于过期时间，需要重新生成验证码
+                    .after(userLogin.getValidCodeExpire())) {//当前时间大于过期时间，需要重新生成验证码
                 validCode = String.valueOf(RandomUtils.nextInt(113494, 984920));
                 UserLogin updateUserLogin = new UserLogin();
                 updateUserLogin.setId(userLogin.getId());
@@ -332,7 +347,8 @@ import java.util.regex.Pattern;
         return validCode;
     }
 
-    @Override public boolean saveOrUpdateUserDevice(UserDeviceParam param) {
+    @Override
+    public boolean saveOrUpdateUserDevice(UserDeviceParam param) {
 
         UserDevice userDevice = new UserDevice();
         userDevice.setUserLoginId(param.getUserLoginId());
@@ -355,14 +371,17 @@ import java.util.regex.Pattern;
         return Boolean.TRUE;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class) public void updateProfileAddress(UserProfileParam param) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateProfileAddress(UserProfileParam param) {
 
         UserProfile record = BeanMapper.map(param, UserProfile.class);
         record.setUpdateTime(DateTime.now().toDate());
         userProfileMapper.updateByPrimaryKeySelective(record);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<UserAddressBo> queryUserAddressList(UserAddressParam param) {
         UserAddressQueryCondition condition = new UserAddressQueryCondition();
         condition.setUserLoginId(param.getUserLoginId());
@@ -373,18 +392,22 @@ import java.util.regex.Pattern;
         return BeanMapper.mapAsList(userAddressList, UserAddressBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class) public void saveUserAddress(UserAddressParam param) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveUserAddress(UserAddressParam param) {
         UserAddress record = BeanMapper.map(param, UserAddress.class);
         userAddressMapper.insertSelective(record);
     }
 
-    @Override public void updateUserAddress(UserAddressParam param) {
+    @Override
+    public void updateUserAddress(UserAddressParam param) {
         UserAddress record = BeanMapper.map(param, UserAddress.class);
         record.setUpdateTime(DateTime.now().toDate());
         userAddressMapper.updateByPrimaryKeySelective(record);
     }
 
-    @Override public void deleteUserAddress(UserAddressParam param) {
+    @Override
+    public void deleteUserAddress(UserAddressParam param) {
         userAddressMapper.deleteByPrimaryKey(param.getId());
     }
 
@@ -394,7 +417,7 @@ import java.util.regex.Pattern;
         char[] ca = str.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ca.length; i++) {
-            sb.append((char)(ca[i] + 49 + offset[i]));
+            sb.append((char) (ca[i] + 49 + offset[i]));
         }
         return sb.toString();
     }

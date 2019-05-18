@@ -4,6 +4,7 @@ public class UserProfileBo extends UserProfile {
 
     private Long userLoginId;
     private String userNickName;
+    private String userTel;
 
     @Override
     public Long getUserLoginId() {
@@ -23,5 +24,13 @@ public class UserProfileBo extends UserProfile {
     @Override
     public void setUserNickName(String userNickName) {
         this.userNickName = userNickName;
+    }
+
+    public String getUserTel() {
+        return userTel;
+    }
+
+    public void setUserTel(String userTel) {
+        this.userTel = userTel;
     }
 }
