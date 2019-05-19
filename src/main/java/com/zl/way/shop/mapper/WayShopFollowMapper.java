@@ -22,7 +22,6 @@ public interface WayShopFollowMapper {
 
     int updateByPrimaryKey(WayShopFollow record);
 
-    List<WayShopFollowBo> selectByCondition(
-            @Param("condition") WayShopFollowQueryCondition condition,
-            @Param("pageable") Pageable pageable);
+    List<WayShopFollowBo> selectByCondition(@Param("condition") WayShopFollowQueryCondition condition,
+        @Param("pageable") Pageable pageable);
 }

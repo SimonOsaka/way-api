@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sensiwords")
 public class SensitiveWordsApi {
 
-	@RequestMapping(value = "/valid", method = RequestMethod.POST)
-	public ResponseResult<SensitiveWordsResponse> isSensitiveWords(
-			@RequestBody SensitiveWordsRequest sensitiveWordsRequest) {
+    @RequestMapping(value = "/valid", method = RequestMethod.POST)
+    public ResponseResult<SensitiveWordsResponse>
+        isSensitiveWords(@RequestBody SensitiveWordsRequest sensitiveWordsRequest) {
 
-		String sentence = sensitiveWordsRequest.getSentence();
+        String sentence = sensitiveWordsRequest.getSentence();
 
-		SensitiveWordsResponse sensitiveWordsResponse = new SensitiveWordsResponse();
-		sensitiveWordsResponse.setSensiWordsPassed(!SensiWordsUtil.isSensiWords(sentence));
+        SensitiveWordsResponse sensitiveWordsResponse = new SensitiveWordsResponse();
+        sensitiveWordsResponse.setSensiWordsPassed(!SensiWordsUtil.isSensiWords(sentence));
 
-		return ResponseResultUtil.wrapSuccessResponseResult(sensitiveWordsResponse);
-	}
+        return ResponseResultUtil.wrapSuccessResponseResult(sensitiveWordsResponse);
+    }
 }

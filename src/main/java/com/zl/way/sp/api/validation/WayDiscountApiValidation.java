@@ -29,8 +29,7 @@ public class WayDiscountApiValidation {
 
     public WayDiscountApiValidation discountCommodityPrice() {
 
-        if (null == request.getCommodityPrice()
-                || request.getCommodityPrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (null == request.getCommodityPrice() || request.getCommodityPrice().compareTo(BigDecimal.ZERO) <= 0) {
             validationMessageList.add("优惠价格不正确");
             return this;
         }
@@ -64,11 +63,12 @@ public class WayDiscountApiValidation {
             return this;
         }
 
-        if (!request.getCommodityCate().equalsIgnoreCase("clothes") && !request.getCommodityCate()
-                .equalsIgnoreCase("drinks") && !request.getCommodityCate()
-                .equalsIgnoreCase("others") && !request.getCommodityCate()
-                .equalsIgnoreCase("snacks") && !request.getCommodityCate().equalsIgnoreCase("tools")
-                && !request.getCommodityCate().equalsIgnoreCase("vegetables")) {
+        if (!request.getCommodityCate().equalsIgnoreCase("clothes")
+            && !request.getCommodityCate().equalsIgnoreCase("drinks")
+            && !request.getCommodityCate().equalsIgnoreCase("others")
+            && !request.getCommodityCate().equalsIgnoreCase("snacks")
+            && !request.getCommodityCate().equalsIgnoreCase("tools")
+            && !request.getCommodityCate().equalsIgnoreCase("vegetables")) {
             validationMessageList.add("优惠分类不正确");
             return this;
         }

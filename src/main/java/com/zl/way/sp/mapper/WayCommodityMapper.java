@@ -24,5 +24,5 @@ public interface WayCommodityMapper {
     int updateByPrimaryKey(WayCommodity record);
 
     List<WayCommodity> selectByCondition(@Param("condition") WayCommodityCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 }

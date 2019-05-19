@@ -8,11 +8,11 @@ public class WayDiscountRequest extends PageParam {
 
     private Long discountId;
 
-    private BigDecimal clientLat;//纬度
+    private BigDecimal clientLat;// 纬度
 
-    private BigDecimal clientLng;//经度
+    private BigDecimal clientLng;// 经度
 
-    private String cityCode;//城市编码
+    private String cityCode;// 城市编码
 
     private String commodityName;
 

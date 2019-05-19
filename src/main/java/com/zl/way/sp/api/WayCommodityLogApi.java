@@ -21,9 +21,8 @@ public class WayCommodityLogApi extends AbstractBaseRestController {
     private WayCommodityLogService commodityLogService;
 
     @PostMapping("reject/get")
-    public ResponseResult<WayCommodityLogResponse> getRejectLog(
-            @RequestBody WayCommodityLogRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityLogResponse> getRejectLog(@RequestBody WayCommodityLogRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);

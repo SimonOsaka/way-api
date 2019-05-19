@@ -3,121 +3,105 @@ package com.zl.way.commodity.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
 public class WayCommodity {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private BigDecimal price;
+    private BigDecimal price;
 
-	private String imgUrl;
+    private String imgUrl;
 
-	private Long shopId;
+    private Long shopId;
 
-	private Date createTime;
+    private Date createTime;
 
-	private Date updateTime;
+    private Date updateTime;
 
-	private Byte isDeleted;
+    private Byte isDeleted;
 
-	private String namePinyin;
+    private String namePinyin;
 
-	private String namePy;
+    private String namePy;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 
-	public String getName() {
-		return name;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
-	}
+    public String getImgUrl() {
+        return imgUrl;
+    }
 
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl == null ? null : imgUrl.trim();
+    }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+    public Long getShopId() {
+        return shopId;
+    }
 
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl == null ? null : imgUrl.trim();
-	}
+    public Byte getIsDeleted() {
+        return isDeleted;
+    }
 
+    public void setIsDeleted(Byte isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
-	public Long getShopId() {
-		return shopId;
-	}
+    public String getNamePinyin() {
+        return namePinyin;
+    }
 
+    public void setNamePinyin(String namePinyin) {
+        this.namePinyin = namePinyin;
+    }
 
-	public void setShopId(Long shopId) {
-		this.shopId = shopId;
-	}
+    public String getNamePy() {
+        return namePy;
+    }
 
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-
-	public Byte getIsDeleted() {
-		return isDeleted;
-	}
-
-
-	public void setIsDeleted(Byte isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
-	public String getNamePinyin() {
-		return namePinyin;
-	}
-
-	public void setNamePinyin(String namePinyin) {
-		this.namePinyin = namePinyin;
-	}
-
-	public String getNamePy() {
-		return namePy;
-	}
-
-	public void setNamePy(String namePy) {
-		this.namePy = namePy;
-	}
+    public void setNamePy(String namePy) {
+        this.namePy = namePy;
+    }
 }

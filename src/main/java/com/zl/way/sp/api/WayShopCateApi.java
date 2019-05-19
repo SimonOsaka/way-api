@@ -30,8 +30,7 @@ public class WayShopCateApi {
     }
 
     @PostMapping("/leaf")
-    public ResponseResult<WayShopCateResponse> queryCateLeaf(
-            @RequestBody WayShopCateRequest request) {
+    public ResponseResult<WayShopCateResponse> queryCateLeaf(@RequestBody WayShopCateRequest request) {
 
         WayShopCateLeafParam leafParam = BeanMapper.map(request, WayShopCateLeafParam.class);
         List<WayShopCateLeafBo> cateLeafBoList = cateService.queryCateLeaf(leafParam);

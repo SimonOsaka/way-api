@@ -25,26 +25,22 @@ public class WayShopQualificationApi {
     private WayShopQualificationService shopQualificationService;
 
     @PostMapping(value = "/get")
-    public ResponseResult<WayShopQualificationResponse> getShop(
-            @RequestBody WayShopQualificationRequest request,
-            @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayShopQualificationResponse> getShop(@RequestBody WayShopQualificationRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayShopQualificationApiValidation validation = new WayShopQualificationApiValidation(
-                request);
+        WayShopQualificationApiValidation validation = new WayShopQualificationApiValidation(request);
         validation.id();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
 
         WayShopQualificationParam param = BeanMapper.map(request, WayShopQualificationParam.class);
-        WayShopQualificationBo shopQualificationBo = shopQualificationService
-                .getShopQualification(param);
+        WayShopQualificationBo shopQualificationBo = shopQualificationService.getShopQualification(param);
 
         WayShopQualificationResponse response = new WayShopQualificationResponse();
         response.setShopQualificationBo(shopQualificationBo);

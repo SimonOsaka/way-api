@@ -35,8 +35,7 @@ public class WayShopApiValidation {
             return this;
         }
 
-        WayShopStatusEnum shopStatusEnum = EnumUtil
-                .getEnumByValue(request.getShopStatus(), WayShopStatusEnum.class);
+        WayShopStatusEnum shopStatusEnum = EnumUtil.getEnumByValue(request.getShopStatus(), WayShopStatusEnum.class);
         if (null == shopStatusEnum) {
             validationMessageList.add("商家状态不正确");
             return this;
@@ -132,9 +131,8 @@ public class WayShopApiValidation {
 
         char[] telCharArr = request.getShopTel().toCharArray();
         for (char telChar : telCharArr) {
-            if (telChar != '1' && telChar != '2' && telChar != '3' && telChar != '4'
-                    && telChar != '5' && telChar != '6' && telChar != '7' && telChar != '8'
-                    && telChar != '9' && telChar != '0' && telChar != '-') {
+            if (telChar != '1' && telChar != '2' && telChar != '3' && telChar != '4' && telChar != '5' && telChar != '6'
+                && telChar != '7' && telChar != '8' && telChar != '9' && telChar != '0' && telChar != '-') {
                 validationMessageList.add("商家电话必须数字和-");
                 return this;
             }

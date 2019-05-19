@@ -24,5 +24,5 @@ public interface WayCityMapper {
     int updateByPrimaryKey(WayCity record);
 
     List<WayCity> selectByCondition(@Param("condition") WayCityCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 }

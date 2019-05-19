@@ -12,7 +12,7 @@ public class EnumUtil {
 
         List<E> enums = EnumUtils.getEnumList(eClass);
         for (E e : enums) {
-            if (((BaseEnum) e).getValue() == value) {
+            if (((BaseEnum)e).getValue() == value) {
                 return e;
             }
         }
@@ -27,7 +27,7 @@ public class EnumUtil {
             return StringUtils.EMPTY;
         }
 
-        return ((BaseEnum) e).getDesc();
+        return ((BaseEnum)e).getDesc();
     }
 
 }

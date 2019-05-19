@@ -6,9 +6,9 @@ public class WayDiscountParam extends WayDiscount {
 
     private Long discountId;
 
-    private BigDecimal clientLat;//纬度
+    private BigDecimal clientLat;// 纬度
 
-    private BigDecimal clientLng;//经度
+    private BigDecimal clientLng;// 经度
 
     private String cityCode;
 

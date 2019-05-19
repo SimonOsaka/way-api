@@ -37,11 +37,11 @@ public class WayShopServiceImpl implements WayShopService {
     @Autowired
     private WayShopQualificationMapper shopQualificationMapper;
 
-    //    @Autowired
-    //    private SpUserShopMapper spUserShopMapper;
+    // @Autowired
+    // private SpUserShopMapper spUserShopMapper;
 
-    //    @Autowired
-    //    private WayCommodityMapper commodityMapper;
+    // @Autowired
+    // private WayCommodityMapper commodityMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -68,33 +68,33 @@ public class WayShopServiceImpl implements WayShopService {
         }
         WayShopBo wayShopBo = BeanMapper.map(shopList.get(0), WayShopBo.class);
         wayShopBo
-                .setShopStatusName(EnumUtil.getEnumByValue(wayShopBo.getIsDeleted(), WayShopStatusEnum.class).getDesc());
+            .setShopStatusName(EnumUtil.getEnumByValue(wayShopBo.getIsDeleted(), WayShopStatusEnum.class).getDesc());
 
         if (null != wayShopBo.getWayShopQualification()) {
             WayShopQualification wayShopQualification =
-                    shopQualificationMapper.selectByPrimaryKey(wayShopBo.getWayShopQualification().getId());
+                shopQualificationMapper.selectByPrimaryKey(wayShopBo.getWayShopQualification().getId());
             if (null != wayShopQualification) {
                 wayShopBo.setWayShopQualification(wayShopQualification);
             }
         }
-        //        String cityCode = wayShopBo.getCityCode();
-        //        String adCode = wayShopBo.getAdCode();
-        //        WayCityCondition wayCityCondition = new WayCityCondition();
-        //        wayCityCondition.setAdcode(adCode);
-        //        wayCityCondition.setCitycode(cityCode);
-        //        List<WayCity> wayCityList = cityMapper
-        //                .selectByCondition(wayCityCondition, WayPageRequest.ONE);
-        //        if (CollectionUtils.isNotEmpty(wayCityList)) {
-        //            WayCity wayCity = wayCityList.get(0);
-        //            wayShopBo.setCityName(wayCity.getName());
-        //        }
+        // String cityCode = wayShopBo.getCityCode();
+        // String adCode = wayShopBo.getAdCode();
+        // WayCityCondition wayCityCondition = new WayCityCondition();
+        // wayCityCondition.setAdcode(adCode);
+        // wayCityCondition.setCitycode(cityCode);
+        // List<WayCity> wayCityList = cityMapper
+        // .selectByCondition(wayCityCondition, WayPageRequest.ONE);
+        // if (CollectionUtils.isNotEmpty(wayCityList)) {
+        // WayCity wayCity = wayCityList.get(0);
+        // wayShopBo.setCityName(wayCity.getName());
+        // }
         return wayShopBo;
     }
 
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo createShop(WayShopParam shopParam) {
-
+    
         SpUserShopCondition spUserShopCondition = new SpUserShopCondition();
         spUserShopCondition.setUserLoginId(shopParam.getSpUserLoginId());
         SpUserShop existSpUserShop = spUserShopMapper.selectByCondition(spUserShopCondition);
@@ -107,15 +107,15 @@ public class WayShopServiceImpl implements WayShopService {
             if (CollectionUtils.isNotEmpty(wayShopList)) {
                 return BeanMapper.map(wayShopList.get(0), WayShopBo.class);//幂等
             }
-
+    
         }
-
+    
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted(WayShopStatusEnum.PENDING.getStatus());
         shopMapper.insertSelective(wayShopRecord);
-
+    
         SpUserShop spUserShopRecord = new SpUserShop();
-
+    
         if (null != existSpUserShop) {//已经创建过
             spUserShopRecord.setShopId(wayShopRecord.getId());
             spUserShopRecord.setId(existSpUserShop.getId());
@@ -150,11 +150,11 @@ public class WayShopServiceImpl implements WayShopService {
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo onlineShop(WayShopParam shopParam) throws BusinessException {
-
+    
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.NORMAL.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
-
+    
         Long shopId = shopParam.getId();
         WayCommodityCondition wayCommodityCondition = new WayCommodityCondition();
         wayCommodityCondition.setShopId(shopId);
@@ -169,7 +169,7 @@ public class WayShopServiceImpl implements WayShopService {
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo offlineShop(WayShopParam shopParam) {
-
+    
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted((WayShopStatusEnum.PENDING.getStatus()));
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
@@ -206,17 +206,17 @@ public class WayShopServiceImpl implements WayShopService {
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo updateShopStatus(WayShopParam shopParam) throws BusinessException {
 
-        //查询商家是否存在
+        // 查询商家是否存在
         WayShop existWayShop = shopMapper.selectByPrimaryKey(shopParam.getId());
         if (null == existWayShop) {
             throw new BusinessException("商家不存在");
         }
 
-        //修改状态
+        // 修改状态
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         shopMapper.updateByPrimaryKeySelective(wayShopRecord);
 
-        //记录日志
+        // 记录日志
         WayShopLog shopLogRecord = new WayShopLog();
         String logContent = null;
         if (WayShopStatusEnum.DRAFT.getValue().equals(shopParam.getIsDeleted())) {
@@ -224,8 +224,8 @@ public class WayShopServiceImpl implements WayShopService {
             shopLogRecord.setType(WayShopLogTypeEnum.REJECT.getValue());
         } else {
             logContent = String.format("商家状态从[%s]修改为[%s]",
-                    EnumUtil.getDescByValue(existWayShop.getIsDeleted(), WayShopStatusEnum.class),
-                    EnumUtil.getDescByValue(shopParam.getIsDeleted(), WayShopStatusEnum.class));
+                EnumUtil.getDescByValue(existWayShop.getIsDeleted(), WayShopStatusEnum.class),
+                EnumUtil.getDescByValue(shopParam.getIsDeleted(), WayShopStatusEnum.class));
             shopLogRecord.setType(WayShopLogTypeEnum.STATUS.getValue());
         }
         shopLogRecord.setContent(logContent);

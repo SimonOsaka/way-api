@@ -17,14 +17,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service public class AMapConvertServiceImpl implements AMapConvertService {
+@Service
+public class AMapConvertServiceImpl implements AMapConvertService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${amap.coordinateConvertUrl}") private String coordinateConvertUrl;
+    @Value("${amap.coordinateConvertUrl}")
+    private String coordinateConvertUrl;
 
-    @Value("${amap.key}") private String key;
+    @Value("${amap.key}")
+    private String key;
 
-    @Override public AMapConvertResponse coordinateConvert(AMapConvertRequest aMapConvertRequest) throws AMapException {
+    @Override
+    public AMapConvertResponse coordinateConvert(AMapConvertRequest aMapConvertRequest) throws AMapException {
         AMapConvertResponse response = new AMapConvertResponse();
         if (CollectionUtils.isNotEmpty(aMapConvertRequest.getLocationList())) {
             Map<String, String> params = new HashMap<>(3);
@@ -40,7 +44,7 @@ import java.util.*;
                 JSONObject resultJsonObject = JSON.parseObject(resp);
                 Integer status = resultJsonObject.getInteger("status");
                 if (status == 1) {
-                    //112,39;112,38
+                    // 112,39;112,38
                     String locationsString =
                         StringUtils.defaultIfBlank(resultJsonObject.getString("locations"), StringUtils.EMPTY);
                     String[] locationsArr = StringUtils.split(locationsString, ";");

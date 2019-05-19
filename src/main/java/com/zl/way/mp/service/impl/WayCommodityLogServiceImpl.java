@@ -1,5 +1,13 @@
 package com.zl.way.mp.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zl.way.mp.enums.WayCommodityLogSourceEnum;
 import com.zl.way.mp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.mp.mapper.WayCommodityLogMapper;
@@ -10,12 +18,6 @@ import com.zl.way.mp.model.WayCommodityLogParam;
 import com.zl.way.mp.service.WayCommodityLogService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.EnumUtil;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service("mpWayCommodityLogService")
 public class WayCommodityLogServiceImpl implements WayCommodityLogService {
@@ -24,22 +26,21 @@ public class WayCommodityLogServiceImpl implements WayCommodityLogService {
     private WayCommodityLogMapper commodityLogMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayCommodityLogBo> queryCommodityLogList(WayCommodityLogParam param) {
 
         WayCommodityLogCondition condition = BeanMapper.map(param, WayCommodityLogCondition.class);
-        List<WayCommodityLog> commodityLogList = commodityLogMapper
-                .selectByCondition(condition, null);
+        List<WayCommodityLog> commodityLogList = commodityLogMapper.selectByCondition(condition, null);
         if (CollectionUtils.isEmpty(commodityLogList)) {
             return Collections.emptyList();
         }
 
-        List<WayCommodityLogBo> wayCommodityLogBoList = BeanMapper
-                .mapAsList(commodityLogList, WayCommodityLogBo.class);
+        List<WayCommodityLogBo> wayCommodityLogBoList = BeanMapper.mapAsList(commodityLogList, WayCommodityLogBo.class);
         for (WayCommodityLogBo commodityLogBo : wayCommodityLogBoList) {
-            commodityLogBo.setTypeDesc(EnumUtil.getDescByValue(commodityLogBo.getType(),
-                    WayCommodityLogTypeEnum.class));
-            commodityLogBo.setSourceDesc(EnumUtil.getDescByValue(commodityLogBo.getSource(),
-                    WayCommodityLogSourceEnum.class));
+            commodityLogBo
+                .setTypeDesc(EnumUtil.getDescByValue(commodityLogBo.getType(), WayCommodityLogTypeEnum.class));
+            commodityLogBo
+                .setSourceDesc(EnumUtil.getDescByValue(commodityLogBo.getSource(), WayCommodityLogSourceEnum.class));
         }
 
         return wayCommodityLogBoList;

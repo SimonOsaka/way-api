@@ -12,26 +12,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("mpDashboardApi") @RequestMapping("/mp/dashboard") public class DashboardApi
-    extends BaseRestController {
+@RestController("mpDashboardApi")
+@RequestMapping("/mp/dashboard")
+public class DashboardApi extends BaseRestController {
 
-    @Autowired private UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @Autowired private WayShopService shopService;
+    @Autowired
+    private WayShopService shopService;
 
-    @Autowired private WayCommodityService commodityService;
+    @Autowired
+    private WayCommodityService commodityService;
 
-    @PostMapping("/user/total") public ResponseResult<DashboardResp> totalUsers() {
+    @PostMapping("/user/total")
+    public ResponseResult<DashboardResp> totalUsers() {
         Long count = userService.queryUserLoginCount(new UserLoginParam());
         return ResponseResultUtil.wrapSuccessResponseResult(new DashboardResp(count.intValue(), null, null));
     }
 
-    @PostMapping("/shop/total") public ResponseResult<DashboardResp> totalShops() {
+    @PostMapping("/shop/total")
+    public ResponseResult<DashboardResp> totalShops() {
         Long count = shopService.queryOnlineCount();
         return ResponseResultUtil.wrapSuccessResponseResult(new DashboardResp(null, count.intValue(), null));
     }
 
-    @PostMapping("/commodity/total") public ResponseResult<DashboardResp> totalCommodities() {
+    @PostMapping("/commodity/total")
+    public ResponseResult<DashboardResp> totalCommodities() {
         Long count = commodityService.queryOnlineCount();
         return ResponseResultUtil.wrapSuccessResponseResult(new DashboardResp(null, null, count.intValue()));
     }

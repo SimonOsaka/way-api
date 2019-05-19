@@ -24,7 +24,7 @@ public interface UserLoginMapper {
     int updateByPrimaryKey(UserLogin record);
 
     List<UserLogin> selectByCondition(@Param("condition") UserLoginCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 
     Long countByCondition(@Param("condition") UserLoginCondition condition);
 }

@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController @RequestMapping("/user") public class UserApi {
+@RestController
+@RequestMapping("/user")
+public class UserApi {
 
     private final Logger logger = LoggerFactory.getLogger(UserApi.class);
 
-    @Autowired private UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @Value("${custom.user.agreementsUrl}") private String agreementsUrl;
+    @Value("${custom.user.agreementsUrl}")
+    private String agreementsUrl;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
@@ -71,7 +75,7 @@ import java.util.List;
 
     /*@RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseResult<UserResponse> getUserDetail(UserRequest userRequest) {
-
+    
         try {
             UserProfileBo userProfileBo = userService.getUser(userRequest.getUserLoginId());
             UserResponse userResponse = BeanMapper.map(userProfileBo, UserResponse.class);
@@ -79,7 +83,7 @@ import java.util.List;
         } catch (RuntimeException re) {
             return ResponseResultUtil.wrapWrongParamResponseResult(re.getMessage());
         }
-
+    
     }*/
 
     @RequestMapping(value = "/validCode", method = RequestMethod.POST)
@@ -130,7 +134,8 @@ import java.util.List;
         return ResponseResultUtil.wrapWrongParamResponseResult("用户登录异常");
     }
 
-    @PostMapping("/device/sync") public ResponseResult<Void> syncUserDevice(@RequestBody UserDeviceRequest request) {
+    @PostMapping("/device/sync")
+    public ResponseResult<Void> syncUserDevice(@RequestBody UserDeviceRequest request) {
 
         if (null == request.getUserLoginId()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(null);

@@ -9,5 +9,5 @@ import com.zl.way.amap.model.AMapInputTipsResponse;
  */
 public interface AMapInputTipsService {
 
-	AMapInputTipsResponse queryInputTips(AMapInputTipsRequest request) throws AMapException;
+    AMapInputTipsResponse queryInputTips(AMapInputTipsRequest request) throws AMapException;
 }

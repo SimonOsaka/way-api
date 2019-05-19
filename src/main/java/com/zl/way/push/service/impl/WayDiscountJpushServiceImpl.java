@@ -34,12 +34,15 @@ import java.util.List;
 /**
  * @author xuzhongliang
  */
-@Service public class WayDiscountJpushServiceImpl implements WayDiscountJpushService {
+@Service
+public class WayDiscountJpushServiceImpl implements WayDiscountJpushService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${jpush.jicu.appKey}") private String appKey;
-    @Value("${jpush.jicu.masterSecret}") private String masterSecret;
+    @Value("${jpush.jicu.appKey}")
+    private String appKey;
+    @Value("${jpush.jicu.masterSecret}")
+    private String masterSecret;
     /**
      * 0.016612≈1500m
      */
@@ -48,11 +51,14 @@ import java.util.List;
     private static final int PAGE_SIZE_DEVICE = 200;
     private final WayDiscountJpushMapper discountJpushMapper;
 
-    @Autowired public WayDiscountJpushServiceImpl(WayDiscountJpushMapper wayDiscountJpushMapper) {
+    @Autowired
+    public WayDiscountJpushServiceImpl(WayDiscountJpushMapper wayDiscountJpushMapper) {
         this.discountJpushMapper = wayDiscountJpushMapper;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class) public void discountPush() {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void discountPush() {
 
         List<WayDiscountJpushBo> discountJpushList = null;
         WayDiscountJpushCondition condition = new WayDiscountJpushCondition();
@@ -74,7 +80,7 @@ import java.util.List;
     }
 
     private void push(WayDiscountJpushBo discountJpushBo) {
-        //根据shopLng、shopLat查出直径三公里内的用户设备经纬度
+        // 根据shopLng、shopLat查出直径三公里内的用户设备经纬度
         Long jpushId = discountJpushBo.getId();
         String commodityName = discountJpushBo.getCommodityName();
         BigDecimal commodityPrice = discountJpushBo.getCommodityPrice();
@@ -131,9 +137,9 @@ import java.util.List;
 
     private PushPayload buildPushObjectAndroid(List<String> jpushRegIdList, String alertContent) {
         return PushPayload.newBuilder().setPlatform(Platform.android())
-            .setAudience(Audience.registrationId(jpushRegIdList)).setNotification(
-                Notification.newBuilder().setAlert(alertContent)
-                    .addPlatformNotification(AndroidNotification.newBuilder().setTitle("有新优惠商品出现").build()).build())
+            .setAudience(Audience.registrationId(jpushRegIdList))
+            .setNotification(Notification.newBuilder().setAlert(alertContent)
+                .addPlatformNotification(AndroidNotification.newBuilder().setTitle("有新优惠商品出现").build()).build())
             .build();
     }
 

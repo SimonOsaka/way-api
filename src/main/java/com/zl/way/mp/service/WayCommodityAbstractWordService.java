@@ -14,8 +14,10 @@ public interface WayCommodityAbstractWordService {
     /**
      * 根据条件查询抽象词
      *
-     * @param param     入参
-     * @param pageParam 分页入参
+     * @param param
+     *            入参
+     * @param pageParam
+     *            分页入参
      * @return 抽象词结果
      */
     WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param, PageParam pageParam);
@@ -23,7 +25,8 @@ public interface WayCommodityAbstractWordService {
     /**
      * 增加抽象词
      *
-     * @param param 入参
+     * @param param
+     *            入参
      * @return
      */
     WayCommodityAbstractWordBo createAbstractWord(WayCommodityAbstractWordParam param);
@@ -31,7 +34,8 @@ public interface WayCommodityAbstractWordService {
     /**
      * 更新抽象词
      *
-     * @param param 入参
+     * @param param
+     *            入参
      * @return
      */
     WayCommodityAbstractWordBo updateAbstractWord(WayCommodityAbstractWordParam param);
@@ -39,7 +43,8 @@ public interface WayCommodityAbstractWordService {
     /**
      * 删除抽象词
      *
-     * @param param 入参
+     * @param param
+     *            入参
      * @return
      */
     WayCommodityAbstractWordBo deleteAbstractWord(WayCommodityAbstractWordParam param) throws Exception;
@@ -47,7 +52,8 @@ public interface WayCommodityAbstractWordService {
     /**
      * 移动抽象词
      *
-     * @param param 入参
+     * @param param
+     *            入参
      * @return
      */
     WayCommodityAbstractWordBo moveAbstractWord(WayCommodityAbstractWordParam param) throws Exception;

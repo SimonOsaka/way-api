@@ -26,19 +26,16 @@ public class WayCommodityLogApi extends BaseRestController {
     private WayCommodityLogService commodityLogService;
 
     @PostMapping("list")
-    public ResponseResult<WayCommodityLogResponse> commodityLogList(
-            @RequestBody WayCommodityLogRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityLogResponse> commodityLogList(@RequestBody WayCommodityLogRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayCommodityLogParam commodityLogParam = BeanMapper
-                .map(request, WayCommodityLogParam.class);
-        List<WayCommodityLogBo> wayCommodityLogBoList = commodityLogService
-                .queryCommodityLogList(commodityLogParam);
+        WayCommodityLogParam commodityLogParam = BeanMapper.map(request, WayCommodityLogParam.class);
+        List<WayCommodityLogBo> wayCommodityLogBoList = commodityLogService.queryCommodityLogList(commodityLogParam);
 
         WayCommodityLogResponse response = new WayCommodityLogResponse();
         response.setCommodityLogBoList(wayCommodityLogBoList);

@@ -32,8 +32,7 @@ public class WayShopCateServiceImpl implements WayShopCateService {
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateLeafBo> queryCateLeaf(WayShopCateLeafParam leafParam) {
 
-        WayShopCateLeafCondition condition = BeanMapper
-                .map(leafParam, WayShopCateLeafCondition.class);
+        WayShopCateLeafCondition condition = BeanMapper.map(leafParam, WayShopCateLeafCondition.class);
         List<WayShopCateLeaf> cateLeafList = cateLeafMapper.selectByCondition(condition);
         return BeanMapper.mapAsList(cateLeafList, WayShopCateLeafBo.class);
     }

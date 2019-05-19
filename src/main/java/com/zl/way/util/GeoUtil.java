@@ -5,20 +5,24 @@ import java.math.BigDecimal;
 public final class GeoUtil {
 
     public static BigDecimal getDistance(BigDecimal clientLng, BigDecimal clientLat, BigDecimal shopLng,
-                                         BigDecimal shopLat) {
-        double distance = getDistance(clientLng.doubleValue(), clientLat.doubleValue(), shopLng.doubleValue(), shopLat.doubleValue());
+        BigDecimal shopLat) {
+        double distance =
+            getDistance(clientLng.doubleValue(), clientLat.doubleValue(), shopLng.doubleValue(), shopLat.doubleValue());
         return BigDecimal.valueOf(distance);
     }
 
     /**
-     * @param lng1 经度1
-     * @param lat1 维度1
-     * @param lng2 经度2
-     * @param lat2 纬度2
+     * @param lng1
+     *            经度1
+     * @param lat1
+     *            维度1
+     * @param lng2
+     *            经度2
+     * @param lat2
+     *            纬度2
      * @return 距离
      */
-    private static double getDistance(double lng1, double lat1, double lng2,
-                                      double lat2) {
+    private static double getDistance(double lng1, double lat1, double lng2, double lat2) {
         double a, b, R;
         // 地球半径
         R = 6378137;
@@ -41,7 +45,6 @@ public final class GeoUtil {
         }
         return Math.round(distance) + "m";
     }
-
 
     public static void main(String[] args) {
         double dt = getDistance(116.695289, 39.869395, 116.687676, 39.872718);

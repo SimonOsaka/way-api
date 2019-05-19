@@ -21,8 +21,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-@SpringBootApplication @MapperScan(basePackages = {"com.zl.way.**.mapper"}) @EnableTransactionManagement
-@EnableAspectJAutoProxy @EnableScheduling public class WayApplication {
+@SpringBootApplication
+@MapperScan(basePackages = {"com.zl.way.**.mapper"})
+@EnableTransactionManagement
+@EnableAspectJAutoProxy
+@EnableScheduling
+public class WayApplication {
 
     private final Logger logger = LoggerFactory.getLogger(WayApplication.class);
 
@@ -33,7 +37,8 @@ import org.springframework.web.filter.CorsFilter;
         application.run(args);
     }
 
-    @Bean public HttpMessageConverters fastJsonHttpMessageConverters() {
+    @Bean
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
 
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
@@ -43,7 +48,7 @@ import org.springframework.web.filter.CorsFilter;
             fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         }
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        //        fastJsonConfig.setSerializeFilters(new XssValueFilter()); //NOSONAR
+        // fastJsonConfig.setSerializeFilters(new XssValueFilter()); //NOSONAR
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
@@ -60,7 +65,8 @@ import org.springframework.web.filter.CorsFilter;
         return corsConfiguration;
     }
 
-    @Bean public CorsFilter corsFilter() {
+    @Bean
+    public CorsFilter corsFilter() {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig());

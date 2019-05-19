@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController @RequestMapping("/land") public class MainApi {
+@RestController
+@RequestMapping("/land")
+public class MainApi {
 
     private final MainService mainService;
 
-    @Autowired public MainApi(MainService mainService) {
+    @Autowired
+    public MainApi(MainService mainService) {
         this.mainService = mainService;
     }
 
-    @GetMapping("/android/download") public void androidDownload(HttpServletResponse response) throws IOException {
+    @GetMapping("/android/download")
+    public void androidDownload(HttpServletResponse response) throws IOException {
         final String androidApkLink = mainService.getAndroidApkLink();
         response.sendRedirect(androidApkLink);
     }

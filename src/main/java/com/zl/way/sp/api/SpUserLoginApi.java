@@ -52,8 +52,7 @@ public class SpUserLoginApi {
                 UserProfileBo userProfileBo = userService.getUserByName(request.getUserLoginName());
                 SpUserResponse response = new SpUserResponse();
                 response.setUserLoginId(userProfileBo.getUserLoginId());
-                response.setToken(
-                        TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
+                response.setToken(TokenUtil.getToken(String.valueOf(userProfileBo.getUserLoginId())));
                 return ResponseResultUtil.wrapSuccessResponseResult(response);
             }
         } catch (Exception e) {
@@ -64,11 +63,10 @@ public class SpUserLoginApi {
 
     @PostMapping(value = "/info")
     public ResponseResult<SpUserResponse> info(@RequestBody SpUserRequest userRequest,
-            @RequestHeader("token") String userToken) {
+        @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
         try {
@@ -95,11 +93,10 @@ public class SpUserLoginApi {
 
     @PostMapping(value = "/logout")
     public ResponseResult<UserResponse> logout(@RequestBody UserRequest userRequest,
-            @RequestHeader("token") String userToken) {
+        @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 

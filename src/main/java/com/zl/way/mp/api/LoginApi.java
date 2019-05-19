@@ -24,21 +24,19 @@ public class LoginApi {
     private static final Map<String, Object> RESULT_EDITOR = new HashMap<>();
 
     static {
-        //admin
+        // admin
         RESULT_ADMIN.put("roles", Arrays.asList("admin"));
         RESULT_ADMIN.put("userLoginId", 8);
         RESULT_ADMIN.put("token", "40ea1605f376771837e8e9787687e8f9");
         RESULT_ADMIN.put("introduction", "我是超级管理员");
-        RESULT_ADMIN.put("avatar",
-                "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        RESULT_ADMIN.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
         RESULT_ADMIN.put("name", "Super Admin");
-        //editor
+        // editor
         RESULT_EDITOR.put("roles", Arrays.asList("editor"));
         RESULT_EDITOR.put("userLoginId", 9);
         RESULT_EDITOR.put("token", "a43138e6f02c61e613e13fbc715fcb53");
         RESULT_EDITOR.put("introduction", "我是编辑");
-        RESULT_EDITOR.put("avatar",
-                "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        RESULT_EDITOR.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
         RESULT_EDITOR.put("name", "Normal Editor");
     }
 
@@ -65,7 +63,7 @@ public class LoginApi {
 
     @PostMapping("logout")
     public ResponseResult<String> logout(@RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -77,7 +75,7 @@ public class LoginApi {
 
     @PostMapping("/user/info")
     public ResponseResult<Map<String, Object>> userInfo(@RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);

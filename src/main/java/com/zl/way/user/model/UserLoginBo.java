@@ -1,4 +1,3 @@
 package com.zl.way.user.model;
 
-public class UserLoginBo extends UserLogin {
-}
+public class UserLoginBo extends UserLogin {}

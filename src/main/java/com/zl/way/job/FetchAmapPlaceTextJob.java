@@ -43,20 +43,18 @@ public class FetchAmapPlaceTextJob {
     @Autowired
     private WayCommodityService commodityService;
 
-    private static final String[] PROVINCE_CODE = {"370700", "130600", "321100", "321000", "450300",
-            "130200", "460200", "330500", "150100", "131000", "410300", "371000", "320900",
-            "371300", "440700", "440500", "321200", "350600", "130400", "370800", "340200",
-            "370300", "450200", "510700", "440800", "210300", "360700", "230600", "420500",
-            "150200", "610400", "130300", "430200", "350300", "220200", "320800", "441200",
-            "350900", "430400", "350700", "320700", "210600", "530700", "445200", "222400",
-            "330900", "360400", "350800", "130900", "210400", "420600", "361100", "210800",
-            "350400", "340300", "331100", "430600", "441800", "421000", "370900", "330800",
-            "211100", "370500", "411300", "340500", "511300", "630100", "420900", "230200"};
+    private static final String[] PROVINCE_CODE = {"370700", "130600", "321100", "321000", "450300", "130200", "460200",
+        "330500", "150100", "131000", "410300", "371000", "320900", "371300", "440700", "440500", "321200", "350600",
+        "130400", "370800", "340200", "370300", "450200", "510700", "440800", "210300", "360700", "230600", "420500",
+        "150200", "610400", "130300", "430200", "350300", "220200", "320800", "441200", "350900", "430400", "350700",
+        "320700", "210600", "530700", "445200", "222400", "330900", "360400", "350800", "130900", "210400", "420600",
+        "361100", "210800", "350400", "340300", "331100", "430600", "441800", "421000", "370900", "330800", "211100",
+        "370500", "411300", "340500", "511300", "630100", "420900", "230200"};
     /*{"0451", "0431", "024", "0471", "0311", "0531",
             "0351", "029", "0371", "025", "0551", "027", "028", "0871", "0851", "0731", "0791",
             "0571", "0591", "020", "0771", "0898", "0951", "0931", "0971"};*/
 
-    //    @Scheduled(fixedDelay = 3600000 * 24)
+    // @Scheduled(fixedDelay = 3600000 * 24)
     public void doJob() throws AMapException, InterruptedException {
 
         logger.info("启动{}", DateTime.now());
@@ -78,16 +76,14 @@ public class FetchAmapPlaceTextJob {
         logger.info("结束{}", DateTime.now());
     }
 
-    private List<AMapSearchTextModel> queryPlaceTextList(int page, String provinceCode)
-            throws AMapException {
+    private List<AMapSearchTextModel> queryPlaceTextList(int page, String provinceCode) throws AMapException {
 
         AMapSearchTextRequest aMapSearchTextRequest = new AMapSearchTextRequest();
         aMapSearchTextRequest.setCity(provinceCode);
         aMapSearchTextRequest.setTypeList(Arrays.asList("婴儿服务场所", "婴儿游泳馆"));
         aMapSearchTextRequest.setOffset(20);
         aMapSearchTextRequest.setPage(page);
-        AMapSearchTextResponse aMapSearchTextResponse = aMapSearchTextService
-                .searchText(aMapSearchTextRequest);
+        AMapSearchTextResponse aMapSearchTextResponse = aMapSearchTextService.searchText(aMapSearchTextRequest);
         if (aMapSearchTextResponse.getCode() == 200) {
             return aMapSearchTextResponse.getSearchTextModelList();
         }
@@ -102,12 +98,9 @@ public class FetchAmapPlaceTextJob {
             AMapSearchTextModel model = textModelList.get(i);
             WayShopParam shopParam = new WayShopParam();
             shopParam.setShopName(model.getName());
-            shopParam.setShopAddress(
-                    model.getpName() + model.getCityName() + model.getAdName() + model
-                            .getAddress());
-            shopParam.setShopTel(StringUtils.isNotBlank(model.getTel()) ?
-                    model.getTel().split(SymbolConstants.SEMICOLON)[0] :
-                    null);
+            shopParam.setShopAddress(model.getpName() + model.getCityName() + model.getAdName() + model.getAddress());
+            shopParam.setShopTel(
+                StringUtils.isNotBlank(model.getTel()) ? model.getTel().split(SymbolConstants.SEMICOLON)[0] : null);
             shopParam.setShopBusinessTime1("00:00-23:45");
             shopParam.setShopCateLeafId(46);
             String longitude = model.getLocation().split(SymbolConstants.COMMA)[0];
@@ -118,9 +111,8 @@ public class FetchAmapPlaceTextJob {
             shopParam.setCityCode(model.getCityCode());
             shopParam.setShopLogoUrl("http://static.duozouzou.top/blank_trans.jpg");
             try {
-                shopParam.setShopPinyin(PinyinHelper
-                        .convertToPinyinString(model.getName(), StringUtils.EMPTY,
-                                PinyinFormat.WITHOUT_TONE));
+                shopParam.setShopPinyin(
+                    PinyinHelper.convertToPinyinString(model.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
                 shopParam.setShopPy(PinyinHelper.getShortPinyin(model.getName()));
             } catch (PinyinException e) {
             }
@@ -145,8 +137,7 @@ public class FetchAmapPlaceTextJob {
         WayCommodityParam wayCommodityParam = new WayCommodityParam();
         wayCommodityParam.setShopId(shopId);
         wayCommodityParam.setName("儿童服装");
-        wayCommodityParam
-                .setImgUrlList(Arrays.asList("http://static.duozouzou.top/kid_clothes.jpg"));
+        wayCommodityParam.setImgUrlList(Arrays.asList("http://static.duozouzou.top/kid_clothes.jpg"));
         commodityService.createCommodity(wayCommodityParam);
     }
 

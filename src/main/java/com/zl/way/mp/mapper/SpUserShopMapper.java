@@ -1,12 +1,13 @@
 package com.zl.way.mp.mapper;
 
-import com.zl.way.mp.model.SpUserShop;
-import com.zl.way.mp.model.SpUserShopCondition;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.zl.way.mp.model.SpUserShop;
+import com.zl.way.mp.model.SpUserShopCondition;
 
 @Repository("mpSpUserShopMapper")
 public interface SpUserShopMapper {
@@ -24,5 +25,5 @@ public interface SpUserShopMapper {
     int updateByPrimaryKey(SpUserShop record);
 
     List<SpUserShop> selectByCondition(@Param("condition") SpUserShopCondition condition,
-                                       @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 }

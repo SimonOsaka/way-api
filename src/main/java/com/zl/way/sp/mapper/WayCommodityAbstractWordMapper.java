@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("spWayCommodityAbstractWordMapper") public interface WayCommodityAbstractWordMapper {
+@Repository("spWayCommodityAbstractWordMapper")
+public interface WayCommodityAbstractWordMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(WayCommodityAbstractWord record);

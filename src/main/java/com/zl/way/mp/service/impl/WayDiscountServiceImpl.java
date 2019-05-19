@@ -37,8 +37,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam,
-            PageParam pageParam) {
+    public List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam, PageParam pageParam) {
 
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
         condition.setClientLat(wayDiscountParam.getClientLat());
@@ -50,28 +49,23 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         condition.setCommodityId(wayDiscountParam.getCommodityId());
 
         Pageable pageable = WayPageRequest.of(pageParam);
-        logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition),
-                JSON.toJSONString(pageable));
+        logger.info("优惠条件查询列表sql参数{},{}", JSON.toJSONString(condition), JSON.toJSONString(pageable));
 
-        List<WayDiscount> wayDiscountList = wayDiscountMapper
-                .selectByCondition(condition, pageable);
+        List<WayDiscount> wayDiscountList = wayDiscountMapper.selectByCondition(condition, pageable);
         if (CollectionUtils.isEmpty(wayDiscountList)) {
             return Collections.emptyList();
         }
 
-        List<WayDiscountBo> wayDiscountBoList = BeanMapper
-                .mapAsList(wayDiscountList, WayDiscountBo.class);
+        List<WayDiscountBo> wayDiscountBoList = BeanMapper.mapAsList(wayDiscountList, WayDiscountBo.class);
         for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
             if (null != wayDiscountParam.getClientLng() && null != wayDiscountParam.getClientLat()
-                    && null != wayDiscountBo.getShopLng() && null != wayDiscountBo.getShopLat()) {
+                && null != wayDiscountBo.getShopLng() && null != wayDiscountBo.getShopLat()) {
                 BigDecimal distance = GeoUtil.getDistance(wayDiscountParam.getClientLng(),
-                        wayDiscountParam.getClientLat(), wayDiscountBo.getShopLng(),
-                        wayDiscountBo.getShopLat());
+                    wayDiscountParam.getClientLat(), wayDiscountBo.getShopLng(), wayDiscountBo.getShopLat());
                 wayDiscountBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
             }
 
-            wayDiscountBo.setCommodityImageUrl(
-                    String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
+            wayDiscountBo.setCommodityImageUrl(String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
 
             wayDiscountBo.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
         }
@@ -88,7 +82,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
         WayDiscount record = new WayDiscount();
         record.setId(wayDiscountParam.getDiscountId());
-        record.setIsDeleted((byte) 1);
+        record.setIsDeleted((byte)1);
         wayDiscountMapper.updateByPrimaryKeySelective(record);
         return BeanMapper.map(record, WayDiscountBo.class);
     }
@@ -96,8 +90,7 @@ public class WayDiscountServiceImpl implements WayDiscountService {
     @Override
     public Long countByCondition(WayDiscountParam wayDiscountParam) {
 
-        WayDiscountQueryCondition condition = BeanMapper
-                .map(wayDiscountParam, WayDiscountQueryCondition.class);
+        WayDiscountQueryCondition condition = BeanMapper.map(wayDiscountParam, WayDiscountQueryCondition.class);
         return wayDiscountMapper.countByCondition(condition);
     }
 }

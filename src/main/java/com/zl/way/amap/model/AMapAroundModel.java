@@ -2,67 +2,67 @@ package com.zl.way.amap.model;
 
 public class AMapAroundModel {
 
-	private String cityCode;
-	private String cityName;
-	private String adCode;
-	private String adName;
-	private String name;
-	private String location;
-	private String distance;
+    private String cityCode;
+    private String cityName;
+    private String adCode;
+    private String adName;
+    private String name;
+    private String location;
+    private String distance;
 
-	public String getCityCode() {
-		return cityCode;
-	}
+    public String getCityCode() {
+        return cityCode;
+    }
 
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
 
-	public String getAdCode() {
-		return adCode;
-	}
+    public String getAdCode() {
+        return adCode;
+    }
 
-	public void setAdCode(String adCode) {
-		this.adCode = adCode;
-	}
+    public void setAdCode(String adCode) {
+        this.adCode = adCode;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getCityName() {
-		return cityName;
-	}
+    public String getCityName() {
+        return cityName;
+    }
 
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
 
-	public String getAdName() {
-		return adName;
-	}
+    public String getAdName() {
+        return adName;
+    }
 
-	public void setAdName(String adName) {
-		this.adName = adName;
-	}
+    public void setAdName(String adName) {
+        this.adName = adName;
+    }
 
-	public String getLocation() {
-		return location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-	public String getDistance() {
-		return distance;
-	}
+    public String getDistance() {
+        return distance;
+    }
 
-	public void setDistance(String distance) {
-		this.distance = distance;
-	}
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
 }

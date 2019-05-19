@@ -15,11 +15,13 @@ public class WayCommodityAbstractWordCondition extends WayCommodityAbstractWord 
         this.pathPid = pathPid;
     }
 
-    @Override public Integer getPid() {
+    @Override
+    public Integer getPid() {
         return pid;
     }
 
-    @Override public void setPid(Integer pid) {
+    @Override
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 

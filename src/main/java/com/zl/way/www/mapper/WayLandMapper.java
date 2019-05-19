@@ -3,7 +3,8 @@ package com.zl.way.www.mapper;
 import com.zl.way.www.model.WayLand;
 import org.springframework.stereotype.Repository;
 
-@Repository public interface WayLandMapper {
+@Repository
+public interface WayLandMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(WayLand record);

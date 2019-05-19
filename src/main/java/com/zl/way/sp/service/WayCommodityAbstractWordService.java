@@ -14,8 +14,10 @@ public interface WayCommodityAbstractWordService {
     /**
      * 根据条件查询抽象词
      *
-     * @param param     入参
-     * @param pageParam 分页入参
+     * @param param
+     *            入参
+     * @param pageParam
+     *            分页入参
      * @return 抽象词结果
      */
     WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param, PageParam pageParam);

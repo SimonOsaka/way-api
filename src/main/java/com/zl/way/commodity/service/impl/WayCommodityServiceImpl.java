@@ -24,43 +24,42 @@ import java.util.List;
 @Service
 public class WayCommodityServiceImpl implements WayCommodityService {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private WayCommodityMapper wayCommodityMapper;
+    @Autowired
+    private WayCommodityMapper wayCommodityMapper;
 
-	@Override
-	@Transactional(rollbackFor = Exception.class, readOnly = true)
-	public WayCommodity getCommodityDetail(Long id) {
-		if (NumberUtil.isNotLongKey(id)) {
-			logger.info("商品详情id={}", id);
-			return null;
-		}
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public WayCommodity getCommodityDetail(Long id) {
+        if (NumberUtil.isNotLongKey(id)) {
+            logger.info("商品详情id={}", id);
+            return null;
+        }
 
+        WayCommodity wayCommodity = wayCommodityMapper.selectByPrimaryKey(id);
+        if (logger.isDebugEnabled()) {
+            logger.debug("商品详情结果={}", JSON.toJSONString(wayCommodity, true));
+        }
+        return wayCommodity;
+    }
 
-		WayCommodity wayCommodity = wayCommodityMapper.selectByPrimaryKey(id);
-		if (logger.isDebugEnabled()) {
-			logger.debug("商品详情结果={}", JSON.toJSONString(wayCommodity, true));
-		}
-		return wayCommodity;
-	}
+    @Override
+    public List<WayCommodityBo> pageCommodityByCondition(WayCommodityParam wayCommodityParam, PageParam pageParam) {
+        if (null == wayCommodityParam) {
+            logger.info("商品列表查询参数={}", wayCommodityParam);
+            return Collections.emptyList();
+        }
 
-	@Override
-	public List<WayCommodityBo> pageCommodityByCondition(WayCommodityParam wayCommodityParam, PageParam pageParam) {
-		if (null == wayCommodityParam) {
-			logger.info("商品列表查询参数={}", wayCommodityParam);
-			return Collections.emptyList();
-		}
+        WayCommodityQueryCondition condition = BeanMapper.map(wayCommodityParam, WayCommodityQueryCondition.class);
+        Pageable pageable = WayPageRequest.of(pageParam);
+        logger.info("商品列表sql条件condition={},pageable={}", condition, pageable);
 
-		WayCommodityQueryCondition condition = BeanMapper.map(wayCommodityParam, WayCommodityQueryCondition.class);
-		Pageable pageable = WayPageRequest.of(pageParam);
-		logger.info("商品列表sql条件condition={},pageable={}", condition, pageable);
-
-		List<WayCommodity> wayCommodityList = wayCommodityMapper.selectByCondition(condition, pageable);
-		if (logger.isDebugEnabled()) {
-			logger.debug("商品列表sql结果={}", JSON.toJSONString(wayCommodityList, true));
-		}
-		return BeanMapper.mapAsList(wayCommodityList, WayCommodityBo.class);
-	}
+        List<WayCommodity> wayCommodityList = wayCommodityMapper.selectByCondition(condition, pageable);
+        if (logger.isDebugEnabled()) {
+            logger.debug("商品列表sql结果={}", JSON.toJSONString(wayCommodityList, true));
+        }
+        return BeanMapper.mapAsList(wayCommodityList, WayCommodityBo.class);
+    }
 
 }

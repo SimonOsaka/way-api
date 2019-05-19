@@ -1,5 +1,17 @@
 package com.zl.way.mp.service.impl;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zl.way.mp.enums.WayCommodityLogSourceEnum;
 import com.zl.way.mp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.mp.enums.WayCommodityStatusEnum;
@@ -12,25 +24,18 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.EnumUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+@Service("mpWayCommodityService")
+public class WayCommodityServiceImpl implements WayCommodityService {
 
-@Service("mpWayCommodityService") public class WayCommodityServiceImpl implements WayCommodityService {
+    @Autowired
+    private WayCommodityMapper commodityMapper;
 
-    @Autowired private WayCommodityMapper commodityMapper;
+    @Autowired
+    private WayCommodityLogMapper commodityLogMapper;
 
-    @Autowired private WayCommodityLogMapper commodityLogMapper;
-
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam, PageParam pageParam) {
 
         Pageable pageable = WayPageRequest.of(pageParam);
@@ -45,7 +50,7 @@ import java.util.Map;
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayCommodityBo getCommodity(WayCommodityParam commodityParam) {
-
+    
         Pageable pageable = WayPageRequest.of(1, 1);
         WayCommodityCondition condition = BeanMapper
                 .map(commodityParam, WayCommodityCondition.class);
@@ -85,7 +90,7 @@ import java.util.Map;
         if (CollectionUtils.isNotEmpty(existCommodityList)) {
             return BeanMapper.map(existCommodityList.get(0), WayCommodityBo.class);
         }
-
+    
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
@@ -94,7 +99,7 @@ import java.util.Map;
             wayCommodityRecord.setNamePy(PinyinHelper.getShortPinyin(wayCommodityRecord.getName()));
         } catch (PinyinException e) {
         }
-
+    
         for (int i = 0; i < commodityParam.getImgUrlList().size(); i++) {
             String imgUrl = commodityParam.getImgUrlList().get(i);
             if (i == 0) {
@@ -117,7 +122,7 @@ import java.util.Map;
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
-
+    
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         try {
             wayCommodityRecord.setNamePinyin(PinyinHelper
@@ -126,12 +131,12 @@ import java.util.Map;
             wayCommodityRecord.setNamePy(PinyinHelper.getShortPinyin(wayCommodityRecord.getName()));
         } catch (PinyinException e) {
         }
-
+    
         wayCommodityRecord.setImgUrl1(StringUtils.EMPTY);
         wayCommodityRecord.setImgUrl2(StringUtils.EMPTY);
         wayCommodityRecord.setImgUrl3(StringUtils.EMPTY);
         wayCommodityRecord.setImgUrl4(StringUtils.EMPTY);
-
+    
         for (int i = 0; i < commodityParam.getImgUrlList().size(); i++) {
             String imgUrl = commodityParam.getImgUrlList().get(i);
             if (i == 0) {
@@ -157,14 +162,15 @@ import java.util.Map;
     /*@Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayCommodityBo deleteCommodity(WayCommodityParam commodityParam) {
-
+    
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayShopRecord.setIsDeleted((byte) 1);
         commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
     }*/
 
-    @Override public Map<String, String> getAllCommodityStatus() {
+    @Override
+    public Map<String, String> getAllCommodityStatus() {
 
         WayCommodityStatusEnum[] commodityStatusEnums = WayCommodityStatusEnum.values();
         if (commodityStatusEnums.length < 1) {
@@ -181,21 +187,22 @@ import java.util.Map;
         return commodityStatusMap;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public WayCommodityBo updateCommodityStatus(WayCommodityParam commodityParam) throws BusinessException {
 
-        //获取商品对象
+        // 获取商品对象
         WayCommodity existCommodity = commodityMapper.selectByPrimaryKey(commodityParam.getId());
         if (null == existCommodity) {
             throw new BusinessException("商品不存在");
         }
 
-        //修改状态
+        // 修改状态
         WayCommodity wayShopRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayShopRecord.setIsDeleted(commodityParam.getStatus());
         commodityMapper.updateByPrimaryKeySelective(wayShopRecord);
 
-        //记录日志
+        // 记录日志
         WayCommodityLog commodityLogRecord = new WayCommodityLog();
         String logContent = null;
         if (WayCommodityStatusEnum.DRAFT.getValue().equals(commodityParam.getStatus())) {
@@ -215,14 +222,16 @@ import java.util.Map;
         return BeanMapper.map(wayShopRecord, WayCommodityBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Long queryCommodityCount(WayCommodityParam commodityParam) {
 
         WayCommodityCondition condition = BeanMapper.map(commodityParam, WayCommodityCondition.class);
         return commodityMapper.countByCondition(condition);
     }
 
-    @Override public Long queryOnlineCount() {
+    @Override
+    public Long queryOnlineCount() {
         return commodityMapper.countAllOnline();
     }
 }

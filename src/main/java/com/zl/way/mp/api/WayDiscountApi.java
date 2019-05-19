@@ -27,8 +27,7 @@ public class WayDiscountApi {
     private WayDiscountService wayDiscountService;
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ResponseResult<WayDiscountResponse> queryDiscountList(
-            @RequestBody WayDiscountRequest wayDiscountRequest) {
+    public ResponseResult<WayDiscountResponse> queryDiscountList(@RequestBody WayDiscountRequest wayDiscountRequest) {
 
         WayDiscountParam wayDiscountParam = new WayDiscountParam();
         wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
@@ -39,8 +38,7 @@ public class WayDiscountApi {
         pageParam.setPageNum(wayDiscountRequest.getPageNum());
         pageParam.setPageSize(wayDiscountRequest.getPageSize());
 
-        List<WayDiscountBo> wayDiscountBoList = wayDiscountService
-                .selectByCondition(wayDiscountParam, pageParam);
+        List<WayDiscountBo> wayDiscountBoList = wayDiscountService.selectByCondition(wayDiscountParam, pageParam);
 
         WayDiscountResponse response = new WayDiscountResponse();
         response.setDiscountBoList(wayDiscountBoList);
@@ -52,32 +50,31 @@ public class WayDiscountApi {
     /*@RequestMapping(value = "/getDetail", method = RequestMethod.GET)
     public ResponseResult<WayDiscountResponse> getDiscountDetail(
             WayDiscountRequest wayDiscountRequest, @RequestHeader("token") String userToken) {
-
+    
         if (NumberUtil.isLongKey(wayDiscountRequest.getRealUserLoginId()) && !TokenUtil
                 .validToken(String.valueOf(wayDiscountRequest.getRealUserLoginId()), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", wayDiscountRequest.getUserLoginId(),
                     userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
-
+    
         WayDiscountParam wayDiscountParam = new WayDiscountParam();
         wayDiscountParam.setDiscountId(wayDiscountRequest.getDiscountId());
         wayDiscountParam.setRealUserLoginId(wayDiscountRequest.getRealUserLoginId());
-
+    
         WayDiscountBo wayDiscountBo = wayDiscountService.selectOne(wayDiscountParam);
         if (null == wayDiscountBo) {
             return ResponseResultUtil.wrapSuccessResponseResult(null);
         }
-
+    
         WayDiscountResponse wayDiscountResponse = BeanMapper
                 .map(wayDiscountBo, WayDiscountResponse.class);
         return ResponseResultUtil.wrapSuccessResponseResult(wayDiscountResponse);
     }*/
 
     @PostMapping("/delete")
-    public ResponseResult<WayDiscountResponse> getDiscountDetail(
-            @RequestBody WayDiscountRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayDiscountResponse> getDiscountDetail(@RequestBody WayDiscountRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);

@@ -1,5 +1,10 @@
 package com.zl.way.sp.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.sp.model.WayCommodityAbstractWordBo;
 import com.zl.way.sp.model.WayCommodityAbstractWordParam;
 import com.zl.way.sp.model.WayCommodityAbstractWordRequest;
@@ -9,26 +14,25 @@ import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import com.zl.way.util.TokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * sp抽象词api
  *
  * @author xuzhongliang
  */
-@RestController("spWayCommodityAbstractWordApi") @RequestMapping("/sp/commodity/abstractword")
+@RestController("spWayCommodityAbstractWordApi")
+@RequestMapping("/sp/commodity/abstractword")
 public class WayCommodityAbstractWordApi {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private WayCommodityAbstractWordService commodityAbstractWordService;
 
-    @Autowired public WayCommodityAbstractWordApi(WayCommodityAbstractWordService commodityAbstractWordService) {
+    @Autowired
+    public WayCommodityAbstractWordApi(WayCommodityAbstractWordService commodityAbstractWordService) {
         this.commodityAbstractWordService = commodityAbstractWordService;
     }
 
-    @PostMapping(value = "/list") public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
+    @PostMapping(value = "/list")
+    public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 

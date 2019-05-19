@@ -48,8 +48,7 @@ public class ApiValidationServiceImpl implements ApiValidationService {
 
         WayCommodityCondition commodityCondition = new WayCommodityCondition();
         commodityCondition.setId(commodityId);
-        List<WayCommodity> commodityList = commodityMapper
-                .selectByCondition(commodityCondition, WayPageRequest.ONE);
+        List<WayCommodity> commodityList = commodityMapper.selectByCondition(commodityCondition, WayPageRequest.ONE);
 
         if (CollectionUtils.isEmpty(commodityList)) {
             throw new BusinessException("商品信息不存在");

@@ -37,8 +37,8 @@ public class WayCommodityApiValidation {
             return this;
         }
 
-        WayCommodityStatusEnum commodityStatusEnum = EnumUtil
-                .getEnumByValue(request.getStatus(), WayCommodityStatusEnum.class);
+        WayCommodityStatusEnum commodityStatusEnum =
+            EnumUtil.getEnumByValue(request.getStatus(), WayCommodityStatusEnum.class);
         if (null == commodityStatusEnum) {
             validationMessageList.add("商品状态不正确");
             return this;

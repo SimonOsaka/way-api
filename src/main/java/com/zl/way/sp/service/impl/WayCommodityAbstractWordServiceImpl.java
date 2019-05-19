@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("spWayCommodityAbstractWordService")
-public class WayCommodityAbstractWordServiceImpl
-        implements WayCommodityAbstractWordService {
+public class WayCommodityAbstractWordServiceImpl implements WayCommodityAbstractWordService {
     private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
 
     @Autowired
@@ -38,15 +37,17 @@ public class WayCommodityAbstractWordServiceImpl
         condition.setPathPid(param.getPathPid());
         condition.setLeaf(param.getLeaf());
         List<WayCommodityAbstractWord> commodityAbstractWordList =
-                commodityAbstractWordMapper.selectByCondition(condition, null);
+            commodityAbstractWordMapper.selectByCondition(condition, null);
 
         condition = new WayCommodityAbstractWordCondition();
         List<WayCommodityAbstractWord> allAbstractWordList =
-                commodityAbstractWordMapper.selectByCondition(condition, null);
+            commodityAbstractWordMapper.selectByCondition(condition, null);
 
-        List<WayCommodityAbstractWordBo> commodityAbstractWordBoList = new ArrayList<>(commodityAbstractWordList.size());
+        List<WayCommodityAbstractWordBo> commodityAbstractWordBoList =
+            new ArrayList<>(commodityAbstractWordList.size());
         for (WayCommodityAbstractWord abstractWord : commodityAbstractWordList) {
-            WayCommodityAbstractWordBo commodityAbstractWordBo = BeanMapper.map(abstractWord, WayCommodityAbstractWordBo.class);
+            WayCommodityAbstractWordBo commodityAbstractWordBo =
+                BeanMapper.map(abstractWord, WayCommodityAbstractWordBo.class);
             JSONObject jsonObject = JSON.parseObject(commodityAbstractWordBo.getJsonData());
             if (jsonObject.containsKey("path")) {
                 JSONArray jsonArray = jsonObject.getJSONArray("path");
@@ -62,7 +63,8 @@ public class WayCommodityAbstractWordServiceImpl
         return commodityAbstractWordBo;
     }
 
-    private String getWordPathName(List<Integer> wordPathIdList, List<WayCommodityAbstractWord> commodityAbstractWordList) {
+    private String getWordPathName(List<Integer> wordPathIdList,
+        List<WayCommodityAbstractWord> commodityAbstractWordList) {
         StringBuilder pathNamesSb = new StringBuilder();
         for (WayCommodityAbstractWord word : commodityAbstractWordList) {
             for (Integer pathId : wordPathIdList) {

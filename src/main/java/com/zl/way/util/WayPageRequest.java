@@ -6,8 +6,7 @@ public class WayPageRequest {
 
     public static final org.springframework.data.domain.PageRequest of(PageParam pageParam) {
 
-        if (null == pageParam || null == pageParam.getPageNum() || null == pageParam
-                .getPageSize()) {
+        if (null == pageParam || null == pageParam.getPageNum() || null == pageParam.getPageSize()) {
             return null;
         }
         return of(pageParam.getPageNum(), pageParam.getPageSize());

@@ -14,7 +14,7 @@ public class XssValueFilter implements ValueFilter {
 
         if (value != null && "java.lang.String".equals(value.getClass().getTypeName())) {
             if (logger.isDebugEnabled()) {
-                //            logger.debug("object={},name={},value={}", object, name, value);
+                // logger.debug("object={},name={},value={}", object, name, value);
                 logger.debug("value type={}", value.getClass().getTypeName());
             }
 

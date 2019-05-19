@@ -24,7 +24,7 @@ public interface WayDiscountMapper {
     int updateByPrimaryKey(WayDiscount record);
 
     List<WayDiscount> selectByCondition(@Param("condition") WayDiscountCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 
     Long countByCondition(@Param("condition") WayDiscountCondition condition);
 }

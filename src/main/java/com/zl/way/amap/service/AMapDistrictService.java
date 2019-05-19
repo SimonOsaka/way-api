@@ -9,5 +9,5 @@ import com.zl.way.amap.model.AMapDistrictResponse;
  */
 public interface AMapDistrictService {
 
-	AMapDistrictResponse queryDistrict(AMapDistrictRequest aMapDistrictRequest) throws AMapException;
+    AMapDistrictResponse queryDistrict(AMapDistrictRequest aMapDistrictRequest) throws AMapException;
 }

@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository public interface UserAddressMapper {
+@Repository
+public interface UserAddressMapper {
     int deleteByPrimaryKey(Long id);
 
     int insertSelective(UserAddress record);

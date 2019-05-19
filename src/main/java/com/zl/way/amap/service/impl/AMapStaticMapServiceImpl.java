@@ -30,20 +30,17 @@ public class AMapStaticMapServiceImpl implements AMapStaticMapService {
     private String key;
 
     @Override
-    public AMapStaticMapResponse getStaticMap(AMapStaticMapRequest aMapStaticMapRequest)
-            throws AMapException {
+    public AMapStaticMapResponse getStaticMap(AMapStaticMapRequest aMapStaticMapRequest) throws AMapException {
 
         Map<String, String> urlParamsMap = new HashMap<>();
         urlParamsMap.put("key", key);
         urlParamsMap.put("location", aMapStaticMapRequest.getLocation());
-        urlParamsMap
-                .put("size", StringUtils.defaultIfBlank(aMapStaticMapRequest.getSize(), "750*300"));
+        urlParamsMap.put("size", StringUtils.defaultIfBlank(aMapStaticMapRequest.getSize(), "750*300"));
         urlParamsMap.put("zoom", StringUtils.defaultIfBlank(aMapStaticMapRequest.getZoom(), "17"));
         urlParamsMap.put("scale", StringUtils.defaultIfBlank(aMapStaticMapRequest.getScale(), "1"));
         try {
             urlParamsMap.put("markers",
-                    "large,," + URLEncoder.encode("这", "UTF8") + ":" + aMapStaticMapRequest
-                            .getLocation());
+                "large,," + URLEncoder.encode("这", "UTF8") + ":" + aMapStaticMapRequest.getLocation());
         } catch (UnsupportedEncodingException e) {
             logger.error("标记地图文字发生异常", e);
         }

@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
-@Service("spWayDiscountService") public class WayDiscountServiceImpl implements WayDiscountService {
+@Service("spWayDiscountService")
+public class WayDiscountServiceImpl implements WayDiscountService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final WayDiscountMapper discountMapper;
@@ -34,7 +35,8 @@ import java.util.List;
 
     private final WayDiscountJpushMapper discountJpushMapper;
 
-    @Autowired public WayDiscountServiceImpl(WayDiscountMapper discountMapper, WayCommodityMapper commodityMapper,
+    @Autowired
+    public WayDiscountServiceImpl(WayDiscountMapper discountMapper, WayCommodityMapper commodityMapper,
         WayShopMapper shopMapper, WayDiscountJpushMapper discountJpushMapper) {
         this.discountMapper = discountMapper;
         this.commodityMapper = commodityMapper;
@@ -42,7 +44,8 @@ import java.util.List;
         this.discountJpushMapper = discountJpushMapper;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayDiscountBo> queryDiscountList(WayDiscountParam param, PageParam pageParam) {
 
         WayDiscountCondition condition = BeanMapper.map(param, WayDiscountCondition.class);
@@ -54,7 +57,8 @@ import java.util.List;
         return BeanMapper.mapAsList(discountList, WayDiscountBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayDiscountBo getDiscount(WayDiscountParam param) {
 
         WayDiscountCondition condition = BeanMapper.map(param, WayDiscountCondition.class);
@@ -67,13 +71,14 @@ import java.util.List;
         return BeanMapper.map(discountList.get(0), WayDiscountBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class) public WayDiscountBo createDiscount(WayDiscountParam param)
-        throws BusinessException {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public WayDiscountBo createDiscount(WayDiscountParam param) throws BusinessException {
 
         Long commodityId = param.getCommodityId();
         WayDiscountCondition discountCondition = new WayDiscountCondition();
         discountCondition.setCommodityId(commodityId);
-        discountCondition.setLimitTimeExpireEnable(true);//未过期
+        discountCondition.setLimitTimeExpireEnable(true);// 未过期
         List<WayDiscount> discountList = discountMapper.selectByCondition(discountCondition, WayPageRequest.ONE);
         if (CollectionUtils.isNotEmpty(discountList)) {
             throw new BusinessException("此商品优惠已存在");

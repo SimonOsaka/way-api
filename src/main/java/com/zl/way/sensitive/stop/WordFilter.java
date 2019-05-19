@@ -19,8 +19,7 @@ public class WordFilter {
 
     private static final FilterSet set = new FilterSet(); // 存储首字
 
-    private static final Map<Integer, WordNode> nodes = new HashMap<Integer, WordNode>(1024,
-            1); // 存储节点
+    private static final Map<Integer, WordNode> nodes = new HashMap<Integer, WordNode>(1024, 1); // 存储节点
 
     private static final Set<Integer> stopwdSet = new HashSet<>(); // 停顿词
 
@@ -51,17 +50,16 @@ public class WordFilter {
         List<String> words;
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(
-                    WordFilter.class.getClassLoader().getResourceAsStream(path)));
+            br = new BufferedReader(new InputStreamReader(WordFilter.class.getClassLoader().getResourceAsStream(path)));
             words = new ArrayList<String>(1200);
-            for (String buf = ""; (buf = br.readLine()) != null; ) {
+            for (String buf = ""; (buf = br.readLine()) != null;) {
                 if (buf == null || buf.trim().equals(""))
                     continue;
                 words.add(buf);
                 ////
-                //                if (buf.length() == 1) {
-                //                    System.out.println(buf);
-                //                }
+                // if (buf.length() == 1) {
+                // System.out.println(buf);
+                // }
                 ////
             }
         } catch (Exception e) {
@@ -159,7 +157,7 @@ public class WordFilter {
                 // 你-3 妹-4 夫-5
                 k = i;
                 cpcurrc = currc; // 当前字符的拷贝
-                for (; ++k < length; ) {
+                for (; ++k < length;) {
                     int temp = charConvert(chs[k]);
                     if (temp == cpcurrc)
                         continue;
@@ -218,7 +216,7 @@ public class WordFilter {
                 // 你-3 妹-4 夫-5
                 k = i;
                 cpcurrc = currc;
-                for (; ++k < length; ) {
+                for (; ++k < length;) {
                     int temp = charConvert(chs[k]);
                     if (temp == cpcurrc)
                         continue;

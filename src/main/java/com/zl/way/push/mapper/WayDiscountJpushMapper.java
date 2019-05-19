@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("pushWayDiscountJpushMapper") public interface WayDiscountJpushMapper {
+@Repository("pushWayDiscountJpushMapper")
+public interface WayDiscountJpushMapper {
 
     int insertSelective(WayDiscountJpush record);
 

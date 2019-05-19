@@ -28,8 +28,7 @@ public class UserApi {
 
     @PostMapping("list")
     public ResponseResult<UserLoginResponse> queryUserList(@RequestBody UserLoginRequest request,
-            @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -45,8 +44,7 @@ public class UserApi {
         pageParam.setPageNum(request.getPageNum());
         pageParam.setPageSize(request.getPageSize());
 
-        List<UserLoginBo> userLoginBoList = userService
-                .queryUserLoginList(userLoginParam, pageParam);
+        List<UserLoginBo> userLoginBoList = userService.queryUserLoginList(userLoginParam, pageParam);
 
         UserLoginResponse response = new UserLoginResponse();
         response.setUserLoginBoList(userLoginBoList);
@@ -56,8 +54,7 @@ public class UserApi {
 
     @PostMapping("disable")
     public ResponseResult<UserLoginResponse> disableUserLogin(@RequestBody UserLoginRequest request,
-            @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -65,8 +62,7 @@ public class UserApi {
         }
         UserLoginApiValidation loginApiValidation = new UserLoginApiValidation(request).Id();
         if (loginApiValidation.hasErrors()) {
-            return ResponseResultUtil
-                    .wrapWrongParamResponseResult(loginApiValidation.getErrors().get(0));
+            return ResponseResultUtil.wrapWrongParamResponseResult(loginApiValidation.getErrors().get(0));
         }
 
         UserLoginParam userLoginParam = new UserLoginParam();

@@ -6,7 +6,7 @@ public class WayShopParam extends WayShop {
 
     private WayShopQualificationParam shopQualificationParam;
 
-    //更新类型：保存=save、提交=submit
+    // 更新类型：保存=save、提交=submit
     private String updateType;
 
     public Long getSpUserLoginId() {

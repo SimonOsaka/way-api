@@ -29,14 +29,14 @@ public class CityApi {
         return ResponseResultUtil.wrapSuccessResponseResult(wayCityResponseList);
     }
 
-//    @RequestMapping(value = "/pinyin", method = RequestMethod.GET)
-//    public ResponseResult<WayCityResponse> refreshPinyin() {
-//        try {
-//            wayCityService.updatePinyin();
-//        } catch (PinyinException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return ResponseResultUtil.wrapSuccessResponseResult(new WayCityResponse());
-//    }
+    // @RequestMapping(value = "/pinyin", method = RequestMethod.GET)
+    // public ResponseResult<WayCityResponse> refreshPinyin() {
+    // try {
+    // wayCityService.updatePinyin();
+    // } catch (PinyinException e) {
+    // e.printStackTrace();
+    // }
+    //
+    // return ResponseResultUtil.wrapSuccessResponseResult(new WayCityResponse());
+    // }
 }

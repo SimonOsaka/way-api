@@ -19,9 +19,11 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
 
     private static final String METHOD_GET = "get";
 
-    @Value("${custom.security.host:''}") private String host;
+    @Value("${custom.security.host:''}")
+    private String host;
 
-    @Override public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         if (METHOD_GET.equalsIgnoreCase(request.getMethod())) {
             logger.info("请求get方法，通过：{}", request.getRequestURL());
@@ -34,8 +36,8 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
             logger.debug("请求api之前referer={}，env={}，host={}", referer, env, host);
         }
 
-        if (StringUtils.equalsIgnoreCase(env, EnvUtil.ENV_TEST) || StringUtils
-            .equalsIgnoreCase(env, EnvUtil.ENV_PRODUCTION)) {
+        if (StringUtils.equalsIgnoreCase(env, EnvUtil.ENV_TEST)
+            || StringUtils.equalsIgnoreCase(env, EnvUtil.ENV_PRODUCTION)) {
             if (StringUtils.indexOf(referer, host) == -1) {
                 logger.warn("安全校验不通过，环境={}，referer={}，host={}", env, referer, host);
                 return false;
@@ -44,7 +46,8 @@ public class WebSecurityValidateInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
         ModelAndView modelAndView) throws Exception {
 
     }

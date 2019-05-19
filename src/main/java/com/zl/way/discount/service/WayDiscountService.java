@@ -9,17 +9,17 @@ import java.util.List;
 
 public interface WayDiscountService {
 
-	List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam, PageParam pageParam);
+    List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam, PageParam pageParam);
 
-	WayDiscountBo selectOne(WayDiscountParam wayDiscountParam);
+    WayDiscountBo selectOne(WayDiscountParam wayDiscountParam);
 
-	void createDiscount(WayDiscountParam wayDiscountParam);
+    void createDiscount(WayDiscountParam wayDiscountParam);
 
-	WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam);
+    WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam);
 
-	WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam);
+    WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam);
 
-	WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam);
+    WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam);
 
-	WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam);
+    WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam);
 }

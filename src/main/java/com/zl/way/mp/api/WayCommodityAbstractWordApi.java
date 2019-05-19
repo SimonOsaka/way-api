@@ -1,31 +1,35 @@
 package com.zl.way.mp.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.mp.model.WayCommodityAbstractWordBo;
 import com.zl.way.mp.model.WayCommodityAbstractWordParam;
 import com.zl.way.mp.model.WayCommodityAbstractWordRequest;
 import com.zl.way.mp.model.WayCommodityAbstractWordResponse;
 import com.zl.way.mp.service.WayCommodityAbstractWordService;
 import com.zl.way.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * mp抽象词api
  *
  * @author xuzhongliang
  */
-@RestController("mpWayCommodityAbstractWordApi") @RequestMapping("/mp/commodity/abstractword")
+@RestController("mpWayCommodityAbstractWordApi")
+@RequestMapping("/mp/commodity/abstractword")
 public class WayCommodityAbstractWordApi {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private WayCommodityAbstractWordService commodityAbstractWordService;
 
-    @Autowired public WayCommodityAbstractWordApi(WayCommodityAbstractWordService commodityAbstractWordService) {
+    @Autowired
+    public WayCommodityAbstractWordApi(WayCommodityAbstractWordService commodityAbstractWordService) {
         this.commodityAbstractWordService = commodityAbstractWordService;
     }
 
-    @PostMapping(value = "/list") public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
+    @PostMapping(value = "/list")
+    public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 
@@ -53,7 +57,8 @@ public class WayCommodityAbstractWordApi {
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
-    @PostMapping(value = "/create") public ResponseResult<WayCommodityAbstractWordResponse> createCommodityAbstractWord(
+    @PostMapping(value = "/create")
+    public ResponseResult<WayCommodityAbstractWordResponse> createCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 
@@ -72,7 +77,8 @@ public class WayCommodityAbstractWordApi {
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
-    @PostMapping(value = "/update") public ResponseResult<WayCommodityAbstractWordResponse> updateCommodityAbstractWord(
+    @PostMapping(value = "/update")
+    public ResponseResult<WayCommodityAbstractWordResponse> updateCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 
@@ -88,7 +94,8 @@ public class WayCommodityAbstractWordApi {
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
-    @PostMapping(value = "/delete") public ResponseResult<WayCommodityAbstractWordResponse> deleteCommodityAbstractWord(
+    @PostMapping(value = "/delete")
+    public ResponseResult<WayCommodityAbstractWordResponse> deleteCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 
@@ -108,7 +115,8 @@ public class WayCommodityAbstractWordApi {
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
-    @PostMapping(value = "/move") public ResponseResult<WayCommodityAbstractWordResponse> moveCommodityAbstractWord(
+    @PostMapping(value = "/move")
+    public ResponseResult<WayCommodityAbstractWordResponse> moveCommodityAbstractWord(
         @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
         @RequestHeader("X-userLoginId") Long userLoginId) {
 

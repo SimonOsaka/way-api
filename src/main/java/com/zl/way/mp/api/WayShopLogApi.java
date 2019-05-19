@@ -27,8 +27,7 @@ public class WayShopLogApi {
 
     @PostMapping("list")
     public ResponseResult<WayShopLogResponse> shopLogList(@RequestBody WayShopLogRequest request,
-            @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);

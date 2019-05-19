@@ -11,20 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("mpWayShopCateServiceImpl") public class WayShopCateServiceImpl implements WayShopCateService {
+@Service("mpWayShopCateServiceImpl")
+public class WayShopCateServiceImpl implements WayShopCateService {
 
-    @Autowired private WayShopCateRootMapper cateRootMapper;
+    @Autowired
+    private WayShopCateRootMapper cateRootMapper;
 
-    @Autowired private WayShopCateLeafMapper cateLeafMapper;
+    @Autowired
+    private WayShopCateLeafMapper cateLeafMapper;
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateRootBo> queryCateRoot() {
 
         List<WayShopCateRoot> cateRootList = cateRootMapper.selectByCondition(null);
         return BeanMapper.mapAsList(cateRootList, WayShopCateRootBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateLeafBo> queryCateLeaf(WayShopCateLeafParam leafParam) {
 
         WayShopCateLeafCondition condition = BeanMapper.map(leafParam, WayShopCateLeafCondition.class);
@@ -32,7 +37,8 @@ import java.util.List;
         return BeanMapper.mapAsList(cateLeafList, WayShopCateLeafBo.class);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopCateRootBo> queryCateAll() {
 
         List<WayShopCateRoot> cateRootList = cateRootMapper.selectByCondition(null);

@@ -1,23 +1,28 @@
 package com.zl.way.mp.api;
 
-import com.zl.way.mp.model.*;
-import com.zl.way.mp.service.WayShopCateService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.ResponseResult;
-import com.zl.way.util.ResponseResultUtil;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.zl.way.mp.model.*;
+import com.zl.way.mp.service.WayShopCateService;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
-@RestController("mpWayShopCateApi") @RequestMapping("/mp/shop/cate") public class WayShopCateApi {
+@RestController("mpWayShopCateApi")
+@RequestMapping("/mp/shop/cate")
+public class WayShopCateApi {
 
-    @Autowired private WayShopCateService cateService;
+    @Autowired
+    private WayShopCateService cateService;
 
-    @PostMapping("/root") public ResponseResult<WayShopCateResponse> queryCateRoot() {
+    @PostMapping("/root")
+    public ResponseResult<WayShopCateResponse> queryCateRoot() {
 
         List<WayShopCateRootBo> cateRootBoList = cateService.queryCateRoot();
         WayShopCateResponse response = new WayShopCateResponse();
@@ -35,7 +40,8 @@ import java.util.List;
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
-    @PostMapping("/all") public ResponseResult<WayShopCateResponse> queryCateAll() {
+    @PostMapping("/all")
+    public ResponseResult<WayShopCateResponse> queryCateAll() {
 
         List<WayShopCateRootBo> cateRootBoList = cateService.queryCateRoot();
         WayShopCateResponse response = new WayShopCateResponse();

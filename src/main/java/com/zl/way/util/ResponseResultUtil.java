@@ -25,8 +25,7 @@ public class ResponseResultUtil {
 
     public static final <T> ResponseResult<T> wrapException(Exception e) {
 
-        return wrapResponseResult(700, StringUtils.defaultString(e.getMessage(), StringUtils.EMPTY),
-                null);
+        return wrapResponseResult(700, StringUtils.defaultString(e.getMessage(), StringUtils.EMPTY), null);
     }
 
     public static final <T> ResponseResult<T> wrapResponseResult(int code, String msg, T data) {

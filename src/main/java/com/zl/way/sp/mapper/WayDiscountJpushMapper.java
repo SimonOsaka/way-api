@@ -3,7 +3,8 @@ package com.zl.way.sp.mapper;
 import com.zl.way.sp.model.WayDiscountJpush;
 import org.springframework.stereotype.Repository;
 
-@Repository("spWayDiscountJpushMapper") public interface WayDiscountJpushMapper {
+@Repository("spWayDiscountJpushMapper")
+public interface WayDiscountJpushMapper {
     int deleteByPrimaryKey(Long id);
 
     int insert(WayDiscountJpush record);

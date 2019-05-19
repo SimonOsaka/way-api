@@ -21,23 +21,29 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-@Service public class WayShopServiceImpl implements WayShopService {
+@Service
+public class WayShopServiceImpl implements WayShopService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired private WayShopMapper wayShopMapper;
+    @Autowired
+    private WayShopMapper wayShopMapper;
 
-    @Autowired private WayShopFollowMapper shopFollowMapper;
+    @Autowired
+    private WayShopFollowMapper shopFollowMapper;
 
-    @Autowired private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
+    @Autowired
+    private WayCommodityAbstractWordMapper commodityAbstractWordMapper;
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShop getPromoShopDetail(Long id) {
 
         return getPromoShopDetail(id, null);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayShop getPromoShopDetail(Long id, Long userLoginId) {
 
         if (NumberUtil.isNotLongKey(id)) {
@@ -71,7 +77,8 @@ import java.util.List;
         return wayShop;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayShopBo> pageWayShopByCondition(WayShopParam wayShopParam, PageParam pageParam) {
 
         if (null == wayShopParam) {
@@ -103,11 +110,10 @@ import java.util.List;
 
         List<WayShopBo> wayShopBoList = BeanMapper.mapAsList(wayShopList, WayShopBo.class);
         for (WayShopBo wayShopBo : wayShopBoList) {
-            if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat() && null != wayShopBo
-                .getShopLng() && null != wayShopBo.getShopLat()) {
-                BigDecimal distance = GeoUtil
-                    .getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(), wayShopBo.getShopLng(),
-                        wayShopBo.getShopLat());
+            if (null != wayShopParam.getClientLng() && null != wayShopParam.getClientLat()
+                && null != wayShopBo.getShopLng() && null != wayShopBo.getShopLat()) {
+                BigDecimal distance = GeoUtil.getDistance(wayShopParam.getClientLng(), wayShopParam.getClientLat(),
+                    wayShopBo.getShopLng(), wayShopBo.getShopLat());
                 wayShopBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
             }
         }

@@ -1,4 +1,3 @@
 package com.zl.way.user.model;
 
-public class UserAddressParam extends UserAddress {
-}
+public class UserAddressParam extends UserAddress {}

@@ -19,11 +19,9 @@ public class WayShopQualificationServiceImpl implements WayShopQualificationServ
     @Override
     public WayShopQualificationBo getShopQualification(WayShopQualificationParam param) {
 
-        WayShopQualificationCondition condition = BeanMapper
-                .map(param, WayShopQualificationCondition.class);
+        WayShopQualificationCondition condition = BeanMapper.map(param, WayShopQualificationCondition.class);
 
-        WayShopQualification shopQualification = shopQualificationMapper
-                .selectByPrimaryKey(condition.getId());
+        WayShopQualification shopQualification = shopQualificationMapper.selectByPrimaryKey(condition.getId());
         return BeanMapper.map(shopQualification, WayShopQualificationBo.class);
     }
 }

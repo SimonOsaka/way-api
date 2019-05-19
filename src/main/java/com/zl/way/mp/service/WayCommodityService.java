@@ -12,13 +12,13 @@ public interface WayCommodityService {
 
     List<WayCommodityBo> queryCommodityList(WayCommodityParam commodityParam, PageParam pageParam);
 
-    //    WayCommodityBo getCommodity(WayCommodityParam commodityParam);
+    // WayCommodityBo getCommodity(WayCommodityParam commodityParam);
     //
-    //    WayCommodityBo createCommodity(WayCommodityParam commodityParam);
+    // WayCommodityBo createCommodity(WayCommodityParam commodityParam);
     //
-    //    WayCommodityBo updateCommodity(WayCommodityParam commodityParam);
+    // WayCommodityBo updateCommodity(WayCommodityParam commodityParam);
 
-    //    WayCommodityBo deleteCommodity(WayCommodityParam commodityParam);
+    // WayCommodityBo deleteCommodity(WayCommodityParam commodityParam);
 
     Map<String, String> getAllCommodityStatus();
 

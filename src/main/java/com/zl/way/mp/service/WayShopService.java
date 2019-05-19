@@ -14,15 +14,15 @@ public interface WayShopService {
 
     WayShopBo getShop(WayShopParam shopParam);
 
-    //    WayShopBo createShop(WayShopParam shopParam);
+    // WayShopBo createShop(WayShopParam shopParam);
 
     WayShopBo updateShop(WayShopParam shopParam);
 
     WayShopBo deleteShop(WayShopParam shopParam);
 
-    //    WayShopBo onlineShop(WayShopParam shopParam) throws BusinessException;
+    // WayShopBo onlineShop(WayShopParam shopParam) throws BusinessException;
 
-    //    WayShopBo offlineShop(WayShopParam shopParam);
+    // WayShopBo offlineShop(WayShopParam shopParam);
 
     Map<String, String> getAllShopStatus();
 

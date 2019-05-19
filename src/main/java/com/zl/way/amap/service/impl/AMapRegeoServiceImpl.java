@@ -18,15 +18,19 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service public class AMapRegeoServiceImpl implements AMapRegeoService {
+@Service
+public class AMapRegeoServiceImpl implements AMapRegeoService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${amap.regeoUrl}") private String regeoUrl;
+    @Value("${amap.regeoUrl}")
+    private String regeoUrl;
 
-    @Value("${amap.key}") private String key;
+    @Value("${amap.key}")
+    private String key;
 
-    @Override public AMapRegeoResponse getRegeo(AMapRegeoRequest aMapRegeoRequest) throws AMapException {
+    @Override
+    public AMapRegeoResponse getRegeo(AMapRegeoRequest aMapRegeoRequest) throws AMapException {
         AMapRegeoResponse regeoResponse = new AMapRegeoResponse();
         Map<String, String> params = new HashMap<>();
         params.put("key", key);

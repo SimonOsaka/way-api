@@ -34,10 +34,8 @@ public class WayShopLogServiceImpl implements WayShopLogService {
 
         List<WayShopLogBo> wayShopLogBoList = BeanMapper.mapAsList(shopLogList, WayShopLogBo.class);
         for (WayShopLogBo shopLogBo : wayShopLogBoList) {
-            shopLogBo.setTypeDesc(
-                    EnumUtil.getDescByValue(shopLogBo.getType(), WayShopLogTypeEnum.class));
-            shopLogBo.setSourceDesc(
-                    EnumUtil.getDescByValue(shopLogBo.getSource(), WayShopLogSourceEnum.class));
+            shopLogBo.setTypeDesc(EnumUtil.getDescByValue(shopLogBo.getType(), WayShopLogTypeEnum.class));
+            shopLogBo.setSourceDesc(EnumUtil.getDescByValue(shopLogBo.getSource(), WayShopLogSourceEnum.class));
         }
 
         return wayShopLogBoList;

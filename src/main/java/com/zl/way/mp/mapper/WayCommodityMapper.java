@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("mpWayCommodityMapper") public interface WayCommodityMapper {
+@Repository("mpWayCommodityMapper")
+public interface WayCommodityMapper {
 
     int deleteByPrimaryKey(Long id);
 

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserLoginMapper userLoginMapper, UserProfileMapper userProfileMapper,
-                           UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
+        UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
         this.userLoginMapper = userLoginMapper;
         this.userProfileMapper = userProfileMapper;
         this.userDeviceMapper = userDeviceMapper;
@@ -315,8 +315,7 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("用户已被删除");
             }
 
-            if (null == userLogin.getValidCodeExpire() || now
-                    .after(userLogin.getValidCodeExpire())) {//当前时间大于过期时间，需要重新生成验证码
+            if (null == userLogin.getValidCodeExpire() || now.after(userLogin.getValidCodeExpire())) {// 当前时间大于过期时间，需要重新生成验证码
                 validCode = String.valueOf(RandomUtils.nextInt(113494, 984920));
                 UserLogin updateUserLogin = new UserLogin();
                 updateUserLogin.setId(userLogin.getId());
@@ -417,7 +416,7 @@ public class UserServiceImpl implements UserService {
         char[] ca = str.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ca.length; i++) {
-            sb.append((char) (ca[i] + 49 + offset[i]));
+            sb.append((char)(ca[i] + 49 + offset[i]));
         }
         return sb.toString();
     }

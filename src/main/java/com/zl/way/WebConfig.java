@@ -11,15 +11,14 @@ import java.util.Arrays;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	@Bean
-	public WebSecurityValidateInterceptor webSecurityValidateInterceptor() {
-		return new WebSecurityValidateInterceptor();
-	}
+    @Bean
+    public WebSecurityValidateInterceptor webSecurityValidateInterceptor() {
+        return new WebSecurityValidateInterceptor();
+    }
 
-	@Override
+    @Override
 
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(webSecurityValidateInterceptor())
-				.excludePathPatterns(Arrays.asList("/test/ping"));
-	}
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(webSecurityValidateInterceptor()).excludePathPatterns(Arrays.asList("/test/ping"));
+    }
 }

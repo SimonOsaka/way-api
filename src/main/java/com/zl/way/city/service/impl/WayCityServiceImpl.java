@@ -19,36 +19,36 @@ import java.util.List;
 @Service
 public class WayCityServiceImpl implements WayCityService {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private WayCityMapper wayCityMapper;
+    @Autowired
+    private WayCityMapper wayCityMapper;
 
-	@Override
-	@Transactional(rollbackFor = Exception.class, readOnly = true)
-	public List<WayCity> getAllCities(byte isUsed) {
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public List<WayCity> getAllCities(byte isUsed) {
 
-		List<WayCity> wayCityList = wayCityMapper.selectAllByCondition(isUsed);
-		if (logger.isDebugEnabled()) {
-			logger.debug("所有城市={}", JSON.toJSONString(wayCityList, true));
-			logger.debug("所有城市数量={}", wayCityList.size());
-		}
-		return wayCityList;
-	}
+        List<WayCity> wayCityList = wayCityMapper.selectAllByCondition(isUsed);
+        if (logger.isDebugEnabled()) {
+            logger.debug("所有城市={}", JSON.toJSONString(wayCityList, true));
+            logger.debug("所有城市数量={}", wayCityList.size());
+        }
+        return wayCityList;
+    }
 
-	@Override
-	public void updatePinyin() throws PinyinException {
-		List<WayCity> wayCityList = wayCityMapper.selectAllByCondition(null);
-		int wayCityListSize = wayCityList.size();
-		for (int i = 0; i < wayCityListSize; i++) {
-			WayCity wayCity = wayCityList.get(i);
+    @Override
+    public void updatePinyin() throws PinyinException {
+        List<WayCity> wayCityList = wayCityMapper.selectAllByCondition(null);
+        int wayCityListSize = wayCityList.size();
+        for (int i = 0; i < wayCityListSize; i++) {
+            WayCity wayCity = wayCityList.get(i);
 
-			WayCity updateWayCity = new WayCity();
-			updateWayCity.setId(wayCity.getId());
-			updateWayCity.setPinyinAll(PinyinHelper
-					.convertToPinyinString(wayCity.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
-			updateWayCity.setPinyinShort(PinyinHelper.getShortPinyin(wayCity.getName()));
-			wayCityMapper.updateByPrimaryKeySelective(updateWayCity);
-		}
-	}
+            WayCity updateWayCity = new WayCity();
+            updateWayCity.setId(wayCity.getId());
+            updateWayCity.setPinyinAll(
+                PinyinHelper.convertToPinyinString(wayCity.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
+            updateWayCity.setPinyinShort(PinyinHelper.getShortPinyin(wayCity.getName()));
+            wayCityMapper.updateByPrimaryKeySelective(updateWayCity);
+        }
+    }
 }

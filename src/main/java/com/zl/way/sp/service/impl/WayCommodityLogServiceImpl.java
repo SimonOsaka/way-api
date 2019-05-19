@@ -24,8 +24,7 @@ public class WayCommodityLogServiceImpl implements WayCommodityLogService {
     public WayCommodityLogBo getLog(WayCommodityLogParam param) {
 
         WayCommodityLogCondition condition = BeanMapper.map(param, WayCommodityLogCondition.class);
-        List<WayCommodityLog> commodityLogList = commodityLogMapper
-                .selectByCondition(condition, WayPageRequest.ONE);
+        List<WayCommodityLog> commodityLogList = commodityLogMapper.selectByCondition(condition, WayPageRequest.ONE);
         if (CollectionUtils.isEmpty(commodityLogList)) {
             return null;
         }

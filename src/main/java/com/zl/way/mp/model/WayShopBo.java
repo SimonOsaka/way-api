@@ -31,7 +31,6 @@ public class WayShopBo extends WayShop {
     public String getShopBusinessTime() {
 
         return StringUtils.defaultIfBlank(super.getShopBusinessTime1(), StringUtils.EMPTY)
-                .concat(StringUtils
-                        .defaultIfBlank(" " + super.getShopBusinessTime2(), StringUtils.EMPTY));
+            .concat(StringUtils.defaultIfBlank(" " + super.getShopBusinessTime2(), StringUtils.EMPTY));
     }
 }

@@ -30,17 +30,16 @@ public class WeixinShareController {
     private WayDiscountService discountService;
 
     @PostMapping("/webpage/commodity")
-    public ResponseResult<WeixinShareResponse> shareCommodityWebpage(
-            @RequestBody WeixinShareRequest request) {
+    public ResponseResult<WeixinShareResponse> shareCommodityWebpage(@RequestBody WeixinShareRequest request) {
 
         Long commodityId = request.getCommodityId();
         if (null == commodityId || commodityId < 0) {
             return ResponseResultUtil.wrapWrongParamResponseResult("商品详情id不正确");
         }
 
-        if (StringUtils.isBlank(request.getShareType()) || (
-                !StringUtils.equalsIgnoreCase(request.getShareType(), "session") && !StringUtils
-                        .equalsIgnoreCase(request.getShareType(), "timeline"))) {
+        if (StringUtils.isBlank(request.getShareType())
+            || (!StringUtils.equalsIgnoreCase(request.getShareType(), "session")
+                && !StringUtils.equalsIgnoreCase(request.getShareType(), "timeline"))) {
             return ResponseResultUtil.wrapWrongParamResponseResult("分享类型不正确");
         }
 
@@ -55,24 +54,22 @@ public class WeixinShareController {
         response.setImageUrl(commodity.getImgUrl());
         response.setShareType(request.getShareType());
         response.setTitle(commodity.getName());
-        response.setWebpageUrl(
-                "http://h5.jicu.vip/views/commodity/detail.html?cid=" + commodity.getId());
+        response.setWebpageUrl("http://h5.jicu.vip/views/commodity/detail.html?cid=" + commodity.getId());
 
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 
     @PostMapping("/webpage/discount")
-    public ResponseResult<WeixinShareResponse> shareDiscountWebpage(
-            @RequestBody WeixinShareRequest request) {
+    public ResponseResult<WeixinShareResponse> shareDiscountWebpage(@RequestBody WeixinShareRequest request) {
 
         Long discountId = request.getDiscountId();
         if (null == discountId || discountId < 0) {
             return ResponseResultUtil.wrapWrongParamResponseResult("优惠详情id不正确");
         }
 
-        if (StringUtils.isBlank(request.getShareType()) || (
-                !StringUtils.equalsIgnoreCase(request.getShareType(), "session") && !StringUtils
-                        .equalsIgnoreCase(request.getShareType(), "timeline"))) {
+        if (StringUtils.isBlank(request.getShareType())
+            || (!StringUtils.equalsIgnoreCase(request.getShareType(), "session")
+                && !StringUtils.equalsIgnoreCase(request.getShareType(), "timeline"))) {
             return ResponseResultUtil.wrapWrongParamResponseResult("分享类型不正确");
         }
 
@@ -87,10 +84,8 @@ public class WeixinShareController {
         response.setDesc(discountBo.getShopPosition());
         response.setImageUrl(discountBo.getCommodityImageUrl());
         response.setShareType(request.getShareType());
-        response.setTitle(
-                discountBo.getCommodityName() + " " + discountBo.getCommodityPrice() + "元");
-        response.setWebpageUrl(
-                "http://h5.jicu.vip/views/discount/detail.html?discountId=" + discountBo.getId());
+        response.setTitle(discountBo.getCommodityName() + " " + discountBo.getCommodityPrice() + "元");
+        response.setWebpageUrl("http://h5.jicu.vip/views/discount/detail.html?discountId=" + discountBo.getId());
 
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }

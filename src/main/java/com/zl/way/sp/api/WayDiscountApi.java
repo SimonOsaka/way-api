@@ -26,10 +26,9 @@ public class WayDiscountApi {
     private WayDiscountService discountService;
 
     @PostMapping("list")
-    public ResponseResult<WayDiscountResponse> queryDiscountList(
-            @RequestBody WayDiscountRequest request,
-            @RequestHeader(ApiConstants.X_TOKEN) String userToken,
-            @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
+    public ResponseResult<WayDiscountResponse> queryDiscountList(@RequestBody WayDiscountRequest request,
+        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
+        @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -48,8 +47,8 @@ public class WayDiscountApi {
 
     @PostMapping("get")
     public ResponseResult<WayDiscountResponse> getDiscount(@RequestBody WayDiscountRequest request,
-            @RequestHeader(ApiConstants.X_TOKEN) String userToken,
-            @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
+        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
+        @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -70,10 +69,9 @@ public class WayDiscountApi {
     }
 
     @PostMapping("create")
-    public ResponseResult<WayDiscountResponse> createDiscount(
-            @RequestBody WayDiscountRequest request,
-            @RequestHeader(ApiConstants.X_TOKEN) String userToken,
-            @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
+    public ResponseResult<WayDiscountResponse> createDiscount(@RequestBody WayDiscountRequest request,
+        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
+        @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -81,7 +79,7 @@ public class WayDiscountApi {
         }
 
         WayDiscountApiValidation validation = new WayDiscountApiValidation(request).commodityId()
-                .discountCommodityCate().discountCommodityPrice().discountLimitTimeExpire();
+            .discountCommodityCate().discountCommodityPrice().discountLimitTimeExpire();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getFirstError());
         }

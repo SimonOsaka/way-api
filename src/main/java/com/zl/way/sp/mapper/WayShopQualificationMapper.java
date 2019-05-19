@@ -23,7 +23,6 @@ public interface WayShopQualificationMapper {
 
     int updateByPrimaryKey(WayShopQualification record);
 
-    List<WayShopQualification> selectByCondition(
-            @Param("condition") WayShopQualificationCondition condition,
-            @Param("pageable") Pageable pageable);
+    List<WayShopQualification> selectByCondition(@Param("condition") WayShopQualificationCondition condition,
+        @Param("pageable") Pageable pageable);
 }

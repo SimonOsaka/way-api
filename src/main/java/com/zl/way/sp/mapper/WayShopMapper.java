@@ -24,5 +24,5 @@ public interface WayShopMapper {
     int updateByPrimaryKey(WayShop record);
 
     List<WayShop> selectByCondition(@Param("condition") WayShopCondition condition,
-            @Param("pageable") Pageable pageable);
+        @Param("pageable") Pageable pageable);
 }

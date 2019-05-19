@@ -22,21 +22,21 @@ public class EnvUtil {
             return ENV;
         }
 
-        //		Map<String, String> envMap = System.getenv();
-        //		Set<String> envKeySets = envMap.keySet();
-        //		for (String key : envKeySets) {
-        //			if (envMap.containsKey(key)) {
-        //				System.out.println("env变量key=" + key + "，value=" + envMap.get(key));
-        //			}
-        //		}
+        // Map<String, String> envMap = System.getenv();
+        // Set<String> envKeySets = envMap.keySet();
+        // for (String key : envKeySets) {
+        // if (envMap.containsKey(key)) {
+        // System.out.println("env变量key=" + key + "，value=" + envMap.get(key));
+        // }
+        // }
         //
-        //		Set<Object> keySets = System.getProperties().keySet();
-        //		for (Object key : keySets) {
-        //			if (System.getProperties().containsKey(key)) {
-        //				Object value = System.getProperties().get(key);
-        //				System.out.println("property变量key=" + key + "，value=" + value);
-        //			}
-        //		}
+        // Set<Object> keySets = System.getProperties().keySet();
+        // for (Object key : keySets) {
+        // if (System.getProperties().containsKey(key)) {
+        // Object value = System.getProperties().get(key);
+        // System.out.println("property变量key=" + key + "，value=" + value);
+        // }
+        // }
 
         String prop = System.getProperty("spring.profiles.active", "development");
 

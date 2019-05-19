@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("spWayCommodityApi") @RequestMapping("/sp/commodity") public class WayCommodityApi {
+@RestController("spWayCommodityApi")
+@RequestMapping("/sp/commodity")
+public class WayCommodityApi {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired private WayCommodityService commodityService;
+    @Autowired
+    private WayCommodityService commodityService;
 
-    @Autowired private ApiValidationService apiValidationService;
+    @Autowired
+    private ApiValidationService apiValidationService;
 
     @PostMapping(value = "/list")
     public ResponseResult<WayCommodityResponse> queryCommodity(@RequestBody WayCommodityRequest request,

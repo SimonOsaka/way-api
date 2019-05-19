@@ -37,11 +37,11 @@ public class WayShopFollowServiceImpl implements WayShopFollowService {
 
             WayShopFollow updateWayShopFollow = new WayShopFollow();
             updateWayShopFollow.setId(id);
-            updateWayShopFollow.setHasFollowed((byte) 0);
+            updateWayShopFollow.setHasFollowed((byte)0);
 
             shopFollowMapper.updateByPrimaryKeySelective(updateWayShopFollow);
         }
-        shopFollow.setHasFollowed((byte) 0);
+        shopFollow.setHasFollowed((byte)0);
         return shopFollow;
     }
 
@@ -57,7 +57,7 @@ public class WayShopFollowServiceImpl implements WayShopFollowService {
 
         WayShopFollow updateWayShopFollow = new WayShopFollow();
         updateWayShopFollow.setId(id);
-        updateWayShopFollow.setHasFollowed((byte) 1);
+        updateWayShopFollow.setHasFollowed((byte)1);
 
         shopFollowMapper.updateByPrimaryKeySelective(updateWayShopFollow);
         return shopFollow;
@@ -69,8 +69,7 @@ public class WayShopFollowServiceImpl implements WayShopFollowService {
         condition.setShopId(shopId);
         condition.setUserLoginId(userLoginId);
 
-        List<WayShopFollowBo> shopFollowList = shopFollowMapper
-                .selectByCondition(condition, WayPageRequest.ONE);
+        List<WayShopFollowBo> shopFollowList = shopFollowMapper.selectByCondition(condition, WayPageRequest.ONE);
         if (CollectionUtils.isEmpty(shopFollowList)) {
             return null;
         }
@@ -80,16 +79,15 @@ public class WayShopFollowServiceImpl implements WayShopFollowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayShopFollowBo> selectByCondition(WayShopFollowParam wayShopFollowParam,
-            PageParam pageParam) {
+    public List<WayShopFollowBo> selectByCondition(WayShopFollowParam wayShopFollowParam, PageParam pageParam) {
 
         WayShopFollowQueryCondition condition = new WayShopFollowQueryCondition();
         condition.setShopId(wayShopFollowParam.getShopId());
         condition.setUserLoginId(wayShopFollowParam.getUserLoginId());
         condition.setHasFollowed(wayShopFollowParam.getHasFollowed());
 
-        List<WayShopFollowBo> shopFollowList = shopFollowMapper
-                .selectByCondition(condition, WayPageRequest.of(pageParam));
+        List<WayShopFollowBo> shopFollowList =
+            shopFollowMapper.selectByCondition(condition, WayPageRequest.of(pageParam));
         if (CollectionUtils.isEmpty(shopFollowList)) {
             return Collections.emptyList();
         }

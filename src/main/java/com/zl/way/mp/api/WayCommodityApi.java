@@ -24,13 +24,12 @@ public class WayCommodityApi {
     @Autowired
     private WayCommodityService commodityService;
 
-    //    @Autowired
-    //    private ApiValidationService apiValidationService;
+    // @Autowired
+    // private ApiValidationService apiValidationService;
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayCommodityResponse> queryCommodity(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> queryCommodity(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
@@ -43,8 +42,7 @@ public class WayCommodityApi {
         pageParam.setPageNum(request.getPageNum());
         pageParam.setPageSize(request.getPageSize());
 
-        List<WayCommodityBo> commodityBoList = commodityService
-                .queryCommodityList(commodityParam, pageParam);
+        List<WayCommodityBo> commodityBoList = commodityService.queryCommodityList(commodityParam, pageParam);
         WayCommodityResponse response = new WayCommodityResponse();
         response.setCommodityBoList(commodityBoList);
         response.setCommodityStatusMap(commodityService.getAllCommodityStatus());
@@ -56,25 +54,25 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> getCommodity(
             @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
             @RequestHeader("X-userLoginId") Long userLoginId) {
-
+    
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
-
+    
         WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
-
+    
         try {
             apiValidationService.validateUserCommodity(userLoginId, request.getId());
         } catch (BusinessException e) {
             return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
         }
-
+    
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-
+    
         WayCommodityBo commodityBo = commodityService.getCommodity(commodityParam);
         WayCommodityResponse response = new WayCommodityResponse();
         response.setCommodityBo(commodityBo);
@@ -85,20 +83,20 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> createCommodity(
             @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
             @RequestHeader("X-userLoginId") Long userLoginId) {
-
+    
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
-
+    
         WayCommodityApiValidation validation = new WayCommodityApiValidation(request).shopId()
                 .name().price().imgUrl();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
-
+    
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-
+    
         commodityService.createCommodity(commodityParam);
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }*/
@@ -107,26 +105,26 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> updateCommodity(
             @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
             @RequestHeader("X-userLoginId") Long userLoginId) {
-
+    
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
-
+    
         WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId()
                 .shopId().name().price().imgUrl();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
-
+    
         try {
             apiValidationService.validateUserCommodity(userLoginId, request.getId());
         } catch (BusinessException e) {
             return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
         }
-
+    
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-
+    
         commodityService.updateCommodity(commodityParam);
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }*/
@@ -135,41 +133,39 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> deleteCommodity(
             @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
             @RequestHeader("X-userLoginId") Long userLoginId) {
-
+    
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
-
+    
         WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
-
+    
         try {
             apiValidationService.validateUserCommodity(userLoginId, request.getId());
         } catch (BusinessException e) {
             return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
         }
-
+    
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-
+    
         commodityService.deleteCommodity(commodityParam);
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }*/
 
     @PostMapping(value = "/status")
-    public ResponseResult<WayCommodityResponse> modifyCommodityStatus(
-            @RequestBody WayCommodityRequest request, @RequestHeader("X-Token") String userToken,
-            @RequestHeader("X-userLoginId") Long userLoginId) {
+    public ResponseResult<WayCommodityResponse> modifyCommodityStatus(@RequestBody WayCommodityRequest request,
+        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
 
         if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
             logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId()
-                .commodityStatus();
+        WayCommodityApiValidation validation = new WayCommodityApiValidation(request).commodityId().commodityStatus();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }

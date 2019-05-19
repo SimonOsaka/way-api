@@ -3,7 +3,7 @@ package com.zl.way.mp.enums;
 import com.zl.way.base.BaseEnum;
 
 public enum WayCommodityLogSourceEnum implements BaseEnum {
-    MP((byte) 1, "MP"), SP((byte) 2, "SP");
+    MP((byte)1, "MP"), SP((byte)2, "SP");
 
     private byte source;
 

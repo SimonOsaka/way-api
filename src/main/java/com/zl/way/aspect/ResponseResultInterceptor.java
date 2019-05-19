@@ -22,7 +22,7 @@ public class ResponseResultInterceptor {
         try {
             long start = System.currentTimeMillis();
             logger.info("api开始，方法：{}，参数：{}", getMethodName(proceedingJoinPoint),
-                    getArgsJsonString(proceedingJoinPoint));
+                getArgsJsonString(proceedingJoinPoint));
 
             Object proceed = proceedingJoinPoint.proceed();
 
@@ -30,7 +30,7 @@ public class ResponseResultInterceptor {
             logger.info("api返回{}，耗时{}ms", getReturnJsonString(proceed), end - start);
 
             return proceed;
-        } catch (Throwable throwable) {//捕捉未知异常
+        } catch (Throwable throwable) {// 捕捉未知异常
             logger.error("系统异常", throwable);
             return ResponseResultUtil.wrapResponseResult(500, "业务繁忙，稍后再试", null);
         }

@@ -61,11 +61,11 @@ public class WayShopApiValidation {
             return this;
         }
 
-        //        if (SensiWordsUtil.isSensiWords(request.getShopAddress())) {
-        //            String sensiWords = SensiWordsUtil.getSensiWords(request.getShopAddress());
-        //            validationMessageList.add("商家地址包含敏感词汇[" + sensiWords + "]");
-        //            return this;
-        //        }
+        // if (SensiWordsUtil.isSensiWords(request.getShopAddress())) {
+        // String sensiWords = SensiWordsUtil.getSensiWords(request.getShopAddress());
+        // validationMessageList.add("商家地址包含敏感词汇[" + sensiWords + "]");
+        // return this;
+        // }
 
         if (StringUtils.length(request.getShopAddress()) > 200) {
             validationMessageList.add("商家地址最多200字");
@@ -114,9 +114,8 @@ public class WayShopApiValidation {
 
         char[] telCharArr = request.getShopTel().toCharArray();
         for (char telChar : telCharArr) {
-            if (telChar != '1' && telChar != '2' && telChar != '3' && telChar != '4'
-                    && telChar != '5' && telChar != '6' && telChar != '7' && telChar != '8'
-                    && telChar != '9' && telChar != '0' && telChar != '-') {
+            if (telChar != '1' && telChar != '2' && telChar != '3' && telChar != '4' && telChar != '5' && telChar != '6'
+                && telChar != '7' && telChar != '8' && telChar != '9' && telChar != '0' && telChar != '-') {
                 validationMessageList.add("商家电话必须数字和-");
                 return this;
             }
@@ -202,8 +201,8 @@ public class WayShopApiValidation {
             return this;
         }
 
-        if (!StringUtils.equalsIgnoreCase("save", request.getUpdateType()) && !StringUtils
-                .equalsIgnoreCase("submit", request.getUpdateType())) {
+        if (!StringUtils.equalsIgnoreCase("save", request.getUpdateType())
+            && !StringUtils.equalsIgnoreCase("submit", request.getUpdateType())) {
             validationMessageList.add("请执行保存或提交的一种");
             return this;
         }

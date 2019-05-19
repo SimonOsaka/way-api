@@ -6,5 +6,5 @@ import com.zl.way.amap.model.AMapStaticMapResponse;
 
 public interface AMapStaticMapService {
 
-	AMapStaticMapResponse getStaticMap(AMapStaticMapRequest aMapStaticMapRequest) throws AMapException;
+    AMapStaticMapResponse getStaticMap(AMapStaticMapRequest aMapStaticMapRequest) throws AMapException;
 }

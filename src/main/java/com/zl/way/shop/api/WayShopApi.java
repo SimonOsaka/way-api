@@ -30,12 +30,11 @@ public class WayShopApi {
 
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResponseResult<WayShopResponse> getShopDetail(@RequestBody WayShopRequest wayShopRequest,
-            @RequestHeader(value = "token", defaultValue = "") String userToken) {
+        @RequestHeader(value = "token", defaultValue = "") String userToken) {
 
-        if (null != wayShopRequest.getUserLoginId() && !TokenUtil
-                .validToken(String.valueOf(wayShopRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", wayShopRequest.getUserLoginId(),
-                    userToken);
+        if (null != wayShopRequest.getUserLoginId()
+            && !TokenUtil.validToken(String.valueOf(wayShopRequest.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", wayShopRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
@@ -44,8 +43,8 @@ public class WayShopApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("店铺信息不存在");
         }
 
-        WayShop wayShop = wayShopService
-                .getPromoShopDetail(wayShopRequest.getShopId(), wayShopRequest.getUserLoginId());
+        WayShop wayShop =
+            wayShopService.getPromoShopDetail(wayShopRequest.getShopId(), wayShopRequest.getUserLoginId());
         if (null == wayShop) {
             logger.info("店铺不存在id={}", wayShopRequest.getShopId());
             return ResponseResultUtil.wrapNotExistResponseResult("店铺信息不存在");
@@ -62,8 +61,7 @@ public class WayShopApi {
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public ResponseResult<List<WayShopResponse>> queryByCondition(
-            @RequestBody WayShopRequest request) {
+    public ResponseResult<List<WayShopResponse>> queryByCondition(@RequestBody WayShopRequest request) {
 
         WayShopParam wayShopParam = new WayShopParam();
         wayShopParam.setShopCateLeafId(request.getShopCateLeafId());
@@ -78,55 +76,45 @@ public class WayShopApi {
         pageParam.setPageNum(request.getPageNum());
         pageParam.setPageSize(request.getPageSize());
 
-        List<WayShopBo> promoShopList = wayShopService
-                .pageWayShopByCondition(wayShopParam, pageParam);
-        List<WayShopResponse> wayShopResponseList = BeanMapper
-                .mapAsList(promoShopList, WayShopResponse.class);
+        List<WayShopBo> promoShopList = wayShopService.pageWayShopByCondition(wayShopParam, pageParam);
+        List<WayShopResponse> wayShopResponseList = BeanMapper.mapAsList(promoShopList, WayShopResponse.class);
         return ResponseResultUtil.wrapSuccessResponseResult(wayShopResponseList);
     }
 
     @PostMapping("/follow")
-    public ResponseResult<WayShopFollowResponse> shopFollowed(
-            @RequestBody WayShopFollowRequest shopFollowRequest,
-            @RequestHeader("token") String userToken) {
+    public ResponseResult<WayShopFollowResponse> shopFollowed(@RequestBody WayShopFollowRequest shopFollowRequest,
+        @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(shopFollowRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        shopFollowService.updateShopFollowed(shopFollowRequest.getShopId(),
-                shopFollowRequest.getUserLoginId());
+        shopFollowService.updateShopFollowed(shopFollowRequest.getShopId(), shopFollowRequest.getUserLoginId());
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
     @PostMapping("/follow/cancel")
     public ResponseResult<WayShopFollowResponse> shopFollowCancelled(
-            @RequestBody WayShopFollowRequest shopFollowRequest,
-            @RequestHeader("token") String userToken) {
+        @RequestBody WayShopFollowRequest shopFollowRequest, @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(shopFollowRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        shopFollowService.cancelShopFollowed(shopFollowRequest.getShopId(),
-                shopFollowRequest.getUserLoginId());
+        shopFollowService.cancelShopFollowed(shopFollowRequest.getShopId(), shopFollowRequest.getUserLoginId());
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
     @PostMapping("/user/follows")
-    public ResponseResult<WayShopFollowResponse> userShopFollows(
-            @RequestBody WayShopFollowRequest shopFollowRequest,
-            @RequestHeader("token") String userToken) {
+    public ResponseResult<WayShopFollowResponse> userShopFollows(@RequestBody WayShopFollowRequest shopFollowRequest,
+        @RequestHeader("token") String userToken) {
 
         if (!TokenUtil.validToken(String.valueOf(shopFollowRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(),
-                    userToken);
+            logger.warn("Token安全校验不过，userId={}，userToken={}", shopFollowRequest.getUserLoginId(), userToken);
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
@@ -137,13 +125,12 @@ public class WayShopApi {
         }
         WayShopFollowParam param = new WayShopFollowParam();
         param.setUserLoginId(shopFollowRequest.getUserLoginId());
-        param.setHasFollowed((byte) 0);
+        param.setHasFollowed((byte)0);
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(shopFollowRequest.getPageNum());
         pageParam.setPageSize(shopFollowRequest.getPageSize());
-        List<WayShopFollowBo> shopFollowBoList = shopFollowService
-                .selectByCondition(param, pageParam);
+        List<WayShopFollowBo> shopFollowBoList = shopFollowService.selectByCondition(param, pageParam);
 
         WayShopFollowResponse response = new WayShopFollowResponse();
         response.setShopFollowList(shopFollowBoList);

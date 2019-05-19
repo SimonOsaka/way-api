@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("mpWayShopCateLeafMapper") public interface WayShopCateLeafMapper {
+@Repository("mpWayShopCateLeafMapper")
+public interface WayShopCateLeafMapper {
 
     int deleteByPrimaryKey(Integer id);
 

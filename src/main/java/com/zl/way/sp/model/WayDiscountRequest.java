@@ -9,7 +9,7 @@ public class WayDiscountRequest extends PageParam {
 
     private Long id;
 
-    private Long commodityId;//way_commodity的id
+    private Long commodityId;// way_commodity的id
 
     private BigDecimal commodityPrice;
 

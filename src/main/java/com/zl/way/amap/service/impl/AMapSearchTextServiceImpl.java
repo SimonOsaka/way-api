@@ -70,7 +70,7 @@ public class AMapSearchTextServiceImpl implements AMapSearchTextService {
                 List<AMapSearchTextModel> searchTextModelList = new ArrayList<>();
                 searchTextResponse.setSearchTextModelList(searchTextModelList);
                 for (Object obj : poisJsonArray) {
-                    JSONObject poiJsonObj = (JSONObject) obj;
+                    JSONObject poiJsonObj = (JSONObject)obj;
                     AMapSearchTextModel searchTextModel = new AMapSearchTextModel();
                     searchTextModel.setName(poiJsonObj.getString("name"));
 

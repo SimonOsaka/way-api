@@ -32,6 +32,5 @@ public interface WayShopFollowService {
      * @param pageParam
      * @return
      */
-    List<WayShopFollowBo> selectByCondition(WayShopFollowParam wayShopFollowParam,
-            PageParam pageParam);
+    List<WayShopFollowBo> selectByCondition(WayShopFollowParam wayShopFollowParam, PageParam pageParam);
 }

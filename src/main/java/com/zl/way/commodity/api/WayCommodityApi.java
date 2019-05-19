@@ -35,8 +35,7 @@ public class WayCommodityApi {
     public ResponseResult<WayCommodityResponse> getCommodityDetail(@RequestBody WayCommodityRequest request) {
         if (NumberUtil.isNotLongKey(request.getCommodityId())) {
             logger.info("参数id={}不正确", request.getCommodityId());
-            return ResponseResultUtil
-                    .wrapWrongParamResponseResult("商品信息不存在");
+            return ResponseResultUtil.wrapWrongParamResponseResult("商品信息不存在");
         }
 
         WayCommodity wayCommodity = wayCommodityService.getCommodityDetail(request.getCommodityId());
@@ -74,8 +73,10 @@ public class WayCommodityApi {
         pageParam.setPageNum(request.getPageNum());
         pageParam.setPageSize(request.getPageSize());
 
-        List<WayCommodityBo> wayCommodityBoList = wayCommodityService.pageCommodityByCondition(wayCommodityParam, pageParam);
-        List<WayCommodityResponse> wayCommodityResponseList = BeanMapper.mapAsList(wayCommodityBoList, WayCommodityResponse.class);
+        List<WayCommodityBo> wayCommodityBoList =
+            wayCommodityService.pageCommodityByCondition(wayCommodityParam, pageParam);
+        List<WayCommodityResponse> wayCommodityResponseList =
+            BeanMapper.mapAsList(wayCommodityBoList, WayCommodityResponse.class);
         return ResponseResultUtil.wrapSuccessResponseResult(wayCommodityResponseList);
     }
 

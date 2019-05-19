@@ -36,7 +36,7 @@ public class WayShopRequest extends PageParam {
 
     private String shopHeadTel;
 
-    //商家资质开始
+    // 商家资质开始
     private String idcardFrontImgUrl;
 
     private String idcardBackImgUrl;
@@ -58,9 +58,9 @@ public class WayShopRequest extends PageParam {
     private String other4ImgUrl;
 
     private String other5ImgUrl;
-    //商家资质结束
+    // 商家资质结束
 
-    //更新类型：保存=save、提交=submit
+    // 更新类型：保存=save、提交=submit
     private String updateType;
 
     public Long getId() {

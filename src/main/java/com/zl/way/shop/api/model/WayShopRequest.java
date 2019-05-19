@@ -14,9 +14,9 @@ public class WayShopRequest extends PageParam {
 
     private String keywords;
 
-    private BigDecimal clientLat;//纬度
+    private BigDecimal clientLat;// 纬度
 
-    private BigDecimal clientLng;//经度
+    private BigDecimal clientLng;// 经度
 
     private String cityCode;
 

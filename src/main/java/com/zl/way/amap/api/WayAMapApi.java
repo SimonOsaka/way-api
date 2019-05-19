@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-@RestController @RequestMapping("/amap") public class WayAMapApi {
+@RestController
+@RequestMapping("/amap")
+public class WayAMapApi {
 
     private final AMapInputTipsService aMapInputTipsService;
 
@@ -30,7 +32,8 @@ import java.util.List;
 
     private final AMapConvertService aMapConvertService;
 
-    @Autowired public WayAMapApi(AMapInputTipsService aMapInputTipsService, AMapDistrictService aMapDistrictService,
+    @Autowired
+    public WayAMapApi(AMapInputTipsService aMapInputTipsService, AMapDistrictService aMapDistrictService,
         AMapAroundService aMapAroundService, AMapStaticMapService aMapStaticMapService,
         AMapRegeoService aMapRegeoService, AMapSearchTextService aMapSearchTextService,
         AMapConvertService aMapConvertService) {
@@ -44,16 +47,16 @@ import java.util.List;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/inputtips")
-    public ResponseResult<List<WayAMapInputTipsResponse>> requestInputTips(
-        @RequestBody WayAMapInputTipsRequest request) {
+    public ResponseResult<List<WayAMapInputTipsResponse>>
+        requestInputTips(@RequestBody WayAMapInputTipsRequest request) {
 
         if (StringUtils.isBlank(request.getKeywords())) {
             return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
         }
 
         AMapInputTipsRequest aMapInputTipsRequest = new AMapInputTipsRequest();
-        aMapInputTipsRequest.setKeywords(request.getKeywords());//关键字
-        aMapInputTipsRequest.setCity(request.getCity());//当前城市
+        aMapInputTipsRequest.setKeywords(request.getKeywords());// 关键字
+        aMapInputTipsRequest.setCity(request.getCity());// 当前城市
         try {
             AMapInputTipsResponse aMapInputTipsResponse = aMapInputTipsService.queryInputTips(aMapInputTipsRequest);
             if (aMapInputTipsResponse.getCode() == 200) {
@@ -79,7 +82,7 @@ import java.util.List;
         }
 
         AMapDistrictRequest aMapDistrictRequest = new AMapDistrictRequest();
-        aMapDistrictRequest.setKeywords(request.getKeywords());//关键字
+        aMapDistrictRequest.setKeywords(request.getKeywords());// 关键字
         try {
             AMapDistrictResponse aMapDistrictResponse = aMapDistrictService.queryDistrict(aMapDistrictRequest);
             if (aMapDistrictResponse.getCode() == 200) {
@@ -104,7 +107,7 @@ import java.util.List;
         AMapAroundRequest aMapAroundRequest = new AMapAroundRequest();
         aMapAroundRequest.setLocation(request.getLocation());
         aMapAroundRequest.setTypes(request.getTypes());
-        aMapAroundRequest.setKeywords(request.getKeywords());//关键字
+        aMapAroundRequest.setKeywords(request.getKeywords());// 关键字
         try {
             AMapAroundResponse aMapAroundResponse = aMapAroundService.searchAround(aMapAroundRequest);
             if (aMapAroundResponse.getCode() == 200) {
@@ -120,8 +123,8 @@ import java.util.List;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/staticmap")
-    public ResponseResult<WayAMapStaticMapResponse> requestStaticMap(
-        @RequestBody WayAMapStaticMapRequest wayAMapStaticMapRequest) {
+    public ResponseResult<WayAMapStaticMapResponse>
+        requestStaticMap(@RequestBody WayAMapStaticMapRequest wayAMapStaticMapRequest) {
 
         AMapStaticMapRequest aMapStaticMapRequest = BeanMapper.map(wayAMapStaticMapRequest, AMapStaticMapRequest.class);
 
@@ -157,16 +160,17 @@ import java.util.List;
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
-    @PostMapping(path = "/searchText") public ResponseResult<List<WayAMapSearchTextResponse>> requestSearchText(
-        @RequestBody WayAMapSearchTextRequest request) {
+    @PostMapping(path = "/searchText")
+    public ResponseResult<List<WayAMapSearchTextResponse>>
+        requestSearchText(@RequestBody WayAMapSearchTextRequest request) {
 
         if (StringUtils.isBlank(request.getKeywords())) {
             return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
         }
 
         AMapSearchTextRequest aMapSearchTextRequest = new AMapSearchTextRequest();
-        aMapSearchTextRequest.setKeywords(request.getKeywords());//关键字
-        aMapSearchTextRequest.setCity(request.getCity());//当前城市
+        aMapSearchTextRequest.setKeywords(request.getKeywords());// 关键字
+        aMapSearchTextRequest.setCity(request.getCity());// 当前城市
         try {
             AMapSearchTextResponse aMapSearchTextResponse = aMapSearchTextService.searchText(aMapSearchTextRequest);
             if (aMapSearchTextResponse.getCode() == 200) {
@@ -185,8 +189,9 @@ import java.util.List;
         return ResponseResultUtil.wrapSuccessResponseResult(Collections.emptyList());
     }
 
-    @PostMapping(path = "/convert") public ResponseResult<List<WayAMapConvertResponse>> requestConvert(
-        @RequestBody WayAMapConvertRequest wayAMapConvertRequest) {
+    @PostMapping(path = "/convert")
+    public ResponseResult<List<WayAMapConvertResponse>>
+        requestConvert(@RequestBody WayAMapConvertRequest wayAMapConvertRequest) {
 
         AMapConvertRequest aMapConvertRequest = BeanMapper.map(wayAMapConvertRequest, AMapConvertRequest.class);
 

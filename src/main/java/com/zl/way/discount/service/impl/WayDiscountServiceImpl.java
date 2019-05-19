@@ -33,11 +33,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@Service public class WayDiscountServiceImpl implements WayDiscountService {
+@Service
+public class WayDiscountServiceImpl implements WayDiscountService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    //	private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
+    // private static final long ONE_HOUR_MILLS = 60 * 60 * 1000;
 
     private final WayDiscountMapper wayDiscountMapper;
 
@@ -60,9 +61,11 @@ import java.util.List;
         this.aMapRegeoService = aMapRegeoService;
     }
 
-    @Value("${custom.discount.imageUrl}") private String discountImageUrl;
+    @Value("${custom.discount.imageUrl}")
+    private String discountImageUrl;
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public List<WayDiscountBo> selectByCondition(WayDiscountParam wayDiscountParam, PageParam pageParam) {
 
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
@@ -82,29 +85,28 @@ import java.util.List;
             return Collections.emptyList();
         }
 
-        //		Date now = DateTime.now().toDate();
-        //		long nowMills = now.getTime();
+        // Date now = DateTime.now().toDate();
+        // long nowMills = now.getTime();
 
         List<WayDiscountBo> wayDiscountBoList = BeanMapper.mapAsList(wayDiscountList, WayDiscountBo.class);
         for (WayDiscountBo wayDiscountBo : wayDiscountBoList) {
             if (null != wayDiscountParam.getClientLng() && null != wayDiscountParam.getClientLat()
                 && null != wayDiscountBo.getShopLng() && null != wayDiscountBo.getShopLat()) {
-                BigDecimal distance = GeoUtil
-                    .getDistance(wayDiscountParam.getClientLng(), wayDiscountParam.getClientLat(),
-                        wayDiscountBo.getShopLng(), wayDiscountBo.getShopLat());
+                BigDecimal distance = GeoUtil.getDistance(wayDiscountParam.getClientLng(),
+                    wayDiscountParam.getClientLat(), wayDiscountBo.getShopLng(), wayDiscountBo.getShopLat());
                 wayDiscountBo.setShopDistance(GeoUtil.getDistanceDesc(distance.intValue()));
             }
 
             wayDiscountBo.setCommodityImageUrl(String.format(discountImageUrl, wayDiscountBo.getCommodityCate()));
 
-            //			if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
-            //					.after(now)) {
-            //				long expireMills = wayDiscountBo.getLimitTimeExpire().getTime();
-            //				long subMills = expireMills - nowMills;
-            //				if (subMills <= ONE_HOUR_MILLS) {
+            // if (wayDiscountBo.getLimitTimeExpire() != null && wayDiscountBo.getLimitTimeExpire()
+            // .after(now)) {
+            // long expireMills = wayDiscountBo.getLimitTimeExpire().getTime();
+            // long subMills = expireMills - nowMills;
+            // if (subMills <= ONE_HOUR_MILLS) {
             wayDiscountBo.setLimitTimeExpireMills(wayDiscountBo.getLimitTimeExpire().getTime());
-            //				}
-            //			}
+            // }
+            // }
         }
 
         if (logger.isDebugEnabled()) {
@@ -113,7 +115,8 @@ import java.util.List;
         return wayDiscountBoList;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     public WayDiscountBo selectOne(WayDiscountParam wayDiscountParam) {
 
         WayDiscountQueryCondition condition = new WayDiscountQueryCondition();
@@ -152,7 +155,8 @@ import java.util.List;
         return null;
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public void createDiscount(WayDiscountParam wayDiscountParam) {
 
         WayDiscount wayDiscount = BeanMapper.map(wayDiscountParam, WayDiscount.class);
@@ -196,7 +200,8 @@ import java.util.List;
 
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayDiscountRealBo increaseReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
@@ -247,7 +252,8 @@ import java.util.List;
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override @Transactional(rollbackFor = Exception.class, readOnly = false)
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayDiscountRealBo decreaseReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
@@ -293,7 +299,8 @@ import java.util.List;
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override public WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam) {
+    @Override
+    public WayDiscountRealBo increaseUnReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
         WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
@@ -343,7 +350,8 @@ import java.util.List;
         return getRealAndUnRealCount(discountId);
     }
 
-    @Override public WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam) {
+    @Override
+    public WayDiscountRealBo decreaseUnReal(WayDiscountParam wayDiscountParam) {
 
         Long discountId = wayDiscountParam.getDiscountId();
         WayDiscount wayDiscount = wayDiscountMapper.selectByPrimaryKey(discountId);
