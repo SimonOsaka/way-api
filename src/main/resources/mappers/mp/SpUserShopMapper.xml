@@ -99,4 +99,22 @@
         is_deleted = #{isDeleted,jdbcType=TINYINT}
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sp_user_shop
+        where is_deleted = 0
+        <if test="condition.id != null">
+            and id = #{condition.id, jdbcType=BIGINT}
+        </if>
+        <if test="condition.shopId != null">
+            and shop_id = #{condition.shopId, jdbcType=BIGINT}
+        </if>
+        <if test="condition.userLoginId != null">
+            and user_login_id = #{condition.userLoginId, jdbcType=BIGINT}
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
 </mapper>
