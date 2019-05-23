@@ -57,4 +57,12 @@ public interface WayCommodityAbstractWordService {
      * @return
      */
     WayCommodityAbstractWordBo moveAbstractWord(WayCommodityAbstractWordParam param) throws Exception;
+
+    /**
+     * 查询抽象词（包含全路径）
+     * 
+     * @param param
+     * @return
+     */
+    WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param);
 }

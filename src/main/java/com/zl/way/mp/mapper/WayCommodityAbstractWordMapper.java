@@ -1,12 +1,13 @@
 package com.zl.way.mp.mapper;
 
-import com.zl.way.mp.model.WayCommodityAbstractWord;
-import com.zl.way.mp.model.WayCommodityAbstractWordCondition;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.zl.way.mp.model.WayCommodityAbstractWord;
+import com.zl.way.mp.model.WayCommodityAbstractWordCondition;
 
 @Repository("mpWayCommodityAbstractWordMapper")
 public interface WayCommodityAbstractWordMapper {
@@ -17,6 +18,8 @@ public interface WayCommodityAbstractWordMapper {
     int insertSelective(WayCommodityAbstractWord record);
 
     WayCommodityAbstractWord selectByPrimaryKey(Integer id);
+
+    List<WayCommodityAbstractWord> selectByPrimaryKeys(@Param("ids") List<Integer> ids);
 
     int updateByPrimaryKeySelective(WayCommodityAbstractWord record);
 

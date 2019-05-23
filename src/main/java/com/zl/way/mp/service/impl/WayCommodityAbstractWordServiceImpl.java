@@ -1,5 +1,6 @@
 package com.zl.way.mp.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class WayCommodityAbstractWordServiceImpl implements WayCommodityAbstract
     public WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param, PageParam pageParam) {
 
         WayCommodityAbstractWordCondition condition = new WayCommodityAbstractWordCondition();
+        condition.setName(param.getName());
         condition.setShopCateLeafId(param.getShopCateLeafId());
         condition.setPid(param.getPid());
         condition.setPathPid(param.getPathPid());
@@ -47,6 +49,50 @@ public class WayCommodityAbstractWordServiceImpl implements WayCommodityAbstract
         WayCommodityAbstractWordBo commodityAbstractWordBo = new WayCommodityAbstractWordBo();
         commodityAbstractWordBo.setCommodityAbstractWordList(commodityAbstractWordList);
         return commodityAbstractWordBo;
+    }
+
+    @Override
+    public WayCommodityAbstractWordBo queryAbstractWord(WayCommodityAbstractWordParam param) {
+        WayCommodityAbstractWordCondition condition = new WayCommodityAbstractWordCondition();
+        condition.setName(param.getName());
+        condition.setLeaf(param.getLeaf());
+        List<WayCommodityAbstractWord> commodityAbstractWordList =
+            commodityAbstractWordMapper.selectByCondition(condition, null);
+
+        List<WayCommodityAbstractWord> allAbstractWordList =
+            commodityAbstractWordMapper.selectByCondition(new WayCommodityAbstractWordCondition(), null);
+
+        List<Map<String, Object>> abstractWordMapList = new ArrayList<>(commodityAbstractWordList.size());
+        for (WayCommodityAbstractWord abstractWord : commodityAbstractWordList) {
+            Map<String, Object> wordMap = new HashMap<>(3);
+            wordMap.put("id", abstractWord.getId());
+            wordMap.put("name", abstractWord.getName());
+            JSONObject jsonObject = JSON.parseObject(abstractWord.getJsonData());
+            if (jsonObject.containsKey("path")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("path");
+                List<Integer> wordPathIdList = jsonArray.toJavaList(Integer.class);
+                String pathName = getWordPathName(wordPathIdList, allAbstractWordList);
+                wordMap.put("fullPathName", pathName + abstractWord.getName());
+                abstractWordMapList.add(wordMap);
+            }
+        }
+
+        WayCommodityAbstractWordBo commodityAbstractWordBo = new WayCommodityAbstractWordBo();
+        commodityAbstractWordBo.setAbstractWordMapList(abstractWordMapList);
+        return commodityAbstractWordBo;
+    }
+
+    private String getWordPathName(List<Integer> wordPathIdList, List<WayCommodityAbstractWord> allAbstractWordList) {
+        StringBuilder pathNamesSb = new StringBuilder();
+        for (WayCommodityAbstractWord word : allAbstractWordList) {
+            for (Integer pathId : wordPathIdList) {
+                if (pathId.equals(word.getId())) {
+                    pathNamesSb.append(word.getName()).append("/");
+                }
+            }
+        }
+
+        return pathNamesSb.toString();
     }
 
     @Override

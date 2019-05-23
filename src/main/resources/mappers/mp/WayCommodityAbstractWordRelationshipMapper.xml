@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayCommodityAbstractWordRelationshipMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.model.WayCommodityAbstractWordRelationship">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="abstract_word_id" jdbcType="INTEGER" property="abstractWordId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+               type="com.zl.way.mp.model.WayCommodityAbstractWordRelationship">
+        <result column="abstract_word_ids" jdbcType="LONGVARCHAR" property="abstractWordIds"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, abstract_word_id, create_time, update_time
+    </sql>
+    <sql id="Blob_Column_List">
+        abstract_word_ids
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from way_commodity_abstract_word_relationship
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByAbstractWordId" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from way_commodity_abstract_word_relationship
+        where abstract_word_id = #{abstractWordId,jdbcType=INTEGER}
+    </select>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.model.WayCommodityAbstractWordRelationship" useGeneratedKeys="true">
+        insert into way_commodity_abstract_word_relationship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="abstractWordId != null">
+                abstract_word_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="abstractWordIds != null">
+                abstract_word_ids,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="abstractWordId != null">
+                #{abstractWordId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="abstractWordIds != null">
+                #{abstractWordIds,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.model.WayCommodityAbstractWordRelationship">
+        update way_commodity_abstract_word_relationship
+        <set>
+            <if test="abstractWordId != null">
+                abstract_word_id = #{abstractWordId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="abstractWordIds != null">
+                abstract_word_ids = #{abstractWordIds,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="selectByCondition" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from
+        way_commodity_abstract_word_relationship relationship
+        where relationship.is_deleted = 0
+        <if test="condition.abstractWordId != null">
+            and relationship.abstract_word_id = #{condition.abstractWordId, jdbcType=INTEGER}
+        </if>
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

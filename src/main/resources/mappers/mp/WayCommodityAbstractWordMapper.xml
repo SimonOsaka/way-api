@@ -25,6 +25,15 @@
         from way_commodity_abstract_word
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="selectByPrimaryKeys" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_commodity_abstract_word
+        where is_deleted = 0 and id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id, jdbcType=INTEGER}
+        </foreach>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from way_commodity_abstract_word
         where id = #{id,jdbcType=INTEGER}
@@ -134,12 +143,13 @@
     </update>
     <select id="selectByCondition" resultMap="BaseResultMap">
         select
-        <include refid="Less_Column_List"/>
+        <include refid="Base_Column_List"/>
         from
         way_commodity_abstract_word word
         where word.is_deleted = 0
         <if test="condition.name != null and condition.name != ''">
-            and word.name = #{condition.name, jdbcType=VARCHAR},
+            and (word.name like CONCAT(#{condition.name, jdbcType=VARCHAR}, '%') OR (word.name like
+            CONCAT('%', #{condition.name, jdbcType=VARCHAR})))
         </if>
         <if test="condition.shopCateLeafId != null">
             and word.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
