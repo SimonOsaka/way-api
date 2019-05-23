@@ -43,6 +43,7 @@ public class WayCommodityAbstractWordApi {
         param.setPid(request.getPid());
         param.setPathPid(request.getPathPid());
         param.setLeaf(request.getLeaf());
+        param.setName(request.getName());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(request.getPageNum());
@@ -50,6 +51,29 @@ public class WayCommodityAbstractWordApi {
 
         WayCommodityAbstractWordBo commodityAbstractWordBo =
             commodityAbstractWordService.queryAbstractWord(param, pageParam);
+
+        WayCommodityAbstractWordResponse response = new WayCommodityAbstractWordResponse();
+        response.setCommodityAbstractWordBo(commodityAbstractWordBo);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping(value = "/query")
+    public ResponseResult<WayCommodityAbstractWordResponse> queryAbstractWord(
+        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
+        @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayCommodityAbstractWordParam param = new WayCommodityAbstractWordParam();
+        param.setShopCateLeafId(request.getShopCateLeafId());
+        param.setLeaf(request.getLeaf());
+        param.setName(request.getName());
+
+        WayCommodityAbstractWordBo commodityAbstractWordBo = commodityAbstractWordService.queryAbstractWord(param);
 
         WayCommodityAbstractWordResponse response = new WayCommodityAbstractWordResponse();
         response.setCommodityAbstractWordBo(commodityAbstractWordBo);
