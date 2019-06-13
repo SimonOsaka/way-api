@@ -1,13 +1,12 @@
 package com.zl.way.user.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.zl.way.user.mapper.UserAddressMapper;
-import com.zl.way.user.mapper.UserDeviceMapper;
-import com.zl.way.user.mapper.UserLoginMapper;
-import com.zl.way.user.mapper.UserProfileMapper;
-import com.zl.way.user.model.*;
-import com.zl.way.user.service.UserService;
-import com.zl.way.util.BeanMapper;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -20,12 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.alibaba.fastjson.JSON;
+import com.zl.way.user.mapper.*;
+import com.zl.way.user.model.*;
+import com.zl.way.user.service.UserService;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.WayPageRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,13 +40,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserAddressMapper userAddressMapper;
 
+    private final UserFeedbackMapper userFeedbackMapper;
+
     @Autowired
     public UserServiceImpl(UserLoginMapper userLoginMapper, UserProfileMapper userProfileMapper,
-        UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper) {
+        UserDeviceMapper userDeviceMapper, UserAddressMapper userAddressMapper, UserFeedbackMapper userFeedbackMapper) {
         this.userLoginMapper = userLoginMapper;
         this.userProfileMapper = userProfileMapper;
         this.userDeviceMapper = userDeviceMapper;
         this.userAddressMapper = userAddressMapper;
+        this.userFeedbackMapper = userFeedbackMapper;
     }
 
     @Override
@@ -408,6 +411,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserAddress(UserAddressParam param) {
         userAddressMapper.deleteByPrimaryKey(param.getId());
+    }
+
+    @Override
+    public void addUserFeedback(UserFeedbackParam param) {
+        UserFeedback record = BeanMapper.map(param, UserFeedback.class);
+        record.setFeedbackTime(DateTime.now().toDate());
+        userFeedbackMapper.insertSelective(record);
+    }
+
+    @Override
+    public UserFeedbackBo getUserFeedback(UserFeedbackParam param) {
+        UserFeedbackCondition condition = BeanMapper.map(param, UserFeedbackCondition.class);
+
+        List<UserFeedback> userFeedbackList = userFeedbackMapper.selectByCondition(condition, WayPageRequest.ONE);
+        if (CollectionUtils.isEmpty(userFeedbackList)) {
+            return null;
+        }
+
+        return BeanMapper.map(userFeedbackList.get(0), UserFeedbackBo.class);
+    }
+
+    @Override
+    public List<UserFeedbackBo> queryUserFeedbackList(UserFeedbackParam param, PageParam pageParam) {
+        UserFeedbackCondition condition = new UserFeedbackCondition();
+        condition.setUserLoginId(param.getUserLoginId());
+
+        List<UserFeedback> userFeedbackList =
+            userFeedbackMapper.selectByCondition(condition, WayPageRequest.of(pageParam));
+
+        return BeanMapper.mapAsList(userFeedbackList, UserFeedbackBo.class);
     }
 
     private String genNickName(String str) {

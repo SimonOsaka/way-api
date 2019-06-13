@@ -1,8 +1,9 @@
 package com.zl.way.user.service;
 
-import com.zl.way.user.model.*;
-
 import java.util.List;
+
+import com.zl.way.user.model.*;
+import com.zl.way.util.PageParam;
 
 public interface UserService {
 
@@ -31,4 +32,10 @@ public interface UserService {
     void updateUserAddress(UserAddressParam param);
 
     void deleteUserAddress(UserAddressParam param);
+
+    void addUserFeedback(UserFeedbackParam param);
+
+    UserFeedbackBo getUserFeedback(UserFeedbackParam param);
+
+    List<UserFeedbackBo> queryUserFeedbackList(UserFeedbackParam param, PageParam pageParam);
 }
