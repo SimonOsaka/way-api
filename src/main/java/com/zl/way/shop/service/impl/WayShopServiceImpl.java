@@ -1,5 +1,18 @@
 package com.zl.way.shop.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSON;
 import com.zl.way.commodity.mapper.WayCommodityAbstractWordMapper;
 import com.zl.way.commodity.mapper.model.WayCommodityAbstractWordCondition;
@@ -9,17 +22,6 @@ import com.zl.way.shop.mapper.WayShopMapper;
 import com.zl.way.shop.model.*;
 import com.zl.way.shop.service.WayShopService;
 import com.zl.way.util.*;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class WayShopServiceImpl implements WayShopService {
@@ -89,10 +91,12 @@ public class WayShopServiceImpl implements WayShopService {
         Pageable pageable = WayPageRequest.of(pageParam);
         logger.info("商铺列表sql条件{}{}", condition, pageable);
 
-        WayCommodityAbstractWordCondition wordCondition = new WayCommodityAbstractWordCondition();
-        wordCondition.setName(wayShopParam.getCommodityName());
-        List<WayCommodityAbstractWord> wordList =
-            commodityAbstractWordMapper.selectByCondition(wordCondition, WayPageRequest.ONE);
+        List<WayCommodityAbstractWord> wordList = null;
+        if (StringUtils.isNotBlank(wayShopParam.getCommodityName())) {
+            WayCommodityAbstractWordCondition wordCondition = new WayCommodityAbstractWordCondition();
+            wordCondition.setName(wayShopParam.getCommodityName());
+            wordList = commodityAbstractWordMapper.selectByCondition(wordCondition, WayPageRequest.ONE);
+        }
 
         List<WayShop> wayShopList;
         if (CollectionUtils.isNotEmpty(wordList)) {
