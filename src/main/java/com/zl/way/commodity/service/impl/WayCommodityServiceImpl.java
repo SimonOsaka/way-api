@@ -99,7 +99,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         List<WayCommodity> commodityList;
         if (StringUtils.equalsIgnoreCase(WaySymbolConstants.BRACKETS, abstractWordIds)) {
             // 查询相同商品分类的商品数据
-            commodityList = querySameShopCateCommodity(shopId);
+            commodityList = querySameShopCateCommodity(shopId, commodityId);
         } else {
             // 查询抽象关联词的商品数据
             List<Integer> abstractWordIdList = JSONArray.parseArray(abstractWordIds, Integer.class);
@@ -117,7 +117,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
      * @param shopId
      * @return 最多20个商品集合
      */
-    private List<WayCommodity> querySameShopCateCommodity(Long shopId) {
+    private List<WayCommodity> querySameShopCateCommodity(Long shopId, Long commodityId) {
         WayShop shop = shopMapper.selectByPrimaryKey(shopId);
         if (null == shop) {
             return Collections.emptyList();
@@ -130,6 +130,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         commodityCondition.setShopAdCode(adCode);
         commodityCondition.setShopCityCode(cityCode);
         commodityCondition.setShopCateLeafId(shopCateLeafId);
+        commodityCondition.setIdExclude(commodityId);
         List<WayCommodity> allCommodityList = new ArrayList<>(WayPageRequest.TWENTY.getPageSize());
         List<WayCommodity> commodityList =
             wayCommodityMapper.selectByCondition(commodityCondition, WayPageRequest.TWENTY);
@@ -143,6 +144,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
             moreCommodityCondition.setShopAdCodeExclude(adCode);
             moreCommodityCondition.setShopCityCode(cityCode);
             moreCommodityCondition.setShopCateLeafId(shopCateLeafId);
+            moreCommodityCondition.setIdExclude(commodityId);
             int moreNum = WayPageRequest.TWENTY.getPageSize() - currentCommodityNum;
             List<WayCommodity> moreCommodityList =
                 wayCommodityMapper.selectByCondition(moreCommodityCondition, WayPageRequest.of(1, moreNum));
