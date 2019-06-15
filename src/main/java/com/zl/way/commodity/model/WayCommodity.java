@@ -25,6 +25,8 @@ public class WayCommodity {
 
     private String namePy;
 
+    private String abstractWordIds;
+
     public Long getId() {
         return id;
     }
@@ -103,5 +105,13 @@ public class WayCommodity {
 
     public void setNamePy(String namePy) {
         this.namePy = namePy;
+    }
+
+    public String getAbstractWordIds() {
+        return abstractWordIds;
+    }
+
+    public void setAbstractWordIds(String abstractWordIds) {
+        this.abstractWordIds = abstractWordIds;
     }
 }

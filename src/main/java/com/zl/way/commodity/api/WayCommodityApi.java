@@ -1,5 +1,15 @@
 package com.zl.way.commodity.api;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.zl.way.commodity.api.model.WayCommodityRequest;
 import com.zl.way.commodity.api.model.WayCommodityResponse;
 import com.zl.way.commodity.model.WayCommodity;
@@ -9,15 +19,6 @@ import com.zl.way.commodity.service.WayCommodityService;
 import com.zl.way.shop.model.WayShop;
 import com.zl.way.shop.service.WayShopService;
 import com.zl.way.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/commodity")
@@ -80,4 +81,15 @@ public class WayCommodityApi {
         return ResponseResultUtil.wrapSuccessResponseResult(wayCommodityResponseList);
     }
 
+    @RequestMapping(value = "/queryRelationCommodity", method = RequestMethod.POST)
+    public ResponseResult<List<WayCommodityResponse>> queryRelationCommodity(@RequestBody WayCommodityRequest request) {
+
+        WayCommodityParam wayCommodityParam = new WayCommodityParam();
+        wayCommodityParam.setId(request.getCommodityId());
+
+        List<WayCommodityBo> wayCommodityBoList = wayCommodityService.queryRelationCommodity(wayCommodityParam);
+        List<WayCommodityResponse> wayCommodityResponseList =
+            BeanMapper.mapAsList(wayCommodityBoList, WayCommodityResponse.class);
+        return ResponseResultUtil.wrapSuccessResponseResult(wayCommodityResponseList);
+    }
 }
