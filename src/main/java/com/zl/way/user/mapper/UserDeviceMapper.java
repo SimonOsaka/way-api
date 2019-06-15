@@ -1,7 +1,10 @@
 package com.zl.way.user.mapper;
 
+import org.springframework.stereotype.Repository;
+
 import com.zl.way.user.model.UserDevice;
 
+@Repository
 public interface UserDeviceMapper {
 
     int deleteByPrimaryKey(Long userLoginId);

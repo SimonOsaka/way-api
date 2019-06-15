@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.user.mapper.UserFeedbackMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.user.model.UserFeedback">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="feedback_os_type" jdbcType="TINYINT" property="feedbackOsType"/>
+        <result column="feedback_type" jdbcType="TINYINT" property="feedbackType"/>
+        <result column="feedback_app_version" jdbcType="VARCHAR" property="feedbackAppVersion"/>
+        <result column="feedback_time" jdbcType="TIMESTAMP" property="feedbackTime"/>
+        <result column="user_login_id" jdbcType="BIGINT" property="userLoginId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="feedback_content" jdbcType="VARCHAR" property="feedbackContent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, feedback_os_type, feedback_type, feedback_app_version, feedback_time, user_login_id,
+        create_time, feedback_content
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_feedback
+        where id = #{id,jdbcType=BIGINT} and user_login_id = #{userLoginId,jdbcType=BIGINT}
+    </select>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.user.model.UserFeedback"
+            useGeneratedKeys="true">
+        insert into user_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedbackOsType != null">
+                feedback_os_type,
+            </if>
+            <if test="feedbackType != null">
+                feedback_type,
+            </if>
+            <if test="feedbackAppVersion != null">
+                feedback_app_version,
+            </if>
+            <if test="feedbackTime != null">
+                feedback_time,
+            </if>
+            <if test="userLoginId != null">
+                user_login_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="feedbackContent != null">
+                feedback_content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackOsType != null">
+                #{feedbackOsType,jdbcType=TINYINT},
+            </if>
+            <if test="feedbackType != null">
+                #{feedbackType,jdbcType=TINYINT},
+            </if>
+            <if test="feedbackAppVersion != null">
+                #{feedbackAppVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="feedbackTime != null">
+                #{feedbackTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userLoginId != null">
+                #{userLoginId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="feedbackContent != null">
+                #{feedbackContent,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_feedback
+        where user_login_id = #{condition.userLoginId,jdbcType=BIGINT}
+        <if test="condition.id != null">
+            and id = #{condition.id,jdbcType=BIGINT}
+        </if>
+        order by id desc
+        <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
+            limit ${pageable.offset}, ${pageable.pageSize}
+        </if>
+    </select>
+</mapper>

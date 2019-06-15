@@ -17,10 +17,16 @@
         <result column="name_pinyin" jdbcType="VARCHAR" property="namePinyin"/>
         <result column="name_py" jdbcType="VARCHAR" property="namePy"/>
     </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zl.way.commodity.model.WayCommodity">
+        <result column="abstract_word_ids" jdbcType="LONGVARCHAR" property="abstractWordIds"/>
+    </resultMap>
     <sql id="Base_Column_List">
 
         id, name, <!--price,--> img_url, shop_id, create_time, update_time, is_deleted, name_pinyin,
         name_py
+    </sql>
+    <sql id="Blob_Column_List">
+        abstract_word_ids
     </sql>
     <sql id="Shop_Commodity_Column_List">
         commodity.id, commodity.name, <!--commodity.price,--> commodity.img_url, commodity.shop_id,
@@ -31,17 +37,13 @@
         shop.id, shop.shop_name
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-
         select
         <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
         from way_commodity
         where id = #{id,jdbcType=BIGINT} and is_deleted = 0
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-
-        delete from way_commodity
-        where id = #{id,jdbcType=BIGINT} and is_deleted = 0
-    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id"
             parameterType="com.zl.way.commodity.model.WayCommodity"
             useGeneratedKeys="true">
@@ -168,12 +170,24 @@
         name_py = #{namePy,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT} and is_deleted = 0
     </update>
-    <select id="selectByCondition" resultMap="BaseResultMap">
-        select
-        <include refid="Shop_Commodity_Column_List"/>
-        from
-        way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
-        where commodity.is_deleted = 0 and shop.is_deleted = 0
+    <sql id="shop_condition">
+        <if test="condition.shopId != null">
+            and commodity.shop_id = #{condition.shopId, jdbcType=BIGINT}
+        </if>
+        <if test="condition.shopCityCode != null and condition.shopCityCode != ''">
+            and shop.city_code = #{condition.shopCityCode, jdbcType=VARCHAR}
+        </if>
+        <if test="condition.shopAdCodeExclude != null and condition.shopAdCodeExclude != ''">
+            and shop.ad_code != #{condition.shopAdCodeExclude, jdbcType=VARCHAR}
+        </if>
+        <if test="condition.shopAdCode != null and condition.shopAdCode != ''">
+            and shop.ad_code = #{condition.shopAdCode, jdbcType=VARCHAR}
+        </if>
+        <if test="condition.shopCateLeafId != null">
+            and shop.shop_cate_leaf_id = #{condition.shopCateLeafId, jdbcType=INTEGER}
+        </if>
+    </sql>
+    <sql id="commodity_condition">
         <if test="condition.name != null and condition.name != ''">
             and (
             commodity.name like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
@@ -181,9 +195,25 @@
             or commodity.name_py like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')
             )
         </if>
-        <if test="condition.shopId != null">
-            and commodity.shop_id = #{condition.shopId, jdbcType=BIGINT}
+        <if test="condition.abstractWordIdList != null and condition.abstractWordIdList.size > 0">
+            <foreach collection="condition.abstractWordIdList" item="abstractWordId" open="and (" close=")"
+                     separator="or">
+                JSON_CONTAINS(commodity.abstract_word_ids, CONVERT(#{abstractWordId, jdbcType=INTEGER}, CHAR))
+            </foreach>
         </if>
+        <if test="condition.idExclude != null">
+            AND (commodity.id &gt; #{condition.idExclude, jdbcType=BIGINT} OR commodity.id &lt;
+            #{condition.idExclude, jdbcType=BIGINT})
+        </if>
+    </sql>
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Shop_Commodity_Column_List"/>
+        from
+        way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
+        where commodity.is_deleted = 0 and shop.is_deleted = 0
+        <include refid="commodity_condition"/>
+        <include refid="shop_condition"/>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>

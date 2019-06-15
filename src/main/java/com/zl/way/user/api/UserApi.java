@@ -1,12 +1,9 @@
 package com.zl.way.user.api;
 
-import com.zl.way.user.api.model.*;
-import com.zl.way.user.model.*;
-import com.zl.way.user.service.UserService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.ResponseResult;
-import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.zl.way.user.api.model.*;
+import com.zl.way.user.model.*;
+import com.zl.way.user.service.UserService;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
+import com.zl.way.util.TokenUtil;
 
 @RestController
 @RequestMapping("/user")
@@ -25,8 +28,19 @@ public class UserApi {
     @Autowired
     private UserService userService;
 
+    private static final Map<Byte, String> FEEDBACK_TYPE_MAP = new HashMap<>(5);
+
     @Value("${custom.user.agreementsUrl}")
     private String agreementsUrl;
+
+    static {
+        FEEDBACK_TYPE_MAP.put((byte)1, "商家反馈");
+        FEEDBACK_TYPE_MAP.put((byte)2, "商品反馈");
+        FEEDBACK_TYPE_MAP.put((byte)3, "优惠反馈");
+        FEEDBACK_TYPE_MAP.put((byte)4, "账号反馈");
+        FEEDBACK_TYPE_MAP.put((byte)99, "投诉建议");
+
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult<UserResponse> userLogin(@RequestBody UserRequest userRequest) {
@@ -231,6 +245,71 @@ public class UserApi {
         UserAddressParam param = new UserAddressParam();
         param.setId(request.getId());
         userService.deleteUserAddress(param);
+
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping("/feedback/typeMap")
+    public ResponseResult<UserFeedbackResponse> feedbackTypeMap(@RequestBody UserFeedbackRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserFeedbackResponse response = new UserFeedbackResponse();
+        response.setFeedbackTypeMap(FEEDBACK_TYPE_MAP);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/feedback/list")
+    public ResponseResult<UserFeedbackResponse> queryUserFeedbackList(@RequestBody UserFeedbackRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserFeedbackParam param = BeanMapper.map(request, UserFeedbackParam.class);
+        List<UserFeedbackBo> userAddressBoList = userService.queryUserFeedbackList(param, request);
+
+        UserFeedbackResponse response = new UserFeedbackResponse();
+        response.setUserFeedbackBoList(userAddressBoList);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/feedback/get")
+    public ResponseResult<UserFeedbackResponse> getUserFeedback(@RequestBody UserFeedbackRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserFeedbackParam param = new UserFeedbackParam();
+        param.setId(request.getId());
+        param.setUserLoginId(request.getUserLoginId());
+        UserFeedbackBo userAddressBo = userService.getUserFeedback(param);
+
+        UserFeedbackResponse response = new UserFeedbackResponse();
+        response.setUserFeedbackBo(userAddressBo);
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
+    }
+
+    @PostMapping("/feedback/add")
+    public ResponseResult<UserFeedbackResponse> addUserFeedback(@RequestBody UserFeedbackRequest request,
+        @RequestHeader("token") String userToken) {
+
+        if (!TokenUtil.validToken(String.valueOf(request.getUserLoginId()), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        UserFeedbackParam param = BeanMapper.map(request, UserFeedbackParam.class);
+        userService.addUserFeedback(param);
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
