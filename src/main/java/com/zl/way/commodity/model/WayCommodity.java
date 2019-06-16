@@ -15,6 +15,14 @@ public class WayCommodity {
 
     private String imgUrl;
 
+    private String imgUrl1;
+
+    private String imgUrl2;
+
+    private String imgUrl3;
+
+    private String imgUrl4;
+
     private Long shopId;
 
     private Date createTime;
@@ -61,6 +69,38 @@ public class WayCommodity {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
+    }
+
+    public String getImgUrl1() {
+        return imgUrl1;
+    }
+
+    public void setImgUrl1(String imgUrl1) {
+        this.imgUrl1 = imgUrl1;
+    }
+
+    public String getImgUrl2() {
+        return imgUrl2;
+    }
+
+    public void setImgUrl2(String imgUrl2) {
+        this.imgUrl2 = imgUrl2;
+    }
+
+    public String getImgUrl3() {
+        return imgUrl3;
+    }
+
+    public void setImgUrl3(String imgUrl3) {
+        this.imgUrl3 = imgUrl3;
+    }
+
+    public String getImgUrl4() {
+        return imgUrl4;
+    }
+
+    public void setImgUrl4(String imgUrl4) {
+        this.imgUrl4 = imgUrl4;
     }
 
     public Long getShopId() {

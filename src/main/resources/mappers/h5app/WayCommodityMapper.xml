@@ -10,6 +10,10 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="img_url_1" jdbcType="VARCHAR" property="imgUrl1"/>
+        <result column="img_url_2" jdbcType="VARCHAR" property="imgUrl2"/>
+        <result column="img_url_3" jdbcType="VARCHAR" property="imgUrl3"/>
+        <result column="img_url_4" jdbcType="VARCHAR" property="imgUrl4"/>
         <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -28,15 +32,24 @@
     </resultMap>
     <sql id="Base_Column_List">
 
-        id, name, <!--price,--> img_url, shop_id, create_time, update_time, is_deleted, name_pinyin,
+        id, name, <!--price,--> img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time, update_time,
+        is_deleted, name_pinyin,
         name_py
     </sql>
     <sql id="Blob_Column_List">
         abstract_word_ids
     </sql>
     <sql id="Shop_Commodity_Column_List">
-        commodity.id, commodity.name, <!--commodity.price,--> commodity.img_url, commodity.shop_id,
-        commodity.create_time, commodity.update_time,
+        commodity.id,
+        commodity.name, <!--commodity.price,-->
+        commodity.img_url,
+        commodity.img_url_1,
+        commodity.img_url_2,
+        commodity.img_url_3,
+        commodity.img_url_4,
+        commodity.shop_id,
+        commodity.create_time,
+        commodity.update_time,
         commodity.is_deleted,
         commodity.name_pinyin,
         commodity.name_py,
@@ -53,82 +66,6 @@
         from way_commodity
         where id = #{id,jdbcType=BIGINT} and is_deleted = 0
     </select>
-    <insert id="insert" keyColumn="id" keyProperty="id"
-            parameterType="com.zl.way.commodity.model.WayCommodity"
-            useGeneratedKeys="true">
-
-        insert into way_commodity (name, price, img_url, shop_id, create_time,
-        update_time, is_deleted, name_pinyin, name_py)
-        values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{imgUrl,jdbcType=CHAR},
-        #{shopId,jdbcType=BIGINT},
-        #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT},
-        #{namePinyin,jdbcType=VARCHAR}, #{namePy,jdbcType=VARCHAR})
-    </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id"
-            parameterType="com.zl.way.commodity.model.WayCommodity"
-            useGeneratedKeys="true">
-
-        insert into way_commodity
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                name,
-            </if>
-            <if test="price != null">
-                price,
-            </if>
-            <if test="imgUrl != null">
-                img_url,
-            </if>
-            <if test="shopId != null">
-                shop_id,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="isDeleted != null">
-                is_deleted,
-            </if>
-            <if test="namePinyin != null">
-                name_pinyin,
-            </if>
-            <if test="namePy != null">
-                name_py,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="price != null">
-                #{price,jdbcType=DECIMAL},
-            </if>
-            <if test="imgUrl != null">
-                #{imgUrl,jdbcType=CHAR},
-            </if>
-            <if test="shopId != null">
-                #{shopId,jdbcType=BIGINT},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="isDeleted != null">
-                #{isDeleted,jdbcType=TINYINT},
-            </if>
-            <if test="namePinyin != null">
-                #{namePinyin,jdbcType=VARCHAR},
-            </if>
-            <if test="namePy != null">
-                #{namePy,jdbcType=VARCHAR},
-            </if>
-        </trim>
-    </insert>
     <update id="updateByPrimaryKeySelective"
             parameterType="com.zl.way.commodity.model.WayCommodity">
 
