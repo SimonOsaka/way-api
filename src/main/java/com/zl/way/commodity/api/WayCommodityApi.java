@@ -86,6 +86,8 @@ public class WayCommodityApi {
 
         WayCommodityParam wayCommodityParam = new WayCommodityParam();
         wayCommodityParam.setId(request.getCommodityId());
+        wayCommodityParam.setClientLng(request.getClientLng());
+        wayCommodityParam.setClientLat(request.getClientLat());
 
         List<WayCommodityBo> wayCommodityBoList = wayCommodityService.queryRelationCommodity(wayCommodityParam);
         List<WayCommodityResponse> wayCommodityResponseList =

@@ -2,17 +2,28 @@ package com.zl.way.shop.model;
 
 import java.math.BigDecimal;
 
+/**
+ * @author xuzhongliang
+ */
 public class WayShopParam extends WayShop {
 
     private String commodityName;
-    private BigDecimal clientLat;// 纬度
-    private BigDecimal clientLng;// 经度
+    /**
+     * 纬度
+     */
+    private BigDecimal clientLat;
+    /**
+     * 经度
+     */
+    private BigDecimal clientLng;
     private String cityCode;
 
+    @Override
     public String getCommodityName() {
         return commodityName;
     }
 
+    @Override
     public void setCommodityName(String commodityName) {
         this.commodityName = commodityName;
     }
@@ -33,10 +44,12 @@ public class WayShopParam extends WayShop {
         this.clientLng = clientLng;
     }
 
+    @Override
     public String getCityCode() {
         return cityCode;
     }
 
+    @Override
     public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
     }
