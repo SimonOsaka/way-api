@@ -1,5 +1,6 @@
 package com.zl.way.commodity.service.impl;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,10 +26,8 @@ import com.zl.way.commodity.service.WayCommodityService;
 import com.zl.way.constants.WaySymbolConstants;
 import com.zl.way.shop.mapper.WayShopMapper;
 import com.zl.way.shop.model.WayShop;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.NumberUtil;
-import com.zl.way.util.PageParam;
-import com.zl.way.util.WayPageRequest;
+import com.zl.way.shop.model.WayShopBo;
+import com.zl.way.util.*;
 
 @Service
 public class WayCommodityServiceImpl implements WayCommodityService {
@@ -106,7 +105,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
             commodityList = queryRelationCommodity(shopId, commodityId, abstractWordIdList);
         }
         if (CollectionUtils.isNotEmpty(commodityList)) {
-            return BeanMapper.mapAsList(commodityList, WayCommodityBo.class);
+            return toCommodityBoList(commodityList, wayCommodityParam.getClientLng(), wayCommodityParam.getClientLat());
         }
         return Collections.emptyList();
     }
@@ -198,4 +197,30 @@ public class WayCommodityServiceImpl implements WayCommodityService {
         }
         return Collections.emptyList();
     }
+
+    /**
+     * 商品集合转换并计算经纬度距离
+     * 
+     * @param commodityList
+     * @param clientLat
+     * @param clientLng
+     * @return
+     */
+    private List<WayCommodityBo> toCommodityBoList(List<WayCommodity> commodityList, BigDecimal clientLat,
+        BigDecimal clientLng) {
+        List<WayCommodityBo> commodityBoList = new ArrayList<>(commodityList.size());
+        for (WayCommodity commodity : commodityList) {
+            WayCommodityBo commodityBo = BeanMapper.map(commodity, WayCommodityBo.class);
+            commodityBo.setWayShop(BeanMapper.map(commodityBo.getShop(), WayShopBo.class));
+            WayShopBo shopBo = commodityBo.getWayShop();
+            BigDecimal distance = GeoUtil.getDistance(clientLng, clientLat, shopBo.getShopLng(), shopBo.getShopLat());
+            if (null != distance) {
+                String distanceFullString = GeoUtil.getDistanceDesc(distance.doubleValue());
+                shopBo.setShopDistance(distanceFullString);
+            }
+            commodityBoList.add(commodityBo);
+        }
+        return commodityBoList;
+    }
+
 }

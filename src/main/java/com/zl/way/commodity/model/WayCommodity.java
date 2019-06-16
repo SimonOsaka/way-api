@@ -3,6 +3,8 @@ package com.zl.way.commodity.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.zl.way.shop.model.WayShop;
+
 public class WayCommodity {
 
     private Long id;
@@ -26,6 +28,8 @@ public class WayCommodity {
     private String namePy;
 
     private String abstractWordIds;
+
+    private WayShop shop;
 
     public Long getId() {
         return id;
@@ -113,5 +117,13 @@ public class WayCommodity {
 
     public void setAbstractWordIds(String abstractWordIds) {
         this.abstractWordIds = abstractWordIds;
+    }
+
+    public WayShop getShop() {
+        return shop;
+    }
+
+    public void setShop(WayShop shop) {
+        this.shop = shop;
     }
 }

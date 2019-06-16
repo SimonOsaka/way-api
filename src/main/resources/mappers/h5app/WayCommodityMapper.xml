@@ -16,6 +16,12 @@
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
         <result column="name_pinyin" jdbcType="VARCHAR" property="namePinyin"/>
         <result column="name_py" jdbcType="VARCHAR" property="namePy"/>
+        <association property="shop" javaType="com.zl.way.shop.model.WayShop">
+            <result column="shopId" property="id" jdbcType="BIGINT"/>
+            <result column="shop_name" property="shopName" jdbcType="VARCHAR"/>
+            <result column="shop_lat" property="shopLat" jdbcType="DECIMAL"/>
+            <result column="shop_lng" property="shopLng" jdbcType="DECIMAL"/>
+        </association>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zl.way.commodity.model.WayCommodity">
         <result column="abstract_word_ids" jdbcType="LONGVARCHAR" property="abstractWordIds"/>
@@ -34,7 +40,10 @@
         commodity.is_deleted,
         commodity.name_pinyin,
         commodity.name_py,
-        shop.id, shop.shop_name
+        shop.id AS shopId,
+        shop.shop_name,
+        shop.shop_lat,
+        shop.shop_lng
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -210,7 +219,8 @@
         select
         <include refid="Shop_Commodity_Column_List"/>
         from
-        way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
+        way_commodity commodity
+        left join way_shop shop on commodity.shop_id = shop.id
         where commodity.is_deleted = 0 and shop.is_deleted = 0
         <include refid="commodity_condition"/>
         <include refid="shop_condition"/>

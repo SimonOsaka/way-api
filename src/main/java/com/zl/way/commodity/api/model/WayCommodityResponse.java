@@ -3,6 +3,8 @@ package com.zl.way.commodity.api.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.zl.way.shop.model.WayShopBo;
+
 public class WayCommodityResponse {
 
     private Long id;
@@ -24,6 +26,8 @@ public class WayCommodityResponse {
     private String shopLogoUrl;
 
     private String shopAddress;
+
+    private WayShopBo wayShop;
 
     public Long getId() {
         return id;
@@ -103,5 +107,13 @@ public class WayCommodityResponse {
 
     public void setShopAddress(String shopAddress) {
         this.shopAddress = shopAddress;
+    }
+
+    public WayShopBo getWayShop() {
+        return wayShop;
+    }
+
+    public void setWayShop(WayShopBo wayShop) {
+        this.wayShop = wayShop;
     }
 }
