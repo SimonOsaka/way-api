@@ -45,7 +45,7 @@ public class WayCommodityApi {
             return ResponseResultUtil.wrapNotExistResponseResult("商品信息不存在");
         }
 
-        WayShop wayShop = wayShopService.getPromoShopDetail(wayCommodity.getShopId());
+        WayShop wayShop = wayShopService.getPromoShopDetail(wayCommodity.getShopId(), request.getUserLoginId());
         if (null == wayShop) {
             logger.info("商家不存在id={}", wayShop.getId());
             return ResponseResultUtil.wrapNotExistResponseResult("商家信息不存在");
@@ -55,6 +55,7 @@ public class WayCommodityApi {
         wayCommodityResponse.setShopName(wayShop.getShopName());
         wayCommodityResponse.setShopAddress(wayShop.getShopAddress());
         wayCommodityResponse.setShopLogoUrl(wayShop.getShopLogoUrl());
+        wayCommodityResponse.setHasFollowed(wayShop.getFollow().getHasFollowed());
 
         if (logger.isDebugEnabled()) {
             logger.debug("商品信息返回{}", wayCommodityResponse);

@@ -37,6 +37,8 @@ public class WayCommodityResponse {
 
     private WayShopBo wayShop;
 
+    private Byte hasFollowed;
+
     public Long getId() {
         return id;
     }
@@ -155,5 +157,13 @@ public class WayCommodityResponse {
 
     public void setWayShop(WayShopBo wayShop) {
         this.wayShop = wayShop;
+    }
+
+    public Byte getHasFollowed() {
+        return hasFollowed;
+    }
+
+    public void setHasFollowed(Byte hasFollowed) {
+        this.hasFollowed = hasFollowed;
     }
 }

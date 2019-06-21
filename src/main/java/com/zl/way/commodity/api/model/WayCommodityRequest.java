@@ -10,6 +10,7 @@ public class WayCommodityRequest extends PageParam {
     private Long commodityId;
     private BigDecimal clientLng;
     private BigDecimal clientLat;
+    private Long userLoginId;
 
     public String getCommodityName() {
         return commodityName;
@@ -49,5 +50,13 @@ public class WayCommodityRequest extends PageParam {
 
     public void setClientLat(BigDecimal clientLat) {
         this.clientLat = clientLat;
+    }
+
+    public Long getUserLoginId() {
+        return userLoginId;
+    }
+
+    public void setUserLoginId(Long userLoginId) {
+        this.userLoginId = userLoginId;
     }
 }
