@@ -1,5 +1,20 @@
 package com.zl.way.job;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
@@ -14,20 +29,6 @@ import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
 import com.zl.way.sp.service.WayCommodityService;
 import com.zl.way.sp.service.WayShopService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class FetchAmapPlaceTextJob {
@@ -109,7 +110,7 @@ public class FetchAmapPlaceTextJob {
             shopParam.setShopLat(new BigDecimal(latitude));
             shopParam.setAdCode(model.getAdCode());
             shopParam.setCityCode(model.getCityCode());
-            shopParam.setShopLogoUrl("http://static.duozouzou.top/blank_trans.jpg");
+            shopParam.setShopLogoUrl("http://static.jicu.vip/blank_trans.jpg");
             try {
                 shopParam.setShopPinyin(
                     PinyinHelper.convertToPinyinString(model.getName(), StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
@@ -137,7 +138,7 @@ public class FetchAmapPlaceTextJob {
         WayCommodityParam wayCommodityParam = new WayCommodityParam();
         wayCommodityParam.setShopId(shopId);
         wayCommodityParam.setName("儿童服装");
-        wayCommodityParam.setImgUrlList(Arrays.asList("http://static.duozouzou.top/kid_clothes.jpg"));
+        wayCommodityParam.setImgUrlList(Arrays.asList("http://static.jicu.vip/kid_clothes.jpg"));
         commodityService.createCommodity(wayCommodityParam);
     }
 
