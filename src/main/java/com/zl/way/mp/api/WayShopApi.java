@@ -1,5 +1,13 @@
 package com.zl.way.mp.api;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
@@ -11,13 +19,6 @@ import com.zl.way.mp.model.WayShopRequest;
 import com.zl.way.mp.model.WayShopResponse;
 import com.zl.way.mp.service.WayShopService;
 import com.zl.way.util.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("mpWayShopApi")
 @RequestMapping("/mp/shop")
@@ -257,4 +258,5 @@ public class WayShopApi {
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
+
 }

@@ -1,17 +1,15 @@
-package com.zl.way.sp.mapper;
+package com.zl.way.mp.mapper;
 
 import org.springframework.stereotype.Repository;
 
-import com.zl.way.sp.model.WayShopExtra;
+import com.zl.way.mp.model.WayShopExtra;
 
-@Repository("spWayShopExtraMapper")
+@Repository("mpWayShopExtraMapper")
 public interface WayShopExtraMapper {
 
     int insertSelective(WayShopExtra record);
 
     WayShopExtra selectByPrimaryKey(Long id);
-
-    WayShopExtra selectByShopId(Long shopId);
 
     int updateByPrimaryKeySelective(WayShopExtra record);
 }

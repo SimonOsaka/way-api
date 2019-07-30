@@ -70,6 +70,10 @@
             <result column="other4_img_url" property="other4ImgUrl"/>
             <result column="other5_img_url" property="other5ImgUrl"/>
         </association>
+        <association property="wayShopExtra" javaType="com.zl.way.mp.model.WayShopExtra">
+            <id column="shop_extra_id" property="id"/>
+            <result column="owner_type" property="ownerType"/>
+        </association>
         <collection property="commodityList"
                     ofType="com.zl.way.mp.model.WayCommodity"
                     javaType="ArrayList">
@@ -107,7 +111,9 @@
         leaf.cate_name as 'shop_cate_leaf_name',
         leaf.id as 'shop_cate_leaf_id',
         root.cate_name as 'shop_cate_root_name',
-        root.id as 'shop_cate_root_id'
+        root.id as 'shop_cate_root_id',
+        extra.id as 'shop_extra_id',
+        extra.owner_type
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -339,6 +345,7 @@
         from way_shop shop
         left join way_shop_cate_leaf leaf on shop.shop_cate_leaf_id = leaf.id
         left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
+        left join way_shop_extra extra on extra.shop_id = shop.id
     </sql>
     <sql id="whereByCondition">
         where shop.is_deleted != 1
