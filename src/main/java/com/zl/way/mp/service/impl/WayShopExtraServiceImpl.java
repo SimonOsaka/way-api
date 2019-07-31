@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zl.way.mp.mapper.WayShopExtraMapper;
+import com.zl.way.mp.model.WayShopExtra;
 import com.zl.way.mp.model.WayShopExtraBo;
 import com.zl.way.mp.model.WayShopExtraCondition;
 import com.zl.way.mp.model.WayShopExtraParam;
 import com.zl.way.mp.service.WayShopExtraService;
+import com.zl.way.util.BeanMapper;
 
 @Service("mpWayShopExtraServiceImpl")
 public class WayShopExtraServiceImpl implements WayShopExtraService {
@@ -43,5 +45,16 @@ public class WayShopExtraServiceImpl implements WayShopExtraService {
 
         shopExtraMapper.updateByPrimaryKeySelective(condition);
         return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public WayShopExtraBo getShopExtra(WayShopExtraParam param) {
+        WayShopExtra shopExtra = shopExtraMapper.selectByPrimaryKey(param.getId());
+        if (null == shopExtra) {
+            return null;
+        }
+
+        return BeanMapper.map(shopExtra, WayShopExtraBo.class);
     }
 }

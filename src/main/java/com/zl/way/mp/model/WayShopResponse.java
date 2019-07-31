@@ -11,6 +11,8 @@ public class WayShopResponse {
 
     private Map<String, String> shopStatusMap;
 
+    private String shopStatusDefault;
+
     private Long shopBoTotal;
 
     public List<WayShopBo> getShopBoList() {
@@ -51,5 +53,13 @@ public class WayShopResponse {
     public void setShopBoTotal(Long shopBoTotal) {
 
         this.shopBoTotal = shopBoTotal;
+    }
+
+    public String getShopStatusDefault() {
+        return shopStatusDefault;
+    }
+
+    public void setShopStatusDefault(String shopStatusDefault) {
+        this.shopStatusDefault = shopStatusDefault;
     }
 }

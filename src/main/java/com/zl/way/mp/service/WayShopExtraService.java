@@ -19,4 +19,12 @@ public interface WayShopExtraService {
      * @return
      */
     WayShopExtraBo changeToSelf(WayShopExtraParam param);
+
+    /**
+     * 获取商家配置
+     * 
+     * @param param
+     * @return
+     */
+    WayShopExtraBo getShopExtra(WayShopExtraParam param);
 }

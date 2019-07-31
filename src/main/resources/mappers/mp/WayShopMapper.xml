@@ -345,7 +345,15 @@
         left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
     </sql>
     <sql id="whereByCondition">
-        where shop.is_deleted != 1
+        where
+        <choose>
+            <when test="condition.isDeleted != null">
+                shop.is_deleted = #{condition.isDeleted, jdbcType=TINYINT}
+            </when>
+            <otherwise>
+                shop.is_deleted != 1
+            </otherwise>
+        </choose>
         <if test="condition.id != null">
             and shop.id = #{condition.id, jdbcType=BIGINT}
         </if>

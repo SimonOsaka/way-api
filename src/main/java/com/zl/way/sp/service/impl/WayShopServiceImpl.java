@@ -109,7 +109,7 @@ public class WayShopServiceImpl implements WayShopService {
         // 商家额外信息写入，默认商家自行创建。审核后，根据资质照片内容修改为管理人员创建。
         WayShopExtra shopExtraRecord = new WayShopExtra();
         shopExtraRecord.setShopId(wayShopRecord.getId());
-        shopExtraRecord.setOwnerType(WayShopExtraOwnerTypeEnum.SHOP_OWNER.getValue());
+        shopExtraRecord.setOwnerType(WayShopExtraOwnerTypeEnum.DEFAULT.getValue());
         shopExtraRecord.setCreateTime(DateTime.now().toDate());
         shopExtraRecord.setUpdateTime(DateTime.now().toDate());
         shopExtraMapper.insertSelective(shopExtraRecord);

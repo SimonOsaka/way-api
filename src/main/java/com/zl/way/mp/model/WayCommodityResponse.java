@@ -13,6 +13,8 @@ public class WayCommodityResponse {
 
     private Long commodityTotal;
 
+    private String commodityStatusDefault;
+
     public WayCommodityBo getCommodityBo() {
 
         return commodityBo;
@@ -51,5 +53,13 @@ public class WayCommodityResponse {
     public void setCommodityTotal(Long commodityTotal) {
 
         this.commodityTotal = commodityTotal;
+    }
+
+    public String getCommodityStatusDefault() {
+        return commodityStatusDefault;
+    }
+
+    public void setCommodityStatusDefault(String commodityStatusDefault) {
+        this.commodityStatusDefault = commodityStatusDefault;
     }
 }

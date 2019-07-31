@@ -36,10 +36,11 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayCommodityBo> queryCommodityList(WayCommodityParam shopParam, PageParam pageParam) {
+    public List<WayCommodityBo> queryCommodityList(WayCommodityParam commodityParam, PageParam pageParam) {
 
         Pageable pageable = WayPageRequest.of(pageParam);
-        WayCommodityCondition condition = BeanMapper.map(shopParam, WayCommodityCondition.class);
+        WayCommodityCondition condition = BeanMapper.map(commodityParam, WayCommodityCondition.class);
+        condition.setIsDeleted(commodityParam.getStatus());
         List<WayCommodity> commodityList = commodityMapper.selectByCondition(condition, pageable);
         if (CollectionUtils.isEmpty(commodityList)) {
             return Collections.emptyList();
@@ -227,6 +228,7 @@ public class WayCommodityServiceImpl implements WayCommodityService {
     public Long queryCommodityCount(WayCommodityParam commodityParam) {
 
         WayCommodityCondition condition = BeanMapper.map(commodityParam, WayCommodityCondition.class);
+        condition.setIsDeleted(commodityParam.getStatus());
         return commodityMapper.countByCondition(condition);
     }
 
