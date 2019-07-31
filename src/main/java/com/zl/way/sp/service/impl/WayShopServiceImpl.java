@@ -1,9 +1,16 @@
 package com.zl.way.sp.service.impl;
 
-import com.zl.way.sp.enums.WayCommodityStatusEnum;
-import com.zl.way.sp.enums.WayShopLogSourceEnum;
-import com.zl.way.sp.enums.WayShopLogTypeEnum;
-import com.zl.way.sp.enums.WayShopStatusEnum;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.zl.way.sp.enums.*;
 import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.mapper.*;
 import com.zl.way.sp.model.*;
@@ -12,15 +19,6 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.EnumUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
-import org.apache.commons.collections4.CollectionUtils;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service("spWayShopService")
 public class WayShopServiceImpl implements WayShopService {
@@ -39,6 +37,9 @@ public class WayShopServiceImpl implements WayShopService {
 
     @Autowired
     private WayShopQualificationMapper shopQualificationMapper;
+
+    @Autowired
+    private WayShopExtraMapper shopExtraMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -82,26 +83,38 @@ public class WayShopServiceImpl implements WayShopService {
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public WayShopBo createShop(WayShopParam shopParam) {
-
+        // 商家用户关联
         SpUserShopCondition spUserShopCondition = new SpUserShopCondition();
         spUserShopCondition.setUserLoginId(shopParam.getSpUserLoginId());
         SpUserShop existSpUserShop = spUserShopMapper.selectByCondition(spUserShopCondition);
-        if (null != existSpUserShop) {// 已经创建过
+        // 已经创建过
+        if (null != existSpUserShop) {
             Long shopId = existSpUserShop.getShopId();
             WayShopCondition getShopCondition = new WayShopCondition();
             getShopCondition.setId(shopId);
             List<WayShop> wayShopList = shopMapper.selectByCondition(getShopCondition, WayPageRequest.of(1, 1));
             if (CollectionUtils.isNotEmpty(wayShopList)) {
-                return BeanMapper.map(wayShopList.get(0), WayShopBo.class);// 幂等
+                // 幂等
+                return BeanMapper.map(wayShopList.get(0), WayShopBo.class);
             }
 
         }
 
+        // 商家信息写入
         WayShop wayShopRecord = BeanMapper.map(shopParam, WayShop.class);
         wayShopRecord.setIsDeleted(WayShopStatusEnum.AUDITTING.getValue());
         wayShopRecord.setUpdateTime(DateTime.now().toDate());
         shopMapper.insertSelective(wayShopRecord);
 
+        // 商家额外信息写入，默认商家自行创建。审核后，根据资质照片内容修改为管理人员创建。
+        WayShopExtra shopExtraRecord = new WayShopExtra();
+        shopExtraRecord.setShopId(wayShopRecord.getId());
+        shopExtraRecord.setOwnerType(WayShopExtraOwnerTypeEnum.DEFAULT.getValue());
+        shopExtraRecord.setCreateTime(DateTime.now().toDate());
+        shopExtraRecord.setUpdateTime(DateTime.now().toDate());
+        shopExtraMapper.insertSelective(shopExtraRecord);
+
+        // 商家资质写入
         if (null != shopParam.getShopQualificationParam()) {
             WayShopQualification wayShopQualificationRecord =
                 BeanMapper.map(shopParam.getShopQualificationParam(), WayShopQualification.class);
@@ -111,7 +124,8 @@ public class WayShopServiceImpl implements WayShopService {
 
         SpUserShop spUserShopRecord = new SpUserShop();
 
-        if (null != existSpUserShop) {// 已经创建过
+        // 已经创建过
+        if (null != existSpUserShop) {
             spUserShopRecord.setShopId(wayShopRecord.getId());
             spUserShopRecord.setId(existSpUserShop.getId());
             spUserShopMapper.updateByPrimaryKeySelective(spUserShopRecord);

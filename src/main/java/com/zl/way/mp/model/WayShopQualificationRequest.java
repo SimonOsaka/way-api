@@ -6,6 +6,8 @@ public class WayShopQualificationRequest extends PageParam {
 
     private Long id;
 
+    private Long shopExtraId;
+
     public Long getId() {
 
         return id;
@@ -14,5 +16,13 @@ public class WayShopQualificationRequest extends PageParam {
     public void setId(Long id) {
 
         this.id = id;
+    }
+
+    public Long getShopExtraId() {
+        return shopExtraId;
+    }
+
+    public void setShopExtraId(Long shopExtraId) {
+        this.shopExtraId = shopExtraId;
     }
 }
