@@ -1,6 +1,14 @@
 package com.zl.way.mp.api;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.mp.api.validation.WayCommodityApiValidation;
+import com.zl.way.mp.enums.WayCommodityStatusEnum;
 import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayCommodityBo;
 import com.zl.way.mp.model.WayCommodityParam;
@@ -8,12 +16,6 @@ import com.zl.way.mp.model.WayCommodityRequest;
 import com.zl.way.mp.model.WayCommodityResponse;
 import com.zl.way.mp.service.WayCommodityService;
 import com.zl.way.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("mpWayCommodityApi")
 @RequestMapping("/mp/commodity")
@@ -45,7 +47,6 @@ public class WayCommodityApi {
         List<WayCommodityBo> commodityBoList = commodityService.queryCommodityList(commodityParam, pageParam);
         WayCommodityResponse response = new WayCommodityResponse();
         response.setCommodityBoList(commodityBoList);
-        response.setCommodityStatusMap(commodityService.getAllCommodityStatus());
         response.setCommodityTotal(commodityService.queryCommodityCount(commodityParam));
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
@@ -178,5 +179,20 @@ public class WayCommodityApi {
             return ResponseResultUtil.wrapNotExistResponseResult("商品不存在");
         }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping(value = "/allCommodityStatus")
+    public ResponseResult<WayCommodityResponse> queryAllCommodityStatus(@RequestHeader("X-Token") String userToken,
+        @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+
+        WayCommodityResponse response = new WayCommodityResponse();
+        response.setCommodityStatusMap(commodityService.getAllCommodityStatus());
+        response.setCommodityStatusDefault(WayCommodityStatusEnum.AUDITTING.getValue().toString());
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 }

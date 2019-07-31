@@ -53,6 +53,8 @@ public class WayShop implements Serializable {
 
     private WayShopQualification wayShopQualification;
 
+    private WayShopExtra wayShopExtra;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -283,5 +285,13 @@ public class WayShop implements Serializable {
     public void setWayShopQualification(WayShopQualification wayShopQualification) {
 
         this.wayShopQualification = wayShopQualification;
+    }
+
+    public WayShopExtra getWayShopExtra() {
+        return wayShopExtra;
+    }
+
+    public void setWayShopExtra(WayShopExtra wayShopExtra) {
+        this.wayShopExtra = wayShopExtra;
     }
 }

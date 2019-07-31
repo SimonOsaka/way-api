@@ -1,17 +1,8 @@
 package com.zl.way.sp.service.impl;
 
-import com.zl.way.sp.enums.WayCommodityStatusEnum;
-import com.zl.way.sp.enums.WayShopStatusEnum;
-import com.zl.way.sp.exception.BusinessException;
-import com.zl.way.sp.mapper.WayCommodityMapper;
-import com.zl.way.sp.mapper.WayDiscountJpushMapper;
-import com.zl.way.sp.mapper.WayDiscountMapper;
-import com.zl.way.sp.mapper.WayShopMapper;
-import com.zl.way.sp.model.*;
-import com.zl.way.sp.service.WayDiscountService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.PageParam;
-import com.zl.way.util.WayPageRequest;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
+import com.zl.way.sp.enums.WayCommodityStatusEnum;
+import com.zl.way.sp.enums.WayShopExtraOwnerTypeEnum;
+import com.zl.way.sp.enums.WayShopStatusEnum;
+import com.zl.way.sp.exception.BusinessException;
+import com.zl.way.sp.mapper.*;
+import com.zl.way.sp.model.*;
+import com.zl.way.sp.service.WayDiscountService;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.WayPageRequest;
 
 @Service("spWayDiscountService")
 public class WayDiscountServiceImpl implements WayDiscountService {
@@ -35,13 +34,16 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
     private final WayDiscountJpushMapper discountJpushMapper;
 
+    private final WayShopExtraMapper shopExtraMapper;
+
     @Autowired
     public WayDiscountServiceImpl(WayDiscountMapper discountMapper, WayCommodityMapper commodityMapper,
-        WayShopMapper shopMapper, WayDiscountJpushMapper discountJpushMapper) {
+        WayShopMapper shopMapper, WayDiscountJpushMapper discountJpushMapper, WayShopExtraMapper shopExtraMapper) {
         this.discountMapper = discountMapper;
         this.commodityMapper = commodityMapper;
         this.shopMapper = shopMapper;
         this.discountJpushMapper = discountJpushMapper;
+        this.shopExtraMapper = shopExtraMapper;
     }
 
     @Override
@@ -78,7 +80,8 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         Long commodityId = param.getCommodityId();
         WayDiscountCondition discountCondition = new WayDiscountCondition();
         discountCondition.setCommodityId(commodityId);
-        discountCondition.setLimitTimeExpireEnable(true);// 未过期
+        // 未过期
+        discountCondition.setLimitTimeExpireEnable(true);
         List<WayDiscount> discountList = discountMapper.selectByCondition(discountCondition, WayPageRequest.ONE);
         if (CollectionUtils.isNotEmpty(discountList)) {
             throw new BusinessException("此商品优惠已存在");
@@ -97,6 +100,11 @@ public class WayDiscountServiceImpl implements WayDiscountService {
         WayShop wayShop = shopMapper.selectByPrimaryKey(shopId);
         if (!WayShopStatusEnum.NORMAL.getValue().equals(wayShop.getIsDeleted())) {
             throw new BusinessException("商家未上线，无法发布优惠");
+        }
+
+        WayShopExtra shopExtra = shopExtraMapper.selectByShopId(shopId);
+        if (null == shopExtra || shopExtra.getOwnerType().equals(WayShopExtraOwnerTypeEnum.SHOP_MANAGER.getValue())) {
+            throw new BusinessException("商家未上传资质（营业执照、身份证、商家店铺等）相关的照片，无法发布优惠");
         }
 
         WayDiscount record = BeanMapper.map(param, WayDiscount.class);

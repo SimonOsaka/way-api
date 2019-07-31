@@ -211,7 +211,16 @@
     <sql id="whereByCondition">
         from
         way_commodity commodity left join way_shop shop on commodity.shop_id = shop.id
-        where commodity.is_deleted != 1 and shop.is_deleted != 1
+        where
+        <choose>
+            <when test="condition.isDeleted != null">
+                commodity.is_deleted = #{condition.isDeleted, jdbcType=TINYINT}
+            </when>
+            <otherwise>
+                commodity.is_deleted != 1
+            </otherwise>
+        </choose>
+        and shop.is_deleted != 1
         <if test="condition.name != null and condition.name != ''">
             and (
             commodity.name like concat('%', #{condition.name, jdbcType=VARCHAR}, '%')

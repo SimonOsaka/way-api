@@ -70,6 +70,10 @@
             <result column="other4_img_url" property="other4ImgUrl"/>
             <result column="other5_img_url" property="other5ImgUrl"/>
         </association>
+        <association property="wayShopExtra" javaType="com.zl.way.mp.model.WayShopExtra">
+            <id column="shop_extra_id" property="id"/>
+            <result column="owner_type" property="ownerType"/>
+        </association>
         <collection property="commodityList"
                     ofType="com.zl.way.mp.model.WayCommodity"
                     javaType="ArrayList">
@@ -341,7 +345,15 @@
         left join way_shop_cate_root root on root.id = leaf.shop_cate_root_id
     </sql>
     <sql id="whereByCondition">
-        where shop.is_deleted != 1
+        where
+        <choose>
+            <when test="condition.isDeleted != null">
+                shop.is_deleted = #{condition.isDeleted, jdbcType=TINYINT}
+            </when>
+            <otherwise>
+                shop.is_deleted != 1
+            </otherwise>
+        </choose>
         <if test="condition.id != null">
             and shop.id = #{condition.id, jdbcType=BIGINT}
         </if>
@@ -373,7 +385,9 @@
         sq.other2_img_url,
         sq.other3_img_url,
         sq.other4_img_url,
-        sq.other5_img_url
+        sq.other5_img_url,
+        extra.id as 'shop_extra_id',
+        extra.owner_type
         from (
         select
         <include refid="Base_CateLeaf_Column_List"/>
@@ -383,7 +397,9 @@
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>
-        ) t left join way_shop_qualification sq on sq.shop_id = t.id
+        ) t
+        left join way_shop_qualification sq on sq.shop_id = t.id
+        left join way_shop_extra extra on extra.shop_id = t.id
     </select>
     <select id="countByCondition" resultType="java.lang.Long">
         select

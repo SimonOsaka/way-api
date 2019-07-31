@@ -1,19 +1,18 @@
 package com.zl.way.mp.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.mp.api.validation.WayShopQualificationApiValidation;
-import com.zl.way.mp.model.WayShopQualificationBo;
-import com.zl.way.mp.model.WayShopQualificationParam;
-import com.zl.way.mp.model.WayShopQualificationRequest;
-import com.zl.way.mp.model.WayShopQualificationResponse;
+import com.zl.way.mp.model.*;
+import com.zl.way.mp.service.WayShopExtraService;
 import com.zl.way.mp.service.WayShopQualificationService;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import com.zl.way.util.TokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController("mpWayShopQualificationApi")
 @RequestMapping("/mp/qualification")
@@ -21,8 +20,16 @@ public class WayShopQualificationApi {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private WayShopQualificationService shopQualificationService;
+
+    private WayShopExtraService shopExtraService;
+
+    @Autowired
+    public WayShopQualificationApi(WayShopQualificationService shopQualificationService,
+        WayShopExtraService shopExtraService) {
+        this.shopQualificationService = shopQualificationService;
+        this.shopExtraService = shopExtraService;
+    }
 
     @PostMapping(value = "/get")
     public ResponseResult<WayShopQualificationResponse> getShop(@RequestBody WayShopQualificationRequest request,
@@ -42,8 +49,13 @@ public class WayShopQualificationApi {
         WayShopQualificationParam param = BeanMapper.map(request, WayShopQualificationParam.class);
         WayShopQualificationBo shopQualificationBo = shopQualificationService.getShopQualification(param);
 
+        WayShopExtraParam shopExtraParam = new WayShopExtraParam();
+        shopExtraParam.setId(request.getShopExtraId());
+        WayShopExtraBo shopExtraBo = shopExtraService.getShopExtra(shopExtraParam);
+
         WayShopQualificationResponse response = new WayShopQualificationResponse();
         response.setShopQualificationBo(shopQualificationBo);
+        response.setShopExtraBo(shopExtraBo);
 
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }

@@ -1,9 +1,9 @@
 package com.zl.way.mp.model;
 
-import com.zl.way.util.PageParam;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.zl.way.util.PageParam;
 
 public class WayCommodityRequest extends PageParam {
 

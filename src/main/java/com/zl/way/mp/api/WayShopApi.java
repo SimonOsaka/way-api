@@ -1,9 +1,18 @@
 package com.zl.way.mp.api;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.mp.api.validation.WayShopApiValidation;
+import com.zl.way.mp.enums.WayShopStatusEnum;
 import com.zl.way.mp.exception.BusinessException;
 import com.zl.way.mp.model.WayShopBo;
 import com.zl.way.mp.model.WayShopParam;
@@ -11,13 +20,6 @@ import com.zl.way.mp.model.WayShopRequest;
 import com.zl.way.mp.model.WayShopResponse;
 import com.zl.way.mp.service.WayShopService;
 import com.zl.way.util.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("mpWayShopApi")
 @RequestMapping("/mp/shop")
@@ -43,6 +45,7 @@ public class WayShopApi {
         WayShopParam shopParam = new WayShopParam();
         shopParam.setShopName(request.getShopName());
         shopParam.setId(request.getId());
+        shopParam.setIsDeleted(request.getShopStatus());
 
         PageParam pageParam = new PageParam();
         pageParam.setPageNum(request.getPageNum());
@@ -51,7 +54,6 @@ public class WayShopApi {
         List<WayShopBo> shopBoList = shopService.queryShopList(shopParam, pageParam);
         WayShopResponse response = new WayShopResponse();
         response.setShopBoList(shopBoList);
-        response.setShopStatusMap(shopService.getAllShopStatus());
         response.setShopBoTotal(shopService.queryShopCount(shopParam));
         return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
@@ -256,5 +258,19 @@ public class WayShopApi {
         }
 
         return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @PostMapping(value = "/allShopStatus")
+    public ResponseResult<WayShopResponse> queryAllShopStatus(@RequestHeader("X-Token") String userToken,
+        @RequestHeader("X-userLoginId") Long userLoginId) {
+
+        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        }
+        WayShopResponse response = new WayShopResponse();
+        response.setShopStatusMap(shopService.getAllShopStatus());
+        response.setShopStatusDefault(WayShopStatusEnum.AUDITTING.getValue().toString());
+        return ResponseResultUtil.wrapSuccessResponseResult(response);
     }
 }
