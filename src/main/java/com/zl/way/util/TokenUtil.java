@@ -5,7 +5,7 @@ import org.springframework.util.DigestUtils;
 
 public final class TokenUtil {
 
-    private static final String TOKEN_SECRET = "11:11";
+    private static final String TOKEN_SECRET = StringUtils.defaultString(System.getenv("API_TOKEN_SECRET"), "11:11");
 
     public static final String getToken(String str) {
 
