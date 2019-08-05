@@ -107,5 +107,6 @@
         <include refid="Base_Column_List"/>
         from
         way_shop_cate_root root left join way_shop_cate_leaf leaf on root.id=leaf.shop_cate_root_id
+        where root.is_deleted = 0 and leaf.is_deleted = 0
     </select>
 </mapper>

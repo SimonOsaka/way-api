@@ -1,15 +1,16 @@
 package com.zl.way.sp.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zl.way.sp.mapper.WayShopCateLeafMapper;
 import com.zl.way.sp.mapper.WayShopCateRootMapper;
 import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.WayShopCateService;
 import com.zl.way.util.BeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service("spWayShopCateServiceImpl")
 public class WayShopCateServiceImpl implements WayShopCateService {
@@ -37,11 +38,4 @@ public class WayShopCateServiceImpl implements WayShopCateService {
         return BeanMapper.mapAsList(cateLeafList, WayShopCateLeafBo.class);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<WayShopCateRootBo> queryCateAll() {
-
-        List<WayShopCateRoot> cateRootList = cateRootMapper.selectByCondition(null);
-        return BeanMapper.mapAsList(cateRootList, WayShopCateRootBo.class);
-    }
 }
