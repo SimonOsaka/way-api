@@ -7,3 +7,14 @@
 项目包结构包含/sp/
 3. MP平台接口
 项目包结构包含/mp/ 
+
+> 系统环境变量
+```shell script
+# API_TOKEN
+export API_TOKEN_SECRET='nmH0Nx4irTNIwSmp'
+
+# MYSQL
+export ONTHEWAY_MYSQL_USERNAME='root'
+export ONTHEWAY_MYSQL_PASSWORD='123456'
+export ONTHEWAY_MYSQL_URL='jdbc:mysql://db.dev.jicu.vip:3306/on_the_way?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8'
+```
