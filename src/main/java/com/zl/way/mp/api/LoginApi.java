@@ -83,9 +83,9 @@ public class LoginApi {
             return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
         }
 
-        if (StringUtils.equalsIgnoreCase(userToken, "40ea1605f376771837e8e9787687e8f9")) {
+        if (StringUtils.equalsIgnoreCase(userToken, TokenUtil.getToken("8"))) {
             return ResponseResultUtil.wrapSuccessResponseResult(RESULT_ADMIN);
-        } else if (StringUtils.equalsIgnoreCase(userToken, "a43138e6f02c61e613e13fbc715fcb53")) {
+        } else if (StringUtils.equalsIgnoreCase(userToken, TokenUtil.getToken("9"))) {
             return ResponseResultUtil.wrapSuccessResponseResult(RESULT_EDITOR);
         } else {
             return ResponseResultUtil.wrapWrongParamResponseResult("用户不存在");
