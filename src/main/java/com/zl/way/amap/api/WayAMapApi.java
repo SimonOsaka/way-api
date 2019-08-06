@@ -1,5 +1,12 @@
 package com.zl.way.amap.api;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.amap.api.model.*;
 import com.zl.way.amap.exception.AMapException;
 import com.zl.way.amap.model.*;
@@ -7,12 +14,6 @@ import com.zl.way.amap.service.*;
 import com.zl.way.util.BeanMapper;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/amap")
@@ -26,7 +27,7 @@ public class WayAMapApi {
 
     private final AMapStaticMapService aMapStaticMapService;
 
-    private final AMapRegeoService aMapRegeoService;
+    private final AMapGeocodeService aMapGeocodeService;
 
     private final AMapSearchTextService aMapSearchTextService;
 
@@ -35,13 +36,13 @@ public class WayAMapApi {
     @Autowired
     public WayAMapApi(AMapInputTipsService aMapInputTipsService, AMapDistrictService aMapDistrictService,
         AMapAroundService aMapAroundService, AMapStaticMapService aMapStaticMapService,
-        AMapRegeoService aMapRegeoService, AMapSearchTextService aMapSearchTextService,
+        AMapGeocodeService aMapGeocodeService, AMapSearchTextService aMapSearchTextService,
         AMapConvertService aMapConvertService) {
         this.aMapInputTipsService = aMapInputTipsService;
         this.aMapDistrictService = aMapDistrictService;
         this.aMapAroundService = aMapAroundService;
         this.aMapStaticMapService = aMapStaticMapService;
-        this.aMapRegeoService = aMapRegeoService;
+        this.aMapGeocodeService = aMapGeocodeService;
         this.aMapSearchTextService = aMapSearchTextService;
         this.aMapConvertService = aMapConvertService;
     }
@@ -149,7 +150,7 @@ public class WayAMapApi {
 
         WayAMapRegeoResponse wayAMapRegeoResponse = null;
         try {
-            AMapRegeoResponse aMapRegeoResponse = aMapRegeoService.getRegeo(aMapRegeoRequest);
+            AMapRegeoResponse aMapRegeoResponse = aMapGeocodeService.getRegeo(aMapRegeoRequest);
 
             wayAMapRegeoResponse = BeanMapper.map(aMapRegeoResponse.getaMapRegeoModel(), WayAMapRegeoResponse.class);
 
@@ -202,6 +203,24 @@ public class WayAMapApi {
                 BeanMapper.mapAsList(aMapConvertResponse.getConvertModelList(), WayAMapConvertResponse.class);
 
             return ResponseResultUtil.wrapSuccessResponseResult(wayAMapConvertResponseList);
+        } catch (AMapException e) {
+        }
+
+        return ResponseResultUtil.wrapSuccessResponseResult(null);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/geo")
+    public ResponseResult<List<WayAMapGeoResponse>> requestGeo(@RequestBody WayAMapGeoRequest wayAMapGeoRequest) {
+
+        AMapGeoRequest aMapGeoRequest = BeanMapper.map(wayAMapGeoRequest, AMapGeoRequest.class);
+
+        List<WayAMapGeoResponse> wayAMapGeoResponse = null;
+        try {
+            AMapGeoResponse aMapGeoResponse = aMapGeocodeService.getGeo(aMapGeoRequest);
+
+            wayAMapGeoResponse = BeanMapper.mapAsList(aMapGeoResponse.getaMapGeoModelList(), WayAMapGeoResponse.class);
+
+            return ResponseResultUtil.wrapSuccessResponseResult(wayAMapGeoResponse);
         } catch (AMapException e) {
         }
 

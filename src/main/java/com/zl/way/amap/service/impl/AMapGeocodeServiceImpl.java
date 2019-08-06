@@ -1,30 +1,34 @@
 package com.zl.way.amap.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.zl.way.amap.exception.AMapException;
-import com.zl.way.amap.model.AMapRegeoModel;
-import com.zl.way.amap.model.AMapRegeoRequest;
-import com.zl.way.amap.model.AMapRegeoResponse;
-import com.zl.way.amap.service.AMapRegeoService;
-import com.zl.way.util.OkHttp3Util;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.zl.way.amap.exception.AMapException;
+import com.zl.way.amap.model.*;
+import com.zl.way.amap.service.AMapGeocodeService;
+import com.zl.way.util.OkHttp3Util;
 
 @Service
-public class AMapRegeoServiceImpl implements AMapRegeoService {
+public class AMapGeocodeServiceImpl implements AMapGeocodeService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${amap.regeoUrl}")
     private String regeoUrl;
+
+    @Value("${amap.geoUrl}")
+    private String geoUrl;
 
     @Value("${amap.key}")
     private String key;
@@ -90,5 +94,66 @@ public class AMapRegeoServiceImpl implements AMapRegeoService {
 
         regeoResponse.setCode(0);
         return regeoResponse;
+    }
+
+    @Override
+    public AMapGeoResponse getGeo(AMapGeoRequest aMapGeoRequest) throws AMapException {
+        AMapGeoResponse geoResponse = new AMapGeoResponse();
+        Map<String, String> params = new HashMap<>();
+        params.put("key", key);
+        params.put("address", aMapGeoRequest.getAddress());
+        params.put("city", StringUtils.defaultIfBlank(aMapGeoRequest.getCity(), ""));
+        String resp = OkHttp3Util.doGet(geoUrl, params);
+        if (logger.isDebugEnabled()) {
+            logger.debug("请求返回={}", resp);
+        }
+
+        if (StringUtils.isNotBlank(resp)) {
+            JSONObject resultJsonObject = JSON.parseObject(resp);
+            Integer status = resultJsonObject.getInteger("status");
+            Integer count = resultJsonObject.getInteger("count");
+            if (status == 1) {
+                geoResponse.setCode(200);
+                if (count > 0) {
+                    JSONArray geoJsonArray = resultJsonObject.getJSONArray("geocodes");
+                    List<AMapGeoModel> aMapGeoModelList = new ArrayList<>();
+                    geoResponse.setaMapGeoModelList(aMapGeoModelList);
+                    for (Object geoObject : geoJsonArray) {
+                        JSONObject geoJson = (JSONObject)geoObject;
+                        AMapGeoModel aMapGeoModel = new AMapGeoModel();
+
+                        String formattedAddress =
+                            StringUtils.defaultString(geoJson.getString("formatted_address"), StringUtils.EMPTY);
+                        aMapGeoModel.setFormatAddress(formattedAddress);
+
+                        String city = geoJson.getString("city");
+                        if (StringUtils.isNotBlank(city)) {
+                            city = city.replaceFirst("\\[", "").replaceFirst("]", "");
+                        }
+                        String province = geoJson.getString("province");
+                        String cityName = StringUtils.defaultIfBlank(city, province);
+                        aMapGeoModel.setCityName(cityName);
+
+                        String cityCode = geoJson.getString("citycode");
+                        aMapGeoModel.setCityCode(cityCode);
+
+                        String adCode = geoJson.getString("adcode");
+                        aMapGeoModel.setAdCode(adCode);
+
+                        String district = geoJson.getString("district");
+                        aMapGeoModel.setDistrict(district);
+
+                        aMapGeoModelList.add(aMapGeoModel);
+                    }
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("组装后的结构={}", JSON.toJSONString(geoResponse, true));
+                }
+                return geoResponse;
+            }
+        }
+
+        geoResponse.setCode(0);
+        return geoResponse;
     }
 }
