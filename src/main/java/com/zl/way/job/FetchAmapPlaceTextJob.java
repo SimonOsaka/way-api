@@ -24,6 +24,7 @@ import com.zl.way.amap.model.AMapSearchTextModel;
 import com.zl.way.amap.model.AMapSearchTextRequest;
 import com.zl.way.amap.model.AMapSearchTextResponse;
 import com.zl.way.amap.service.AMapSearchTextService;
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.model.WayCommodityParam;
 import com.zl.way.sp.model.WayShopBo;
 import com.zl.way.sp.model.WayShopParam;
@@ -127,7 +128,12 @@ public class FetchAmapPlaceTextJob {
 
         for (int i = 0; i < spShopParamList.size(); i++) {
             WayShopParam shopParam = spShopParamList.get(i);
-            WayShopBo shopBo = shopService.createShop(shopParam);
+            WayShopBo shopBo = null;
+            try {
+                shopBo = shopService.createShop(shopParam);
+            } catch (BusinessException e) {
+                e.printStackTrace();
+            }
             Long shopId = shopBo.getId();
             this.addCommodity(shopId);
         }

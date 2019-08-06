@@ -1,5 +1,13 @@
 package com.zl.way.sp.api;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
@@ -9,13 +17,6 @@ import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.ApiValidationService;
 import com.zl.way.sp.service.WayShopService;
 import com.zl.way.util.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("spWayShopApi")
 @RequestMapping("/sp/shop")
@@ -105,7 +106,11 @@ public class WayShopApi {
             shopParam.setShopPy(PinyinHelper.getShortPinyin(request.getShopName()));
         } catch (PinyinException e) {
         }
-        shopService.createShop(shopParam);
+        try {
+            shopService.createShop(shopParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapException(e);
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
@@ -140,7 +145,11 @@ public class WayShopApi {
             shopParam.setShopPy(PinyinHelper.getShortPinyin(request.getShopName()));
         } catch (PinyinException e) {
         }
-        shopService.updateShop(shopParam);
+        try {
+            shopService.updateShop(shopParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapException(e);
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 

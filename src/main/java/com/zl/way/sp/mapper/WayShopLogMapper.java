@@ -1,12 +1,15 @@
 package com.zl.way.sp.mapper;
 
-import com.zl.way.sp.model.WayShopLog;
-import com.zl.way.sp.model.WayShopLogCondition;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import com.zl.way.sp.model.WayShopLog;
+import com.zl.way.sp.model.WayShopLogCondition;
+
+@Repository("spWayShopLogMapper")
 public interface WayShopLogMapper {
 
     int deleteByPrimaryKey(Long id);

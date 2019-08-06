@@ -1,22 +1,10 @@
 package com.zl.way.discount.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.zl.way.amap.exception.AMapException;
-import com.zl.way.amap.model.AMapRegeoRequest;
-import com.zl.way.amap.model.AMapRegeoResponse;
-import com.zl.way.amap.model.AMapStaticMapRequest;
-import com.zl.way.amap.model.AMapStaticMapResponse;
-import com.zl.way.amap.service.AMapRegeoService;
-import com.zl.way.amap.service.AMapStaticMapService;
-import com.zl.way.discount.mapper.WayDiscountJpushMapper;
-import com.zl.way.discount.mapper.WayDiscountMapper;
-import com.zl.way.discount.mapper.WayDiscountRealMapper;
-import com.zl.way.discount.model.*;
-import com.zl.way.discount.service.WayDiscountService;
-import com.zl.way.util.BeanMapper;
-import com.zl.way.util.GeoUtil;
-import com.zl.way.util.PageParam;
-import com.zl.way.util.WayPageRequest;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
@@ -28,10 +16,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSON;
+import com.zl.way.amap.exception.AMapException;
+import com.zl.way.amap.model.AMapRegeoRequest;
+import com.zl.way.amap.model.AMapRegeoResponse;
+import com.zl.way.amap.model.AMapStaticMapRequest;
+import com.zl.way.amap.model.AMapStaticMapResponse;
+import com.zl.way.amap.service.AMapGeocodeService;
+import com.zl.way.amap.service.AMapStaticMapService;
+import com.zl.way.discount.mapper.WayDiscountJpushMapper;
+import com.zl.way.discount.mapper.WayDiscountMapper;
+import com.zl.way.discount.mapper.WayDiscountRealMapper;
+import com.zl.way.discount.model.*;
+import com.zl.way.discount.service.WayDiscountService;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.GeoUtil;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.WayPageRequest;
 
 @Service
 public class WayDiscountServiceImpl implements WayDiscountService {
@@ -46,14 +47,14 @@ public class WayDiscountServiceImpl implements WayDiscountService {
 
     private final AMapStaticMapService aMapStaticMapService;
 
-    private final AMapRegeoService aMapRegeoService;
+    private final AMapGeocodeService aMapRegeoService;
 
     private final WayDiscountJpushMapper wayDiscountJpushMapper;
 
     @Autowired
     public WayDiscountServiceImpl(WayDiscountMapper wayDiscountMapper, WayDiscountJpushMapper wayDiscountJpushMapper,
         WayDiscountRealMapper wayDiscountRealMapper, AMapStaticMapService aMapStaticMapService,
-        AMapRegeoService aMapRegeoService) {
+        AMapGeocodeService aMapRegeoService) {
         this.wayDiscountMapper = wayDiscountMapper;
         this.wayDiscountJpushMapper = wayDiscountJpushMapper;
         this.wayDiscountRealMapper = wayDiscountRealMapper;
