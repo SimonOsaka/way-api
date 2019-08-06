@@ -1,17 +1,18 @@
 package com.zl.way.mp.api;
 
-import com.zl.way.mp.model.LoginRequest;
-import com.zl.way.util.ResponseResult;
-import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import com.zl.way.mp.model.LoginRequest;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
+import com.zl.way.util.TokenUtil;
 
 @RestController("loginApi")
 @RequestMapping("/mp/login")
@@ -27,14 +28,14 @@ public class LoginApi {
         // admin
         RESULT_ADMIN.put("roles", Arrays.asList("admin"));
         RESULT_ADMIN.put("userLoginId", 8);
-        RESULT_ADMIN.put("token", "40ea1605f376771837e8e9787687e8f9");
+        RESULT_ADMIN.put("token", TokenUtil.getToken("8"));
         RESULT_ADMIN.put("introduction", "我是超级管理员");
         RESULT_ADMIN.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
         RESULT_ADMIN.put("name", "Super Admin");
         // editor
         RESULT_EDITOR.put("roles", Arrays.asList("editor"));
         RESULT_EDITOR.put("userLoginId", 9);
-        RESULT_EDITOR.put("token", "a43138e6f02c61e613e13fbc715fcb53");
+        RESULT_EDITOR.put("token", TokenUtil.getToken("9"));
         RESULT_EDITOR.put("introduction", "我是编辑");
         RESULT_EDITOR.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
         RESULT_EDITOR.put("name", "Normal Editor");
