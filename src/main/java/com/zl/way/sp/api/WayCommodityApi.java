@@ -1,5 +1,12 @@
 package com.zl.way.sp.api;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.zl.way.sp.api.validation.WayCommodityApiValidation;
 import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.model.WayCommodityBo;
@@ -9,12 +16,6 @@ import com.zl.way.sp.model.WayCommodityResponse;
 import com.zl.way.sp.service.ApiValidationService;
 import com.zl.way.sp.service.WayCommodityService;
 import com.zl.way.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("spWayCommodityApi")
 @RequestMapping("/sp/commodity")
@@ -87,7 +88,7 @@ public class WayCommodityApi {
         }
 
         WayCommodityApiValidation validation =
-            new WayCommodityApiValidation(request).shopId().name().price().imgUrl().abstractWordIds();
+            new WayCommodityApiValidation(request).shopId().name()./*price().*/imgUrl().abstractWordIds();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
@@ -108,7 +109,7 @@ public class WayCommodityApi {
         }
 
         WayCommodityApiValidation validation =
-            new WayCommodityApiValidation(request).commodityId().shopId().name().price().imgUrl().abstractWordIds();
+            new WayCommodityApiValidation(request).commodityId().shopId().name()./*price().*/imgUrl().abstractWordIds();
         if (validation.hasErrors()) {
             return ResponseResultUtil.wrapWrongParamResponseResult(validation.getErrors().get(0));
         }
