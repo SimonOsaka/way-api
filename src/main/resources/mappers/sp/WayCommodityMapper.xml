@@ -20,12 +20,14 @@
         <result column="abstract_word_ids" jdbcType="CHAR" property="abstractWordIds"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, price, img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
+        id, name, <!--price,--> img_url, img_url_1, img_url_2, img_url_3, img_url_4, shop_id, create_time,
         update_time, is_deleted, name_pinyin,
         name_py, abstract_word_ids
     </sql>
     <sql id="Shop_Commodity_Column_List">
-        commodity.id, commodity.name, commodity.price,
+        commodity.id,
+        commodity.name,
+        <!--        commodity.price,-->
         commodity.img_url,
         commodity.img_url_1,
         commodity.img_url_2,

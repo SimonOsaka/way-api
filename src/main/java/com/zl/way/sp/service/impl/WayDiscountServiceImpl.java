@@ -92,9 +92,9 @@ public class WayDiscountServiceImpl implements WayDiscountService {
             throw new BusinessException("商品未上线，无法发布优惠");
         }
 
-        if (param.getCommodityPrice().compareTo(wayCommodity.getPrice()) >= 0) {
-            throw new BusinessException("优惠价格应低于商品价格");
-        }
+        // if (param.getCommodityPrice().compareTo(wayCommodity.getPrice()) >= 0) {
+        // throw new BusinessException("优惠价格应低于商品价格");
+        // }
 
         Long shopId = wayCommodity.getShopId();
         WayShop wayShop = shopMapper.selectByPrimaryKey(shopId);
