@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.model.LoginRequest;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
@@ -63,25 +64,16 @@ public class LoginApi {
     }
 
     @PostMapping("logout")
-    public ResponseResult<String> logout(@RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
+    @WayTokenValidation
+    public ResponseResult<String> logout() {
 
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
         return ResponseResultUtil.wrapSuccessResponseResult("success");
 
     }
 
     @PostMapping("/user/info")
-    public ResponseResult<Map<String, Object>> userInfo(@RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<Map<String, Object>> userInfo(@RequestHeader("X-Token") String userToken) {
 
         if (StringUtils.equalsIgnoreCase(userToken, TokenUtil.getToken("8"))) {
             return ResponseResultUtil.wrapSuccessResponseResult(RESULT_ADMIN);

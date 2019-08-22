@@ -6,11 +6,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.api.validation.WayShopApiValidation;
 import com.zl.way.mp.enums.WayShopStatusEnum;
 import com.zl.way.mp.exception.BusinessException;
@@ -19,7 +23,10 @@ import com.zl.way.mp.model.WayShopParam;
 import com.zl.way.mp.model.WayShopRequest;
 import com.zl.way.mp.model.WayShopResponse;
 import com.zl.way.mp.service.WayShopService;
-import com.zl.way.util.*;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
 @RestController("mpWayShopApi")
 @RequestMapping("/mp/shop")
@@ -34,13 +41,8 @@ public class WayShopApi {
     // private ApiValidationService apiValidationService;
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request) {
 
         WayShopParam shopParam = new WayShopParam();
         shopParam.setShopName(request.getShopName());
@@ -59,13 +61,8 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/get")
-    public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
@@ -117,13 +114,8 @@ public class WayShopApi {
     }*/
 
     @PostMapping(value = "/update")
-    public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopName().shopTel().shopAddress()
             .shopBusinessTime1().shopLocation().shopLogoUrl().shopId().shopCateLeafId().shopInfo();
@@ -149,13 +141,8 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/delete")
-    public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
@@ -233,13 +220,8 @@ public class WayShopApi {
     }*/
 
     @PostMapping(value = "/status")
-    public ResponseResult<WayShopResponse> modifyStatus(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> modifyStatus(@RequestBody WayShopRequest request) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId().shopStatus();
         if (validation.hasErrors()) {
@@ -261,13 +243,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/allShopStatus")
-    public ResponseResult<WayShopResponse> queryAllShopStatus(@RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> queryAllShopStatus() {
 
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
         WayShopResponse response = new WayShopResponse();
         response.setShopStatusMap(shopService.getAllShopStatus());
         response.setShopStatusDefault(WayShopStatusEnum.AUDITTING.getValue().toString());

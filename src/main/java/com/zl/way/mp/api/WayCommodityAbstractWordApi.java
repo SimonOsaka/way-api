@@ -3,14 +3,21 @@ package com.zl.way.mp.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.model.WayCommodityAbstractWordBo;
 import com.zl.way.mp.model.WayCommodityAbstractWordParam;
 import com.zl.way.mp.model.WayCommodityAbstractWordRequest;
 import com.zl.way.mp.model.WayCommodityAbstractWordResponse;
 import com.zl.way.mp.service.WayCommodityAbstractWordService;
-import com.zl.way.util.*;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
 /**
  * mp抽象词api
@@ -29,14 +36,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        queryCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = new WayCommodityAbstractWordParam();
         param.setShopCateLeafId(request.getShopCateLeafId());
@@ -59,14 +61,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/query")
-    public ResponseResult<WayCommodityAbstractWordResponse> queryAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        queryAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = new WayCommodityAbstractWordParam();
         param.setShopCateLeafId(request.getShopCateLeafId());
@@ -82,14 +79,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/create")
-    public ResponseResult<WayCommodityAbstractWordResponse> createCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        createCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
 
@@ -102,14 +94,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/update")
-    public ResponseResult<WayCommodityAbstractWordResponse> updateCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        updateCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
 
@@ -119,14 +106,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/delete")
-    public ResponseResult<WayCommodityAbstractWordResponse> deleteCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        deleteCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
 
@@ -140,14 +122,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/move")
-    public ResponseResult<WayCommodityAbstractWordResponse> moveCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        moveCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = BeanMapper.map(request, WayCommodityAbstractWordParam.class);
 
