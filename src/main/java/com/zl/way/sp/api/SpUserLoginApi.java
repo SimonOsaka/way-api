@@ -1,5 +1,15 @@
 package com.zl.way.sp.api;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.SpUserShopService;
 import com.zl.way.sp.service.WayShopService;
@@ -11,11 +21,6 @@ import com.zl.way.user.service.UserService;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
 import com.zl.way.util.TokenUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController("spUserLoginApi")
 @RequestMapping("/sp/user")
@@ -62,13 +67,9 @@ public class SpUserLoginApi {
     }
 
     @PostMapping(value = "/info")
-    public ResponseResult<SpUserResponse> info(@RequestBody SpUserRequest userRequest,
-        @RequestHeader("token") String userToken) {
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<SpUserResponse> info(@RequestBody SpUserRequest userRequest) {
 
-        if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(), userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
         try {
             SpUserResponse response = new SpUserResponse();
 
@@ -92,13 +93,8 @@ public class SpUserLoginApi {
     }
 
     @PostMapping(value = "/logout")
-    public ResponseResult<UserResponse> logout(@RequestBody UserRequest userRequest,
-        @RequestHeader("token") String userToken) {
-
-        if (!TokenUtil.validToken(String.valueOf(userRequest.getUserLoginId()), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userRequest.getUserLoginId(), userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<UserResponse> logout(@RequestBody UserRequest userRequest) {
 
         UserLoginParam userLoginParam = new UserLoginParam();
         userLoginParam.setId(userRequest.getUserLoginId());

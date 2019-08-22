@@ -30,4 +30,11 @@ public @interface WayTokenValidation {
      * @return
      */
     String headerUserLoginId() default "X-userLoginId";
+
+    /**
+     * 指定request body中userLoginId变量名称，默认：userLoginId
+     * 
+     * @return
+     */
+    String rawUserLoginId() default "userLoginId";
 }

@@ -39,7 +39,7 @@ public class WayTokenValidationInterceptor implements HandlerInterceptor {
         WayTokenValidation tokenValidation = method.getAnnotation(WayTokenValidation.class);
         // 不需要token验证
         if (null == tokenValidation) {
-            logger.info("token不需要验证，方法：{}", method.getClass().getName() + "." + method.getName());
+            logger.info("token不需要验证，方法：{}", method.getDeclaringClass().getName() + "." + method.getName());
             return true;
         }
 
@@ -62,7 +62,7 @@ public class WayTokenValidationInterceptor implements HandlerInterceptor {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("project名称验证通过");
+            logger.debug("project={}名称验证通过", project);
         }
 
         return context.exec(request, response, tokenValidation);
@@ -75,39 +75,25 @@ interface Strategy {
         throws IOException;
 }
 
-class MpTokenValidationStrategy implements Strategy {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+class MpTokenValidationStrategy extends AbstractStrategy implements Strategy {
 
     @Override
     public boolean exec(HttpServletRequest request, HttpServletResponse response, WayTokenValidation tokenValidation)
         throws IOException {
-        String userToken = request.getHeader(tokenValidation.headerToken());
-        String userLoginId = request.getHeader(tokenValidation.headerUserLoginId());
 
-        if (!TokenUtil.validToken(userLoginId, userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            ResponseResult responseResult = ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getWriter().print(JSON.toJSONString(responseResult));
-            response.getWriter().flush();
-            return false;
-        }
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("token, userLoginId验证通过");
-        }
-
-        return true;
+        return this.doAction(request, response, tokenValidation);
     }
 }
 
-class SpTokenValidationStrategy implements Strategy {
+class SpTokenValidationStrategy extends AbstractStrategy implements Strategy {
 
     @Override
     public boolean exec(HttpServletRequest request, HttpServletResponse response, WayTokenValidation tokenValidation)
         throws IOException {
-        return true;
+
+        return this.doAction(request, response, tokenValidation);
     }
+
 }
 
 class AppTokenValidationStrategy implements Strategy {
@@ -115,6 +101,35 @@ class AppTokenValidationStrategy implements Strategy {
     @Override
     public boolean exec(HttpServletRequest request, HttpServletResponse response, WayTokenValidation tokenValidation)
         throws IOException {
+        return true;
+    }
+}
+
+abstract class AbstractStrategy {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    void responseFailed(HttpServletResponse response) throws IOException {
+        ResponseResult responseResult = ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().print(JSON.toJSONString(responseResult));
+        response.getWriter().flush();
+    }
+
+    boolean doAction(HttpServletRequest request, HttpServletResponse response, WayTokenValidation tokenValidation)
+        throws IOException {
+        String userToken = request.getHeader(tokenValidation.headerToken());
+        String userLoginId = request.getHeader(tokenValidation.headerUserLoginId());
+
+        if (!TokenUtil.validToken(userLoginId, userToken)) {
+            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
+            responseFailed(response);
+            return false;
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("token, userLoginId验证通过");
+        }
+
         return true;
     }
 }

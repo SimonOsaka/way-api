@@ -3,8 +3,12 @@ package com.zl.way.sp.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.sp.model.WayCommodityAbstractWordBo;
 import com.zl.way.sp.model.WayCommodityAbstractWordParam;
 import com.zl.way.sp.model.WayCommodityAbstractWordRequest;
@@ -13,7 +17,6 @@ import com.zl.way.sp.service.WayCommodityAbstractWordService;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
 
 /**
  * sp抽象词api
@@ -32,14 +35,9 @@ public class WayCommodityAbstractWordApi {
     }
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayCommodityAbstractWordResponse> queryCommodityAbstractWord(
-        @RequestBody WayCommodityAbstractWordRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<WayCommodityAbstractWordResponse>
+        queryCommodityAbstractWord(@RequestBody WayCommodityAbstractWordRequest request) {
 
         WayCommodityAbstractWordParam param = new WayCommodityAbstractWordParam();
         param.setShopCateLeafId(request.getShopCateLeafId());

@@ -20,6 +20,6 @@ public class WayTokenValidationWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(wayTokenValidationInterceptor()).addPathPatterns("/mp/**");
+        registry.addInterceptor(wayTokenValidationInterceptor()).addPathPatterns("/mp/**", "/sp/**");
     }
 }

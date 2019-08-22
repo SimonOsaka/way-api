@@ -1,5 +1,13 @@
 package com.zl.way.sp.api;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.sp.api.validation.WayDiscountApiValidation;
 import com.zl.way.sp.constants.ApiConstants;
 import com.zl.way.sp.exception.BusinessException;
@@ -8,13 +16,10 @@ import com.zl.way.sp.model.WayDiscountParam;
 import com.zl.way.sp.model.WayDiscountRequest;
 import com.zl.way.sp.model.WayDiscountResponse;
 import com.zl.way.sp.service.WayDiscountService;
-import com.zl.way.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
 @RestController("spWayDiscountApi")
 @RequestMapping("/sp/discount")
@@ -26,14 +31,8 @@ public class WayDiscountApi {
     private WayDiscountService discountService;
 
     @PostMapping("list")
-    public ResponseResult<WayDiscountResponse> queryDiscountList(@RequestBody WayDiscountRequest request,
-        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
-        @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<WayDiscountResponse> queryDiscountList(@RequestBody WayDiscountRequest request) {
 
         WayDiscountParam param = BeanMapper.map(request, WayDiscountParam.class);
         PageParam pageParam = BeanMapper.map(request, PageParam.class);
@@ -46,14 +45,8 @@ public class WayDiscountApi {
     }
 
     @PostMapping("get")
-    public ResponseResult<WayDiscountResponse> getDiscount(@RequestBody WayDiscountRequest request,
-        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
-        @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<WayDiscountResponse> getDiscount(@RequestBody WayDiscountRequest request) {
 
         WayDiscountApiValidation validation = new WayDiscountApiValidation(request).commodityId();
         if (validation.hasErrors()) {
@@ -69,14 +62,9 @@ public class WayDiscountApi {
     }
 
     @PostMapping("create")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayDiscountResponse> createDiscount(@RequestBody WayDiscountRequest request,
-        @RequestHeader(ApiConstants.X_TOKEN) String userToken,
         @RequestHeader(ApiConstants.X_USERLOGINID) Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
 
         WayDiscountApiValidation validation = new WayDiscountApiValidation(request).commodityId()
             .discountCommodityCate().discountCommodityPrice().discountLimitTimeExpire();
