@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.sp.api.validation.WayShopApiValidation;
 import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.model.*;
 import com.zl.way.sp.service.ApiValidationService;
 import com.zl.way.sp.service.WayShopService;
-import com.zl.way.util.*;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
 @RestController("spWayShopApi")
 @RequestMapping("/sp/shop")
@@ -31,13 +35,8 @@ public class WayShopApi {
     private ApiValidationService apiValidationService;
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", request.getUserLoginId(), userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<WayShopResponse> queryShop(@RequestBody WayShopRequest request) {
 
         WayShopParam shopParam = new WayShopParam();
         shopParam.setShopName(request.getShopName());
@@ -53,13 +52,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/get")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayShopResponse> getShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
@@ -81,13 +76,8 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/create")
-    public ResponseResult<WayShopResponse> createShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation(project = "sp")
+    public ResponseResult<WayShopResponse> createShop(@RequestBody WayShopRequest request) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopLogoUrl().shopHeadTel().shopName()
             .shopCateLeafId().shopAddress().shopTel().shopBusinessTime1().shopLocation().shopInfo()
@@ -115,13 +105,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/update")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayShopResponse> updateShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopHeadTel().updateType().shopName()
             .shopTel().shopAddress().shopBusinessTime1().shopLocation().shopLogoUrl().shopId().shopCateLeafId()
@@ -154,13 +140,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/delete")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayShopResponse> deleteShop(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
@@ -180,13 +162,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/online")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayShopResponse> online(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
@@ -210,13 +188,9 @@ public class WayShopApi {
     }
 
     @PostMapping(value = "/offline")
+    @WayTokenValidation(project = "sp")
     public ResponseResult<WayShopResponse> offline(@RequestBody WayShopRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+        @RequestHeader("X-userLoginId") Long userLoginId) {
 
         WayShopApiValidation validation = new WayShopApiValidation(request).shopId();
         if (validation.hasErrors()) {
