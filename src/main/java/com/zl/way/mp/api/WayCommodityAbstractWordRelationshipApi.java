@@ -5,15 +5,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.api.model.WayCommodityAbstractWordRelationshipRequest;
 import com.zl.way.mp.api.model.WayCommodityAbstractWordRelationshipResponse;
 import com.zl.way.mp.api.validation.WayCommodityAbstractWordRelationshipApiValidation;
 import com.zl.way.mp.model.WayCommodityAbstractWordRelationshipBo;
 import com.zl.way.mp.model.WayCommodityAbstractWordRelationshipParam;
 import com.zl.way.mp.service.WayCommodityAbstractWordRelationshipService;
-import com.zl.way.util.*;
+import com.zl.way.util.BeanMapper;
+import com.zl.way.util.PageParam;
+import com.zl.way.util.ResponseResult;
+import com.zl.way.util.ResponseResultUtil;
 
 /**
  * mp抽象网络图api
@@ -33,14 +40,10 @@ public class WayCommodityAbstractWordRelationshipApi {
     }
 
     @PostMapping(value = "/list")
-    public ResponseResult<WayCommodityAbstractWordRelationshipResponse> queryCommodityAbstractWordRelationship(
-        @RequestBody WayCommodityAbstractWordRelationshipRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordRelationshipResponse>
+        queryCommodityAbstractWordRelationship(@RequestBody WayCommodityAbstractWordRelationshipRequest request) {
 
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
         WayCommodityAbstractWordRelationshipApiValidation validation =
             new WayCommodityAbstractWordRelationshipApiValidation(request).abstractWordId();
         if (validation.hasErrors()) {
@@ -60,14 +63,9 @@ public class WayCommodityAbstractWordRelationshipApi {
     }
 
     @PostMapping(value = "/save")
-    public ResponseResult<WayCommodityAbstractWordRelationshipResponse> createCommodityAbstractWordRelationship(
-        @RequestBody WayCommodityAbstractWordRelationshipRequest request, @RequestHeader("X-Token") String userToken,
-        @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayCommodityAbstractWordRelationshipResponse>
+        createCommodityAbstractWordRelationship(@RequestBody WayCommodityAbstractWordRelationshipRequest request) {
 
         WayCommodityAbstractWordRelationshipApiValidation validation =
             new WayCommodityAbstractWordRelationshipApiValidation(request).abstractWordId();

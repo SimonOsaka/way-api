@@ -3,8 +3,12 @@ package com.zl.way.mp.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.api.validation.WayShopExtraApiValidation;
 import com.zl.way.mp.model.WayShopExtraParam;
 import com.zl.way.mp.model.WayShopExtraRequest;
@@ -12,7 +16,6 @@ import com.zl.way.mp.model.WayShopResponse;
 import com.zl.way.mp.service.WayShopExtraService;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
 
 @RestController("mpWayShopExtraApi")
 @RequestMapping("/mp/shop/extra")
@@ -27,13 +30,8 @@ public class WayShopExtraApi {
     }
 
     @PostMapping(value = "/owner/manager")
-    public ResponseResult<WayShopResponse> changeManager(@RequestBody WayShopExtraRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> changeManager(@RequestBody WayShopExtraRequest request) {
 
         WayShopExtraApiValidation validation = new WayShopExtraApiValidation(request).shopExtraId();
         if (validation.hasErrors()) {
@@ -49,13 +47,8 @@ public class WayShopExtraApi {
     }
 
     @PostMapping(value = "/owner/self")
-    public ResponseResult<WayShopResponse> changeSelf(@RequestBody WayShopExtraRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayShopResponse> changeSelf(@RequestBody WayShopExtraRequest request) {
 
         WayShopExtraApiValidation validation = new WayShopExtraApiValidation(request).shopExtraId();
         if (validation.hasErrors()) {

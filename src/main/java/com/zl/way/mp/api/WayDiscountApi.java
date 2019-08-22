@@ -1,5 +1,13 @@
 package com.zl.way.mp.api;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.zl.way.annotation.WayTokenValidation;
 import com.zl.way.mp.api.validation.WayDiscountApiValidation;
 import com.zl.way.mp.model.WayDiscountBo;
 import com.zl.way.mp.model.WayDiscountParam;
@@ -9,13 +17,6 @@ import com.zl.way.mp.service.WayDiscountService;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseResult;
 import com.zl.way.util.ResponseResultUtil;
-import com.zl.way.util.TokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController("mpWayDiscountApi")
 @RequestMapping("/mp/discount")
@@ -27,6 +28,7 @@ public class WayDiscountApi {
     private WayDiscountService wayDiscountService;
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @WayTokenValidation
     public ResponseResult<WayDiscountResponse> queryDiscountList(@RequestBody WayDiscountRequest wayDiscountRequest) {
 
         WayDiscountParam wayDiscountParam = new WayDiscountParam();
@@ -73,13 +75,8 @@ public class WayDiscountApi {
     }*/
 
     @PostMapping("/delete")
-    public ResponseResult<WayDiscountResponse> getDiscountDetail(@RequestBody WayDiscountRequest request,
-        @RequestHeader("X-Token") String userToken, @RequestHeader("X-userLoginId") Long userLoginId) {
-
-        if (!TokenUtil.validToken(String.valueOf(userLoginId), userToken)) {
-            logger.warn("Token安全校验不过，userId={}，userToken={}", userLoginId, userToken);
-            return ResponseResultUtil.wrapWrongParamResponseResult("安全校验没有通过");
-        }
+    @WayTokenValidation
+    public ResponseResult<WayDiscountResponse> getDiscountDetail(@RequestBody WayDiscountRequest request) {
 
         WayDiscountApiValidation validation = new WayDiscountApiValidation(request).discountId();
         if (validation.hasErrors()) {
