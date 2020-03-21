@@ -366,18 +366,24 @@
         </if>
         <trim prefix="and (" suffix=")" suffixOverrides="or">
             <if test="condition.shopName != null and condition.shopName != ''">
-                shop.shop_name like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
-                shop.shop_pinyin like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
-                shop.shop_py like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%') or
+                shop.shop_name like concat('%', #{condition.shopName, jdbcType=VARCHAR}, '%')
+                <if test="condition.shopPinyin != null and condition.shopPinyin != ''">
+                    or shop.shop_pinyin like concat('%', #{condition.shopPinyin, jdbcType=VARCHAR}, '%')
+                </if>
+                <if test="condition.shopPy != null and condition.shopPy != ''">
+                    or shop.shop_py like concat('%', #{condition.shopPy, jdbcType=VARCHAR}, '%')
+                </if>
+                or
             </if>
             <if test="condition.commodityName != null and condition.commodityName != ''">
                 commodity.name like concat('%', #{condition.commodityName, jdbcType=VARCHAR}, '%')
+                <if test="condition.commodityNamePinyin != null and condition.commodityNamePinyin != ''">
+                    or commodity.name_pinyin like concat('%', #{condition.commodityNamePinyin, jdbcType=VARCHAR}, '%')
+                </if>
+                <if test="condition.commodityNamePy != null and condition.commodityNamePy != ''">
+                    or commodity.name_py like concat('%', #{condition.commodityNamePy, jdbcType=VARCHAR}, '%')
+                </if>
                 or
-                commodity.name_pinyin like concat('%',
-                #{condition.commodityName, jdbcType=VARCHAR},
-                '%') or
-                commodity.name_py like concat('%', #{condition.commodityName, jdbcType=VARCHAR},
-                '%') or
             </if>
         </trim>
         <include refid="WHERE_CONDITION"/>

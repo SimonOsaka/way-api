@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.github.stuxuhai.jpinyin.PinyinException;
+import com.github.stuxuhai.jpinyin.PinyinFormat;
+import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.commodity.mapper.WayCommodityAbstractWordMapper;
 import com.zl.way.commodity.mapper.model.WayCommodityAbstractWordCondition;
 import com.zl.way.commodity.model.WayCommodityAbstractWord;
@@ -103,6 +106,21 @@ public class WayShopServiceImpl implements WayShopService {
             condition.setPathPid(wordList.get(0).getId());
             wayShopList = wayShopMapper.selectByAbstractWord(condition, pageable);
         } else {
+            try {
+                // 非中文或掺杂非中文，进行翻译。注：拼音查询功能，不一定有用，要是真没用，就可以去掉
+                if (!isChinese(wayShopParam.getShopName())) {
+                    // 商家名称拼音
+                    condition.setShopPinyin(PinyinHelper.convertToPinyinString(wayShopParam.getShopName(),
+                        StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
+                    condition.setShopPy(PinyinHelper.getShortPinyin(wayShopParam.getShopName()));
+                    // 商品名称拼音
+                    condition.setCommodityNamePinyin(PinyinHelper.convertToPinyinString(wayShopParam.getCommodityName(),
+                        StringUtils.EMPTY, PinyinFormat.WITHOUT_TONE));
+                    condition.setCommodityNamePy(PinyinHelper.getShortPinyin(wayShopParam.getCommodityName()));
+                }
+            } catch (PinyinException e) {
+                logger.warn("商家拼音转译发生异常", e);
+            }
             wayShopList = wayShopMapper.selectByCondition(condition, pageable);
         }
         if (logger.isDebugEnabled()) {
@@ -126,5 +144,22 @@ public class WayShopServiceImpl implements WayShopService {
             logger.debug("商铺列表组装结果={}", JSON.toJSONString(wayShopBoList));
         }
         return wayShopBoList;
+    }
+
+    /**
+     * 判断该字符串是否为中文
+     * 
+     * @param string
+     * @return
+     */
+    public static boolean isChinese(String string) {
+        int n = 0;
+        for (int i = 0; i < string.length(); i++) {
+            n = (int)string.charAt(i);
+            if (!(19968 <= n && n < 40869)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

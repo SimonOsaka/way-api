@@ -145,7 +145,10 @@ public class FetchAmapPlaceTextJob {
         wayCommodityParam.setShopId(shopId);
         wayCommodityParam.setName("儿童服装");
         wayCommodityParam.setImgUrlList(Arrays.asList("http://static.jicu.vip/kid_clothes.jpg"));
-        commodityService.createCommodity(wayCommodityParam);
+        try {
+            commodityService.createCommodity(wayCommodityParam);
+        } catch (BusinessException e) {
+        }
     }
 
     public static void main(String[] args) throws AMapException, InterruptedException {
