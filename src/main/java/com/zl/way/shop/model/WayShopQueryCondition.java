@@ -15,6 +15,14 @@ public class WayShopQueryCondition extends WayShop {
      * 抽象词id
      */
     private Integer pathPid;
+    /**
+     * 商品名称完整拼音
+     */
+    private String commodityNamePinyin;
+    /**
+     * 商品名称缩写拼音
+     */
+    private String commodityNamePy;
 
     public BigDecimal getClientLat() {
         return clientLat;
@@ -38,5 +46,21 @@ public class WayShopQueryCondition extends WayShop {
 
     public void setPathPid(Integer pathPid) {
         this.pathPid = pathPid;
+    }
+
+    public String getCommodityNamePinyin() {
+        return commodityNamePinyin;
+    }
+
+    public void setCommodityNamePinyin(String commodityNamePinyin) {
+        this.commodityNamePinyin = commodityNamePinyin;
+    }
+
+    public String getCommodityNamePy() {
+        return commodityNamePy;
+    }
+
+    public void setCommodityNamePy(String commodityNamePy) {
+        this.commodityNamePy = commodityNamePy;
     }
 }

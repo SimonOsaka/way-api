@@ -1,5 +1,16 @@
 package com.zl.way.sp.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +20,7 @@ import com.github.stuxuhai.jpinyin.PinyinHelper;
 import com.zl.way.sp.enums.WayCommodityLogSourceEnum;
 import com.zl.way.sp.enums.WayCommodityLogTypeEnum;
 import com.zl.way.sp.enums.WayCommodityStatusEnum;
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.mapper.WayCommodityAbstractWordMapper;
 import com.zl.way.sp.mapper.WayCommodityLogMapper;
 import com.zl.way.sp.mapper.WayCommodityMapper;
@@ -19,16 +31,6 @@ import com.zl.way.util.BeanMapper;
 import com.zl.way.util.EnumUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.WayPageRequest;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Service("spWayCommodityService")
 public class WayCommodityServiceImpl implements WayCommodityService {
@@ -137,14 +139,16 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public WayCommodityBo createCommodity(WayCommodityParam commodityParam) {
-        // 当前只能增加一个商品，如果已存在商品，返回当前的商品，幂等操作
+    public WayCommodityBo createCommodity(WayCommodityParam commodityParam) throws BusinessException {
+        // 1. 同一个商家、同一个抽象词，只能有一个商品
         WayCommodityCondition getCommodityCondition = new WayCommodityCondition();
         getCommodityCondition.setShopId(commodityParam.getShopId());
+        getCommodityCondition.setAbstractIdList(commodityParam.getAbstractWordIdList());
         List<WayCommodity> existCommodityList =
             commodityMapper.selectByCondition(getCommodityCondition, WayPageRequest.of(1, 1));
         if (CollectionUtils.isNotEmpty(existCommodityList)) {
-            return BeanMapper.map(existCommodityList.get(0), WayCommodityBo.class);
+            String commodityName = existCommodityList.get(0).getName();
+            throw new BusinessException("已经有抽象词被关联，此商品是'" + commodityName + "'");
         }
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
@@ -188,7 +192,20 @@ public class WayCommodityServiceImpl implements WayCommodityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) {
+    public WayCommodityBo updateCommodity(WayCommodityParam commodityParam) throws BusinessException {
+        // 1. 同一个商家、同一个抽象词，只能有一个商品
+        WayCommodityCondition getCommodityCondition = new WayCommodityCondition();
+        getCommodityCondition.setShopId(commodityParam.getShopId());
+        getCommodityCondition.setAbstractIdList(commodityParam.getAbstractWordIdList());
+        // 2. 更新时，要移除当前id的商品，否则自己把自己挡住
+        getCommodityCondition.setExcludeId(commodityParam.getId());
+        List<WayCommodity> existCommodityList =
+            commodityMapper.selectByCondition(getCommodityCondition, WayPageRequest.of(1, 1));
+        // 3. 出现已存在的商品，就暂停执行并返回
+        if (CollectionUtils.isNotEmpty(existCommodityList)) {
+            String commodityName = existCommodityList.get(0).getName();
+            throw new BusinessException("已经有抽象词被关联，此商品是'" + commodityName + "'");
+        }
 
         WayCommodity wayCommodityRecord = BeanMapper.map(commodityParam, WayCommodity.class);
         wayCommodityRecord

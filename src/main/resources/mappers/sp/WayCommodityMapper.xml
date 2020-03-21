@@ -243,6 +243,14 @@
         <if test="condition.id != null">
             and commodity.id = #{condition.id, jdbcType=BIGINT}
         </if>
+        <if test="condition.abstractIdList != null and condition.abstractIdList.size > 0">
+            <foreach collection="condition.abstractIdList" item="abstractId" separator="or" open="and (" close=")">
+                JSON_CONTAINS(commodity.abstract_word_ids, CONVERT(#{abstractId, jdbcType=INTEGER}, CHAR), '$')
+            </foreach>
+        </if>
+        <if test="condition.excludeId != null">
+            and commodity.id != #{condition.excludeId, jdbcType=BIGINT}
+        </if>
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>

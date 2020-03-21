@@ -84,8 +84,11 @@ public class WayCommodityApi {
         }
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
-
-        commodityService.createCommodity(commodityParam);
+        try {
+            commodityService.createCommodity(commodityParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
@@ -108,7 +111,11 @@ public class WayCommodityApi {
 
         WayCommodityParam commodityParam = BeanMapper.map(request, WayCommodityParam.class);
 
-        commodityService.updateCommodity(commodityParam);
+        try {
+            commodityService.updateCommodity(commodityParam);
+        } catch (BusinessException e) {
+            return ResponseResultUtil.wrapWrongParamResponseResult(e.getMessage());
+        }
         return ResponseResultUtil.wrapSuccessResponseResult(null);
     }
 
