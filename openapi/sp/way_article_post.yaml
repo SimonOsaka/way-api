@@ -1,0 +1,255 @@
+openapi: '3.0.3'
+info:
+  title: JICU API
+  description: 急促项目的服务接口。包括：商家平台、管理平台、h5、iOS和Android。
+  version: '1.2'
+
+servers:
+  - url: https://api.jicu.vip
+    description: api链接
+
+paths:
+  /sp/article:
+    post:
+      tags:
+        - "文章"
+      operationId: createArticle
+      summary: 创建一篇文章
+      description: 创建一篇文章
+      parameters:
+        - $ref: '#/components/parameters/X-userLoginId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WayCreateArticlePostReq'
+      responses:
+        '200':
+          description: 创建一篇文章成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseMessage'
+        '400':
+          description: 参数不正确，返回不通过原因
+        default:
+          description: 未知异常
+
+    get:
+      tags:
+        - "文章"
+      operationId: queryArticles
+      summary: 获取文章列表
+      description: 获取文章列表
+      parameters:
+        - name: keywords
+          in: query
+          description: 查询文章关键词
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+      responses:
+        '200':
+          description: 文章列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref:
+                    '#/components/schemas/WayQueryArticlePost'
+        default:
+          description: 未知异常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseMessage'
+
+  /sp/article/{postId}:
+    get:
+      tags:
+        - "文章"
+      operationId: getArticle
+      summary: 获取指定{postId}文章内容
+      description: 获取指定{postId}文章内容
+      parameters:
+        - $ref: '#/components/parameters/postId'
+        - $ref: '#/components/parameters/X-userLoginId'
+      responses:
+        '200':
+          description: 返回文章内容
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WayQueryArticlePost'
+        '404':
+          description: 文章不存在
+        '500':
+          description: 未知异常
+
+    delete:
+      tags:
+        - "文章"
+      operationId: deleteArticle
+      summary: 删除指定{postId}文章内容
+      description: 删除指定{postId}文章内容
+      parameters:
+        - $ref: '#/components/parameters/postId'
+        - $ref: '#/components/parameters/X-userLoginId'
+      responses:
+        '200':
+          description: 删除文章。幂等
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseMessage'
+        '500':
+          description: 未知异常
+
+    put:
+      tags:
+        - "文章"
+      operationId: updateArticle
+      summary: 修改一篇文章
+      description: 修改一篇文章
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WayUpdateArticlePostReq'
+      parameters:
+        - $ref: '#/components/parameters/postId'
+        - $ref: '#/components/parameters/X-userLoginId'
+      responses:
+        '200':
+          description: 修改一篇文章成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseMessage'
+        '404':
+          description: 文章不存在
+        '500':
+          description: 未知异常
+
+  /sp/article/token:
+    get:
+      tags:
+        - 文章
+      operationId: getToken
+      summary: 获取token
+      description: 获取token
+      parameters:
+        - $ref: '#/components/parameters/X-userLoginId'
+      responses:
+        '200':
+          description: 返回token成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WayArticlePostToken'
+        '500':
+          description: 未知异常
+
+
+components:
+  parameters:
+    X-userLoginId:
+      name: X-userLoginId
+      in: header
+      description: 用户登录id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    postId:
+      name: postId
+      in: path
+      description: 文章id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    page:
+      name: page
+      in: query
+      description: 页码
+      required: true
+      schema:
+        type: integer
+        format: int32
+        default: 1
+    pageSize:
+      name: pageSize
+      in: query
+      description: 每页数据量
+      required: true
+      schema:
+        type: integer
+        format: int32
+        default: 10
+  schemas:
+    WayCreateArticlePostReq:
+      properties:
+        subject:
+          type: string
+        postContent:
+          type: string
+        commodityId:
+          type: integer
+          format: int64
+        postToken:
+          type: string
+      required:
+        - subject
+        - postContent
+        - commodityId
+        - postToken
+
+    WayUpdateArticlePostReq:
+      properties:
+        subject:
+          type: string
+        postContent:
+          type: string
+        enableSubmit:
+          type: integer
+          format: int32
+          default: 0
+      required:
+        - enableSubmit
+
+    WayQueryArticlePost:
+      properties:
+        postId:
+          type: integer
+          format: int64
+        commodityId:
+          type: integer
+          format: int64
+        commodityName:
+          type: string
+        subject:
+          type: string
+        postContent:
+          type: string
+        publishTime:
+          type: date
+
+    WayArticlePostToken:
+      properties:
+        token:
+          type: string
+
+    ApiResponseMessage:
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string

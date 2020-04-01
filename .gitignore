@@ -25,3 +25,6 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### OPENAPI3 ###
+/openapi/example/
