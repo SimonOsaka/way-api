@@ -56,10 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref:
-                    '#/components/schemas/WayQueryArticlePost'
+                $ref: '#/components/schemas/WayQueryArticlePostResp'
         default:
           description: 未知异常
           content:
@@ -213,6 +210,9 @@ components:
       properties:
         subject:
           type: string
+        commodityId:
+          type: integer
+          format: int64
         postContent:
           type: string
         enableSubmit:
@@ -221,6 +221,16 @@ components:
           default: 0
       required:
         - enableSubmit
+
+    WayQueryArticlePostResp:
+      properties:
+        total:
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WayQueryArticlePost'
 
     WayQueryArticlePost:
       properties:
@@ -238,6 +248,9 @@ components:
           type: string
         publishTime:
           type: date
+        postStatus:
+          type: integer
+          format: int32
 
     WayArticlePostToken:
       properties:

@@ -24,6 +24,8 @@ public class WayQueryArticlePost {
 
     private Date publishTime = null;
 
+    private Integer postStatus = null;
+
     public WayQueryArticlePost postId(Long postId) {
         this.postId = postId;
         return this;
@@ -139,6 +141,25 @@ public class WayQueryArticlePost {
         this.publishTime = publishTime;
     }
 
+    public WayQueryArticlePost postStatus(Integer postStatus) {
+        this.postStatus = postStatus;
+        return this;
+    }
+
+    /**
+     * Get postStatus
+     * 
+     * @return postStatus
+     **/
+
+    public Integer getPostStatus() {
+        return postStatus;
+    }
+
+    public void setPostStatus(Integer postStatus) {
+        this.postStatus = postStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -153,12 +174,13 @@ public class WayQueryArticlePost {
             && Objects.equals(this.commodityName, wayQueryArticlePost.commodityName)
             && Objects.equals(this.subject, wayQueryArticlePost.subject)
             && Objects.equals(this.postContent, wayQueryArticlePost.postContent)
-            && Objects.equals(this.publishTime, wayQueryArticlePost.publishTime);
+            && Objects.equals(this.publishTime, wayQueryArticlePost.publishTime)
+            && Objects.equals(this.postStatus, wayQueryArticlePost.postStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postId, commodityId, commodityName, subject, postContent, publishTime);
+        return Objects.hash(postId, commodityId, commodityName, subject, postContent, publishTime, postStatus);
     }
 
     @Override
@@ -172,6 +194,7 @@ public class WayQueryArticlePost {
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
         sb.append("    postContent: ").append(toIndentedString(postContent)).append("\n");
         sb.append("    publishTime: ").append(toIndentedString(publishTime)).append("\n");
+        sb.append("    postStatus: ").append(toIndentedString(postStatus)).append("\n");
         sb.append("}");
         return sb.toString();
     }

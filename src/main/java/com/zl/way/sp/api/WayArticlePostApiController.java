@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +27,6 @@ import com.zl.way.sp.service.model.*;
 import com.zl.way.util.DateUtil;
 import com.zl.way.util.PageParam;
 import com.zl.way.util.TokenUtil;
-import com.zl.way.validation.WayValidation;
-import com.zl.way.validation.rule.WayValidationRuleNotNull;
-import com.zl.way.validation.rule.WayValidationRuleStringNotBlank;
 
 @RestController
 public class WayArticlePostApiController implements WayArticlePostApi {
@@ -49,15 +48,6 @@ public class WayArticlePostApiController implements WayArticlePostApi {
     @Override
     public ResponseEntity<ApiResponseMessage> createArticle(@Valid @RequestBody WayCreateArticlePostReq body,
         @RequestHeader(value = "X-userLoginId", required = true) Long xUserLoginId) {
-        // 校验开始
-        WayValidation validation = new WayValidation().validRule(new WayValidationRuleStringNotBlank(body.getSubject()))
-            .validRule(new WayValidationRuleStringNotBlank(body.getPostContent()))
-            .validRule(new WayValidationRuleStringNotBlank(body.getPostToken()))
-            .validRule(new WayValidationRuleNotNull(body.getCommodityId()));
-        if (validation.hasErrors()) {
-            return ResponseEntity.ok(new ApiResponseMessage(2, validation.getErrorString()));
-        }
-        // 校验结束
 
         String formPostToken = body.getPostToken();
         String cacheKey = ApiConstants.SUBMIT_TOKEN_SP_PREFIX + xUserLoginId;
@@ -72,10 +62,10 @@ public class WayArticlePostApiController implements WayArticlePostApi {
                 String cacheOkPostToken = caffeienCache.getIfPresent(cacheOkKey);
                 if (formPostToken.equalsIgnoreCase(cacheOkPostToken)) {
                     log.warn("不能重复提交 formPostToken: {}, cacheOkPostToken={}", formPostToken, cacheOkPostToken);
-                    return ResponseEntity.ok(new ApiResponseMessage(ApiResponseMessage.ERROR, "已提交成功，不能重复提交"));
+                    return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.ERROR, "已提交成功，不能重复提交"));
                 }
                 log.warn("提交失败 formPostToken: {}, cachePostToken: {}", formPostToken, cachePostToken);
-                return ResponseEntity.ok(new ApiResponseMessage(ApiResponseMessage.ERROR, "提交失败"));
+                return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.ERROR, "提交失败"));
             }
 
             // 创建文章
@@ -88,10 +78,13 @@ public class WayArticlePostApiController implements WayArticlePostApi {
             caffeienCache.put(cacheOkKey, cachePostToken);
             // 删除判断token
             caffeienCache.invalidate(cacheKey);
+        } catch (Exception e) {
+            return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.ERROR, "服务出现问题"),
+                HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             createArticleLock.unlock();
         }
-        return ResponseEntity.ok(new ApiResponseMessage(ApiResponseMessage.OK, "ok"));
+        return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.OK, "ok"));
     }
 
     @Override
@@ -102,9 +95,9 @@ public class WayArticlePostApiController implements WayArticlePostApi {
         try {
             articlePostService.deleteArticlePost(deleteArticlePostParam);
         } catch (NotExistException e) {
-            return ResponseEntity.ok(new ApiResponseMessage(ApiResponseMessage.ERROR, "文章不存在"));
+            return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.ERROR, "文章不存在"));
         }
-        return ResponseEntity.ok(new ApiResponseMessage(ApiResponseMessage.OK, "ok"));
+        return sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.OK, "ok"));
     }
 
     @Override
@@ -113,7 +106,7 @@ public class WayArticlePostApiController implements WayArticlePostApi {
         WayQueryArticlePost queryArticlePost = new WayQueryArticlePost();
         WayGetArticlePostBo getArticlePostBo = articlePostService.getArticlePost(postId);
         if (null == getArticlePostBo.getArticlePost()) {
-            return ResponseEntity.status(404).build();
+            return sendResponseEntity(null, HttpStatus.NOT_FOUND);
         }
         queryArticlePost.setCommodityId(getArticlePostBo.getArticlePost().getCommodityId());
         queryArticlePost.setCommodityName(getArticlePostBo.getCommodityName());
@@ -121,7 +114,7 @@ public class WayArticlePostApiController implements WayArticlePostApi {
         queryArticlePost.setPostId(postId);
         queryArticlePost.setSubject(getArticlePostBo.getArticlePost().getSubject());
         queryArticlePost.setPublishTime(getArticlePostBo.getArticlePost().getCreateTime());
-        return ResponseEntity.ok(queryArticlePost);
+        return sendResponseEntity(queryArticlePost);
     }
 
     @Override
@@ -131,11 +124,11 @@ public class WayArticlePostApiController implements WayArticlePostApi {
             .getToken(ApiConstants.SUBMIT_TOKEN_SP_PREFIX + xUserLoginId + "_" + DateUtil.getDefaultDateTime());
         caffeienCache.put(ApiConstants.SUBMIT_TOKEN_SP_PREFIX + xUserLoginId, postTokenStr);
         WayArticlePostToken postToken = new WayArticlePostToken().token(postTokenStr);
-        return ResponseEntity.ok(postToken);
+        return sendResponseEntity(postToken);
     }
 
     @Override
-    public ResponseEntity<List<WayQueryArticlePost>> queryArticles(
+    public ResponseEntity<WayQueryArticlePostResp> queryArticles(
         @NotNull @Valid @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
         @NotNull @Valid @RequestParam(value = "pageSize", required = true, defaultValue = "10") Integer pageSize,
         @Valid @RequestParam(value = "keywords", required = false) String keywords) {
@@ -146,14 +139,19 @@ public class WayArticlePostApiController implements WayArticlePostApi {
             PageParam.PageParamBuilder.aPageParam().withPageNum(page).withPageSize(pageSize).build());
         List<WayQueryArticlePost> queryArticlePostList = queryArticlePostBo.getArticlePostList().stream()
             .map(item -> transformQueryPostArticle(item)).collect(Collectors.toList());
-        return ResponseEntity.ok(queryArticlePostList);
+
+        WayQueryArticlePostResp queryArticlePostResp = new WayQueryArticlePostResp().items(queryArticlePostList)
+            .total(queryArticlePostBo.getArticlePostListTotal());
+
+        return sendResponseEntity(queryArticlePostResp);
     }
 
     private WayQueryArticlePost transformQueryPostArticle(WayArticlePost articlePost) {
         WayQueryArticlePost queryArticlePost = new WayQueryArticlePost();
-        queryArticlePost.setPublishTime(articlePost.getCreateTime());
+        queryArticlePost.setPublishTime(articlePost.getPublishedTime());
         queryArticlePost.setSubject(articlePost.getSubject());
         queryArticlePost.setPostId(articlePost.getId());
+        queryArticlePost.setPostStatus(Integer.valueOf(articlePost.getIsDeleted()));
 
         return queryArticlePost;
     }
@@ -163,9 +161,9 @@ public class WayArticlePostApiController implements WayArticlePostApi {
         @PathVariable("postId") Long postId,
         @RequestHeader(value = "X-userLoginId", required = true) Long xUserLoginId) {
 
-        WayUpdateArticlePostParam updateArticlePostParam =
-            WayUpdateArticlePostParam.WayUpdateArticlePostBoBuilder.aWayUpdateArticlePostBo()
-                .withPostContent(body.getPostContent()).withPostId(postId).withSubject(body.getSubject()).build();
+        WayUpdateArticlePostParam updateArticlePostParam = WayUpdateArticlePostParam.WayUpdateArticlePostParamBuilder
+            .aWayUpdateArticlePostParam().withPostContent(body.getPostContent()).withPostId(postId)
+            .withSubject(body.getSubject()).withCommodityId(body.getCommodityId()).build();
         try {
             // 是否提交
             switch (body.getEnableSubmit()) {
@@ -178,12 +176,23 @@ public class WayArticlePostApiController implements WayArticlePostApi {
                     articlePostService.updateAndSubmitArticlePostAndContent(updateArticlePostParam);
                     break;
                 default:
-                    return ResponseEntity.ok(new ApiResponseMessage(1, "是否提交不正确"));
+                    return sendResponseEntity(new ApiResponseMessage(1, "是否提交不正确"));
             }
         } catch (NotExistException e) {
             log.warn("更新的文章不存在 postId: {}", postId);
-            return ResponseEntity.status(404).build();
+            return sendResponseEntity(null, HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok().build();
+        return sendResponseEntity(null);
+    }
+
+    private <T> ResponseEntity<T> sendResponseEntity(T t) {
+        return sendResponseEntity(t, HttpStatus.OK);
+    }
+
+    private <T> ResponseEntity<T> sendResponseEntity(T t, HttpStatus status) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Access-Control-Expose-Headers", "Api-Generation");
+        httpHeaders.add("Api-Generation", "2");
+        return new ResponseEntity(t, httpHeaders, status);
     }
 }

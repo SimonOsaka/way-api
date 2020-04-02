@@ -11,6 +11,16 @@ public class WayUpdateArticlePostParam {
 
     private String postContent;
 
+    private Long commodityId;
+
+    public Long getCommodityId() {
+        return commodityId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+        this.commodityId = commodityId;
+    }
+
     public Long getPostId() {
         return postId;
     }
@@ -35,40 +45,46 @@ public class WayUpdateArticlePostParam {
         this.postContent = postContent;
     }
 
-    public static final class WayUpdateArticlePostBoBuilder {
-        private WayUpdateArticlePostParam wayUpdateArticlePostBo;
+    public static final class WayUpdateArticlePostParamBuilder {
+        private WayUpdateArticlePostParam wayUpdateArticlePostParam;
 
-        private WayUpdateArticlePostBoBuilder() {
-            wayUpdateArticlePostBo = new WayUpdateArticlePostParam();
+        private WayUpdateArticlePostParamBuilder() {
+            wayUpdateArticlePostParam = new WayUpdateArticlePostParam();
         }
 
-        public static WayUpdateArticlePostBoBuilder aWayUpdateArticlePostBo() {
-            return new WayUpdateArticlePostBoBuilder();
+        public static WayUpdateArticlePostParamBuilder aWayUpdateArticlePostParam() {
+            return new WayUpdateArticlePostParamBuilder();
         }
 
-        public WayUpdateArticlePostBoBuilder withPostId(Long postId) {
-            wayUpdateArticlePostBo.setPostId(postId);
+        public WayUpdateArticlePostParamBuilder withPostId(Long postId) {
+            wayUpdateArticlePostParam.setPostId(postId);
             return this;
         }
 
-        public WayUpdateArticlePostBoBuilder withSubject(String subject) {
-            wayUpdateArticlePostBo.setSubject(subject);
+        public WayUpdateArticlePostParamBuilder withSubject(String subject) {
+            wayUpdateArticlePostParam.setSubject(subject);
             return this;
         }
 
-        public WayUpdateArticlePostBoBuilder withPostContent(String postContent) {
-            wayUpdateArticlePostBo.setPostContent(postContent);
+        public WayUpdateArticlePostParamBuilder withPostContent(String postContent) {
+            wayUpdateArticlePostParam.setPostContent(postContent);
             return this;
         }
 
-        public WayUpdateArticlePostBoBuilder but() {
-            return aWayUpdateArticlePostBo().withPostId(wayUpdateArticlePostBo.getPostId())
-                .withSubject(wayUpdateArticlePostBo.getSubject())
-                .withPostContent(wayUpdateArticlePostBo.getPostContent());
+        public WayUpdateArticlePostParamBuilder withCommodityId(Long commodityId) {
+            wayUpdateArticlePostParam.setCommodityId(commodityId);
+            return this;
+        }
+
+        public WayUpdateArticlePostParamBuilder but() {
+            return aWayUpdateArticlePostParam().withPostId(wayUpdateArticlePostParam.getPostId())
+                .withSubject(wayUpdateArticlePostParam.getSubject())
+                .withPostContent(wayUpdateArticlePostParam.getPostContent())
+                .withCommodityId(wayUpdateArticlePostParam.getCommodityId());
         }
 
         public WayUpdateArticlePostParam build() {
-            return wayUpdateArticlePostBo;
+            return wayUpdateArticlePostParam;
         }
     }
 }

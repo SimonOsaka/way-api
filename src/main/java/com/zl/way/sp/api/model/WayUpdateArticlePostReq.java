@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 public class WayUpdateArticlePostReq {
     private String subject = null;
 
+    private Long commodityId = null;
+
     private String postContent = null;
 
     private Integer enableSubmit = 0;
@@ -34,6 +36,25 @@ public class WayUpdateArticlePostReq {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public WayUpdateArticlePostReq commodityId(Long commodityId) {
+        this.commodityId = commodityId;
+        return this;
+    }
+
+    /**
+     * Get commodityId
+     * 
+     * @return commodityId
+     **/
+
+    public Long getCommodityId() {
+        return commodityId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+        this.commodityId = commodityId;
     }
 
     public WayUpdateArticlePostReq postContent(String postContent) {
@@ -85,13 +106,14 @@ public class WayUpdateArticlePostReq {
         }
         WayUpdateArticlePostReq wayUpdateArticlePostReq = (WayUpdateArticlePostReq)o;
         return Objects.equals(this.subject, wayUpdateArticlePostReq.subject)
+            && Objects.equals(this.commodityId, wayUpdateArticlePostReq.commodityId)
             && Objects.equals(this.postContent, wayUpdateArticlePostReq.postContent)
             && Objects.equals(this.enableSubmit, wayUpdateArticlePostReq.enableSubmit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(subject, postContent, enableSubmit);
+        return Objects.hash(subject, commodityId, postContent, enableSubmit);
     }
 
     @Override
@@ -100,6 +122,7 @@ public class WayUpdateArticlePostReq {
         sb.append("class WayUpdateArticlePostReq {\n");
 
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
+        sb.append("    commodityId: ").append(toIndentedString(commodityId)).append("\n");
         sb.append("    postContent: ").append(toIndentedString(postContent)).append("\n");
         sb.append("    enableSubmit: ").append(toIndentedString(enableSubmit)).append("\n");
         sb.append("}");

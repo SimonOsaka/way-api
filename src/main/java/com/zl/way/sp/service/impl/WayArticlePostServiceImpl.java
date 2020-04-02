@@ -2,6 +2,7 @@ package com.zl.way.sp.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,6 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
         WayArticlePostContent articlePostContent = new WayArticlePostContent();
         articlePostContent.setContent(createArticlePostBo.getPostContent());
         articlePostContent.setCreateTime(DateUtil.getCurrent());
-        articlePostContent.setUpdateTime(DateUtil.getCurrent());
         articlePostContentMapper.insertSelective(articlePostContent);
 
         WayArticlePost articlePost = new WayArticlePost();
@@ -53,7 +53,6 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
         articlePost.setCreateTime(DateUtil.getCurrent());
         articlePost.setIsDeleted((byte)2);
         articlePost.setSubject(createArticlePostBo.getSubject());
-        articlePost.setUpdateTime(DateUtil.getCurrent());
         articlePost.setAuditAction((byte)0);
         articlePostMapper.insertSelective(articlePost);
 
@@ -99,6 +98,7 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
             articlePost.setAuditAction((byte)1);
         }
         articlePost.setSubject(updateArticlePostBo.getSubject());
+        articlePost.setCommodityId(updateArticlePostBo.getCommodityId());
         articlePost.setUpdateTime(DateUtil.getCurrent());
         articlePostMapper.updateByPrimaryKeySelective(articlePost);
 
@@ -127,7 +127,10 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
         query.setSubject(queryArticlePostParam.getKeywords());
         Pageable pageable = WayPageRequest.of(pageParam);
         List<WayArticlePost> articlePostList = articlePostMapper.querySelective(query, pageable);
-        return new WayQueryArticlePostBo(null == articlePostList ? Collections.emptyList() : articlePostList);
+        Integer articlePostTotal = articlePostMapper.querySelectiveTotal(query, pageable);
+
+        return new WayQueryArticlePostBo(Optional.ofNullable(articlePostList).orElse(Collections.emptyList()),
+            articlePostTotal);
     }
 
     @Override

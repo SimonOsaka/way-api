@@ -8,11 +8,12 @@
         <result column="post_content_id" jdbcType="BIGINT" property="postContentId"/>
         <result column="audit_action" jdbcType="TINYINT" property="auditAction"/>
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="published_time" jdbcType="TIMESTAMP" property="publishedTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, commodity_id, subject, post_content_id, audit_action, is_deleted, create_time,
+        id, commodity_id, subject, post_content_id, audit_action, is_deleted, published_time, create_time,
     update_time
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -40,6 +41,9 @@
             <if test="isDeleted != null">
                 is_deleted,
             </if>
+            <if test="publishedTime != null">
+                published_time,
+            </if>
             <if test="createTime != null">
                 create_time,
             </if>
@@ -62,6 +66,9 @@
             </if>
             <if test="isDeleted != null">
                 #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="publishedTime != null">
+                #{publishedTime,jdbcType=TIMESTAMP},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
@@ -89,6 +96,9 @@
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
+            <if test="publishedTime != null">
+                published_time = #{publishedTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -98,17 +108,29 @@
         </set>
         where id = #{id,jdbcType=BIGINT} and is_deleted != 1
     </update>
-    <select id="querySelective" resultType="com.zl.way.sp.model.WayArticlePost">
-        select
-        <include refid="Base_Column_List"/>
+    <sql id="querySelectiveFrom">
         from way_article_post
+    </sql>
+    <sql id="querySelectiveWhere">
         where is_deleted != 1
         <if test="condition.subject">
             and subject like concat('%', #{condition.subject,jdbcType=VARCHAR}, '%')
         </if>
+    </sql>
+    <select id="querySelective" resultType="com.zl.way.sp.model.WayArticlePost">
+        select
+        <include refid="Base_Column_List"/>
+        <include refid="querySelectiveFrom"/>
+        <include refid="querySelectiveWhere"/>
         order by id desc
         <if test="pageable != null and pageable.offset != null and pageable.pageSize != null">
             limit ${pageable.offset}, ${pageable.pageSize}
         </if>
+    </select>
+    <select id="querySelectiveTotal" resultType="java.lang.Integer">
+        select
+        count(*)
+        <include refid="querySelectiveFrom"/>
+        <include refid="querySelectiveWhere"/>
     </select>
 </mapper>

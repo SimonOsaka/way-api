@@ -4,8 +4,6 @@
  */
 package com.zl.way.sp.api;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -34,7 +32,7 @@ public interface WayArticlePostApi {
         getToken(@RequestHeader(value = "X-userLoginId", required = true) Long xUserLoginId);
 
     @RequestMapping(value = "/sp/article", produces = {"application/json"}, method = RequestMethod.GET)
-    ResponseEntity<List<WayQueryArticlePost>> queryArticles(
+    ResponseEntity<WayQueryArticlePostResp> queryArticles(
         @NotNull @Valid @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
         @NotNull @Valid @RequestParam(value = "pageSize", required = true, defaultValue = "10") Integer pageSize,
         @Valid @RequestParam(value = "keywords", required = false) String keywords);

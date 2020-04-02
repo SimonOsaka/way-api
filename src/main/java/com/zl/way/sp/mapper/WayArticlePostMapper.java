@@ -20,4 +20,7 @@ public interface WayArticlePostMapper {
 
     List<WayArticlePost> querySelective(@Param("condition") WayArticlePostQuery condition,
         @Param("pageable") Pageable pageable);
+
+    Integer querySelectiveTotal(@Param("condition") WayArticlePostQuery condition,
+        @Param("pageable") Pageable pageable);
 }

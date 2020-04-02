@@ -43,6 +43,9 @@ public class WayErrorController implements ErrorController {
      */
     @RequestMapping(ERROR_PATH)
     public Map<Object, Object> error(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Api-Generation", "2");
+        response.setHeader("Access-Control-Expose-Headers", "Api-Generation");
+
         if (logger.isDebugEnabled()) {
             logger.debug("error message: {}",
                 JSON.toJSONString(getErrorAttributes(request, false).get("errors"), true));

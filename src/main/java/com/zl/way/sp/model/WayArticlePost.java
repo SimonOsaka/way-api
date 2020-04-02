@@ -16,6 +16,8 @@ public class WayArticlePost implements Serializable {
 
     private Byte isDeleted;
 
+    private Date publishedTime;
+
     private Date createTime;
 
     private Date updateTime;
@@ -68,6 +70,14 @@ public class WayArticlePost implements Serializable {
 
     public void setIsDeleted(Byte isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Date getPublishedTime() {
+        return publishedTime;
+    }
+
+    public void setPublishedTime(Date publishedTime) {
+        this.publishedTime = publishedTime;
     }
 
     public Date getCreateTime() {
