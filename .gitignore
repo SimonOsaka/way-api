@@ -28,3 +28,5 @@
 
 ### OPENAPI3 ###
 /openapi/example/
+/openapi/node_modules/
+/openapi/package-lock.json

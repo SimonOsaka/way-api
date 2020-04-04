@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css" >
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
 </head>
 <body>
 <div id="swagger-ui"></div>
 
 <script src="https://unpkg.com/swagger-ui-dist@3.25.0/swagger-ui-bundle.js"></script>
 <script src="https://unpkg.com/swagger-ui-dist@3.25.0/swagger-ui-standalone-preset.js"></script>
+<script src="http://localhost:9413/swagger-ui-data.js"></script>
 <script type="text/javascript">
 window.onload = function() {
     const ui = SwaggerUIBundle({
-        urls: [{url: "https://api.jicu.vip/doc/mp/article/openapi.yaml", name: 'MP ARTICLE API 1.2'}],
+        urls: urls,
         dom_id: '#swagger-ui',
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -23,6 +24,7 @@ window.onload = function() {
       });
     window.ui = ui
 }
+
 </script>
 </body>
 </html>

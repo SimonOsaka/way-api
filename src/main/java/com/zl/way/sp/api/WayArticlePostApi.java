@@ -43,4 +43,8 @@ public interface WayArticlePostApi {
         @PathVariable("postId") Long postId,
         @RequestHeader(value = "X-userLoginId", required = true) Long xUserLoginId);
 
+    @RequestMapping(value = "/sp/article/audit/{postId}", produces = {"application/json"}, method = RequestMethod.GET)
+    ResponseEntity<WayArticlePostRejectResp> getArticleRejectContent(@PathVariable("postId") Long postId,
+        @RequestHeader(value = "X-userLoginId", required = true) Long xUserLoginId);
+
 }

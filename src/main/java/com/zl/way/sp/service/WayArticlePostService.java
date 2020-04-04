@@ -49,4 +49,12 @@ public interface WayArticlePostService {
      * @return
      */
     WayGetArticlePostBo getArticlePost(Long postId);
+
+    /**
+     * 获取驳回内容
+     *
+     * @param postId
+     * @return
+     */
+    String getArticlePostRejectContent(Long postId);
 }

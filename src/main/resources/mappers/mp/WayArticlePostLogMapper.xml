@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zl.way.sp.mapper.WayArticlePostLogMapper">
-    <resultMap id="BaseResultMap" type="com.zl.way.sp.model.WayArticlePostLog">
+<mapper namespace="com.zl.way.mp.mapper.WayArticlePostLogMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.mapper.model.WayArticlePostLog">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="article_post_id" jdbcType="BIGINT" property="articlePostId"/>
         <result column="event_type" jdbcType="TINYINT" property="eventType"/>
@@ -18,13 +18,8 @@
         from way_article_post_log
         where id = #{id,jdbcType=BIGINT}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from way_article_post_log
-        where id = #{id,jdbcType=BIGINT}
-    </delete>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zl.way.sp.model.WayArticlePostLog"
-            useGeneratedKeys="true">
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.mapper.model.WayArticlePostLog" useGeneratedKeys="true">
         insert into way_article_post_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="articlePostId != null">
@@ -61,7 +56,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.sp.model.WayArticlePostLog">
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.mapper.model.WayArticlePostLog">
         update way_article_post_log
         <set>
             <if test="articlePostId != null">
@@ -82,13 +77,4 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <select id="queryArticlePostLog" resultMap="BaseResultMap">
-        select *
-        from way_article_post_log
-        where event_source=1 and article_post_id = #{postId, jdbcType=BIGINT}
-        <if test="eventType != null">
-            and event_type = #{eventType, jdbcType=TINYINT}
-        </if>
-        order by id desc
-    </select>
 </mapper>

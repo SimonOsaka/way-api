@@ -1,4 +1,4 @@
-package com.zl.way.sp.api.model;
+package com.zl.way.mp.api.model;
 
 import java.util.Date;
 import java.util.Objects;
@@ -25,8 +25,6 @@ public class WayQueryArticlePost {
     private Date publishTime = null;
 
     private Integer postStatus = null;
-
-    private Integer preAction = null;
 
     public WayQueryArticlePost postId(Long postId) {
         this.postId = postId;
@@ -162,25 +160,6 @@ public class WayQueryArticlePost {
         this.postStatus = postStatus;
     }
 
-    public WayQueryArticlePost preAction(Integer preAction) {
-        this.preAction = preAction;
-        return this;
-    }
-
-    /**
-     * Get preAction
-     * 
-     * @return preAction
-     **/
-
-    public Integer getPreAction() {
-        return preAction;
-    }
-
-    public void setPreAction(Integer preAction) {
-        this.preAction = preAction;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -196,14 +175,12 @@ public class WayQueryArticlePost {
             && Objects.equals(this.subject, wayQueryArticlePost.subject)
             && Objects.equals(this.postContent, wayQueryArticlePost.postContent)
             && Objects.equals(this.publishTime, wayQueryArticlePost.publishTime)
-            && Objects.equals(this.postStatus, wayQueryArticlePost.postStatus)
-            && Objects.equals(this.preAction, wayQueryArticlePost.preAction);
+            && Objects.equals(this.postStatus, wayQueryArticlePost.postStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postId, commodityId, commodityName, subject, postContent, publishTime, postStatus,
-            preAction);
+        return Objects.hash(postId, commodityId, commodityName, subject, postContent, publishTime, postStatus);
     }
 
     @Override
@@ -218,7 +195,6 @@ public class WayQueryArticlePost {
         sb.append("    postContent: ").append(toIndentedString(postContent)).append("\n");
         sb.append("    publishTime: ").append(toIndentedString(publishTime)).append("\n");
         sb.append("    postStatus: ").append(toIndentedString(postStatus)).append("\n");
-        sb.append("    preAction: ").append(toIndentedString(preAction)).append("\n");
         sb.append("}");
         return sb.toString();
     }

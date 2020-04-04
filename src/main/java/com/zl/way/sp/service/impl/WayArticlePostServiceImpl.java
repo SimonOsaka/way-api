@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -166,4 +168,11 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
         articlePostLogMapper.insertSelective(articlePostLog);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public String getArticlePostRejectContent(Long postId) {
+        List<WayArticlePostLog> articlePostLogList = articlePostLogMapper.queryArticlePostLog(postId, (byte)6);
+        return CollectionUtils.isNotEmpty(articlePostLogList) ? articlePostLogList.get(0).getEventContent()
+            : StringUtils.EMPTY;
+    }
 }
