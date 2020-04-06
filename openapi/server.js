@@ -16,9 +16,15 @@ var server = http.createServer(function(req,res){
 			res.end(`${filePath} is not a directory or file.`)
 			return;
 		}
+		var extname = path.extname(filePath)
+		console.log('extname', extname);
 		if(stats.isFile()){//如果是文件
 			res.statusCode = 200;
-			res.setHeader('Content-Type','text/javascript;charset=UTF-8');
+			if (extname === '.html') {
+			    res.setHeader('Content-Type','text/html;charset=UTF-8');
+			} else {
+			    res.setHeader('Content-Type','text/javascript;charset=UTF-8');
+			}
 			res.setHeader('Access-Control-Allow-Origin', '*');
 			fs.createReadStream(filePath).pipe(res);//以流的方式来读取文件
 		}else if (stats.isDirectory()) {//如果是文件夹，拿到文件列表
@@ -34,5 +40,6 @@ var server = http.createServer(function(req,res){
 server.listen(config.port,config.hostname,()=>{
 	var addr = `http://${config.hostname}:${config.port}`;
 	console.info(`listenning in:${chalk.green(addr)}`);
+	console.log('浏览器会自动打开swagger-ui.html', '同时也可以访问'+`http://${config.hostname}:${config.port}`+'/swagger-ui.html')
     opn('./swagger-ui.html')
 })
