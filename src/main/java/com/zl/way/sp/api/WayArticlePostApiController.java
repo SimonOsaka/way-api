@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.zl.way.sp.api.model.*;
 import com.zl.way.sp.constants.ApiConstants;
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.exception.NotExistException;
 import com.zl.way.sp.model.WayArticlePost;
 import com.zl.way.sp.service.WayArticlePostService;
@@ -28,7 +29,7 @@ import com.zl.way.util.PageParam;
 import com.zl.way.util.ResponseEntityUtil;
 import com.zl.way.util.TokenUtil;
 
-@RestController
+@RestController("spWayArticlePostApi")
 public class WayArticlePostApiController implements WayArticlePostApi {
 
     private static final Logger log = LoggerFactory.getLogger(WayArticlePostApiController.class);
@@ -79,6 +80,9 @@ public class WayArticlePostApiController implements WayArticlePostApi {
             caffeienCache.put(cacheOkKey, cachePostToken);
             // 删除判断token
             caffeienCache.invalidate(cacheKey);
+        } catch (BusinessException e) {
+            return ResponseEntityUtil.sendResponseEntity(
+                new ApiResponseMessage(ApiResponseMessage.ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return ResponseEntityUtil.sendResponseEntity(new ApiResponseMessage(ApiResponseMessage.ERROR, "服务出现问题"),
                 HttpStatus.INTERNAL_SERVER_ERROR);
@@ -182,7 +186,12 @@ public class WayArticlePostApiController implements WayArticlePostApi {
             }
         } catch (NotExistException e) {
             log.warn("更新的文章不存在 postId: {}", postId);
-            return ResponseEntityUtil.sendResponseEntity(null, HttpStatus.NOT_FOUND);
+            return ResponseEntityUtil.sendResponseEntity(new ApiResponseMessage(1, e.getMessage()),
+                HttpStatus.NOT_FOUND);
+        } catch (BusinessException e) {
+            log.warn("更新的文章 postId: {}", postId);
+            return ResponseEntityUtil.sendResponseEntity(new ApiResponseMessage(2, e.getMessage()),
+                HttpStatus.BAD_REQUEST);
         }
         return ResponseEntityUtil.sendResponseEntity(null);
     }

@@ -1,5 +1,6 @@
 package com.zl.way.sp.service;
 
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.exception.NotExistException;
 import com.zl.way.sp.service.model.*;
 import com.zl.way.util.PageParam;
@@ -10,14 +11,15 @@ public interface WayArticlePostService {
      * 
      * @param createArticlePostParam
      */
-    void createArticlePostAndContent(WayCreateArticlePostParam createArticlePostParam);
+    void createArticlePostAndContent(WayCreateArticlePostParam createArticlePostParam) throws BusinessException;
 
     /**
      * 修改文章
      * 
      * @param updateArticlePostParam
      */
-    void updateArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostParam) throws NotExistException;
+    void updateArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostParam)
+        throws NotExistException, BusinessException;
 
     /**
      * 修改文章
@@ -25,7 +27,7 @@ public interface WayArticlePostService {
      * @param updateArticlePostParam
      */
     void updateAndSubmitArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostParam)
-        throws NotExistException;
+        throws NotExistException, BusinessException;
 
     /**
      * 删除文章

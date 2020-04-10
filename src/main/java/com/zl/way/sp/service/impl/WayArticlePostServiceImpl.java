@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zl.way.sp.exception.BusinessException;
 import com.zl.way.sp.exception.NotExistException;
 import com.zl.way.sp.mapper.WayArticlePostContentMapper;
 import com.zl.way.sp.mapper.WayArticlePostLogMapper;
@@ -43,7 +44,15 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public void createArticlePostAndContent(WayCreateArticlePostParam createArticlePostBo) {
+    public void createArticlePostAndContent(WayCreateArticlePostParam createArticlePostBo) throws BusinessException {
+        if (StringUtils.length(createArticlePostBo.getSubject()) > 20
+            || StringUtils.isBlank(createArticlePostBo.getSubject())) {
+            throw new BusinessException("文章主题必须在20字以内");
+        }
+        if (StringUtils.length(createArticlePostBo.getPostContent()) > 800
+            || StringUtils.isBlank(createArticlePostBo.getPostContent())) {
+            throw new BusinessException("文章内容必须在800字以内");
+        }
         WayArticlePostContent articlePostContent = new WayArticlePostContent();
         articlePostContent.setContent(createArticlePostBo.getPostContent());
         articlePostContent.setCreateTime(DateUtil.getCurrent());
@@ -64,7 +73,8 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
-    public void updateArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostBo) throws NotExistException {
+    public void updateArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostBo)
+        throws NotExistException, BusinessException {
         this.updateOrSubmitArticlePost(updateArticlePostBo, false);
         this.insertArticlePostLog(updateArticlePostBo.getPostId(), (byte)2, "更新文章主体");
     }
@@ -72,17 +82,26 @@ public class WayArticlePostServiceImpl implements WayArticlePostService {
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = false)
     public void updateAndSubmitArticlePostAndContent(WayUpdateArticlePostParam updateArticlePostParam)
-        throws NotExistException {
+        throws NotExistException, BusinessException {
         this.updateOrSubmitArticlePost(updateArticlePostParam, true);
         this.insertArticlePostLog(updateArticlePostParam.getPostId(), (byte)4, "更新并提交文章主体");
     }
 
     private void updateOrSubmitArticlePost(WayUpdateArticlePostParam updateArticlePostBo, boolean enableSubmit)
-        throws NotExistException {
+        throws NotExistException, BusinessException {
         WayArticlePost dbArticlePost = articlePostMapper.selectByPrimaryKey(updateArticlePostBo.getPostId());
         if (null == dbArticlePost || dbArticlePost.getIsDeleted() == 1) {
             throw new NotExistException("文章不存在");
         }
+        if (StringUtils.length(updateArticlePostBo.getSubject()) > 20
+            || StringUtils.isBlank(updateArticlePostBo.getSubject())) {
+            throw new BusinessException("文章主题必须在20字以内");
+        }
+        if (StringUtils.length(updateArticlePostBo.getPostContent()) > 800
+            || StringUtils.isBlank(updateArticlePostBo.getPostContent())) {
+            throw new BusinessException("文章内容必须在800字以内");
+        }
+
         Long articlePostContentId = dbArticlePost.getPostContentId();
 
         WayArticlePostContent articlePostContent = new WayArticlePostContent();
