@@ -27,4 +27,30 @@ public class PageParam {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+    public static final class PageParamBuilder {
+        private PageParam pageParam;
+
+        private PageParamBuilder() {
+            pageParam = new PageParam();
+        }
+
+        public static PageParamBuilder aPageParam() {
+            return new PageParamBuilder();
+        }
+
+        public PageParamBuilder withPageNum(Integer pageNum) {
+            pageParam.setPageNum(pageNum);
+            return this;
+        }
+
+        public PageParamBuilder withPageSize(Integer pageSize) {
+            pageParam.setPageSize(pageSize);
+            return this;
+        }
+
+        public PageParam build() {
+            return pageParam;
+        }
+    }
 }

@@ -47,9 +47,12 @@ public class WayValidationExample {
         }
 
         @Override
-        boolean check() {
-            setMessage("low low low!!!");
-            return false;
+        protected boolean check() {
+            if (null == getValue() || getValue().isEmpty()) {
+                setMessage("不能为空");
+                return false;
+            }
+            return true;
         }
 
     }

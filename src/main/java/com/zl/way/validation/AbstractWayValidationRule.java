@@ -21,7 +21,7 @@ public abstract class AbstractWayValidationRule<T> {
     private String alias;
     private Map<String, Object> extra;
 
-    abstract boolean check();
+    protected abstract boolean check();
 
     public WayValidationError getErrorMessage() {
         return new WayValidationError(this.alias, this.message);
@@ -31,7 +31,7 @@ public abstract class AbstractWayValidationRule<T> {
         return this.value;
     }
 
-    void setMessage(String message) {
+    protected void setMessage(String message) {
         this.message = message;
     }
 
@@ -41,5 +41,9 @@ public abstract class AbstractWayValidationRule<T> {
 
     public Map<String, Object> getExtra() {
         return extra;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 }

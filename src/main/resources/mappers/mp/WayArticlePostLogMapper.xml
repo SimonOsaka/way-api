@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.way.mp.mapper.WayArticlePostLogMapper">
+    <resultMap id="BaseResultMap" type="com.zl.way.mp.mapper.model.WayArticlePostLog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="article_post_id" jdbcType="BIGINT" property="articlePostId"/>
+        <result column="event_type" jdbcType="TINYINT" property="eventType"/>
+        <result column="event_content" jdbcType="VARCHAR" property="eventContent"/>
+        <result column="event_source" jdbcType="TINYINT" property="eventSource"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, article_post_id, event_type, event_content, event_source, create_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from way_article_post_log
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zl.way.mp.mapper.model.WayArticlePostLog" useGeneratedKeys="true">
+        insert into way_article_post_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articlePostId != null">
+                article_post_id,
+            </if>
+            <if test="eventType != null">
+                event_type,
+            </if>
+            <if test="eventContent != null">
+                event_content,
+            </if>
+            <if test="eventSource != null">
+                event_source,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articlePostId != null">
+                #{articlePostId,jdbcType=BIGINT},
+            </if>
+            <if test="eventType != null">
+                #{eventType,jdbcType=TINYINT},
+            </if>
+            <if test="eventContent != null">
+                #{eventContent,jdbcType=VARCHAR},
+            </if>
+            <if test="eventSource != null">
+                #{eventSource,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zl.way.mp.mapper.model.WayArticlePostLog">
+        update way_article_post_log
+        <set>
+            <if test="articlePostId != null">
+                article_post_id = #{articlePostId,jdbcType=BIGINT},
+            </if>
+            <if test="eventType != null">
+                event_type = #{eventType,jdbcType=TINYINT},
+            </if>
+            <if test="eventContent != null">
+                event_content = #{eventContent,jdbcType=VARCHAR},
+            </if>
+            <if test="eventSource != null">
+                event_source = #{eventSource,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
