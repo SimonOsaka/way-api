@@ -5,19 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.zl.way.amap.exception.AMapException;
+import com.zl.way.amap.model.AMapGeoModel;
+import com.zl.way.amap.model.AMapGeoRequest;
+import com.zl.way.amap.model.AMapGeoResponse;
+import com.zl.way.amap.model.AMapRegeoModel;
+import com.zl.way.amap.model.AMapRegeoRequest;
+import com.zl.way.amap.model.AMapRegeoResponse;
+import com.zl.way.amap.service.AMapGeocodeService;
+import com.zl.way.amap.util.OkHttp3Util;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.zl.way.amap.exception.AMapException;
-import com.zl.way.amap.model.*;
-import com.zl.way.amap.service.AMapGeocodeService;
-import com.zl.way.util.OkHttp3Util;
 
 @Service
 public class AMapGeocodeServiceImpl implements AMapGeocodeService {

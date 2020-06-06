@@ -1,13 +1,14 @@
-package com.zl.way.util;
-
-import okhttp3.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.zl.way.amap.util;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import okhttp3.*;
 
 public class OkHttp3Util {
 

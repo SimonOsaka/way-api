@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-WayApplication<on_the_way>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.zl.way.WayApplication",
+            "projectName": "on_the_way",
+            "args": ""
+        }
+    ]
+}

@@ -7,7 +7,7 @@ import com.zl.way.amap.model.AMapConvertModel;
 import com.zl.way.amap.model.AMapConvertRequest;
 import com.zl.way.amap.model.AMapConvertResponse;
 import com.zl.way.amap.service.AMapConvertService;
-import com.zl.way.util.OkHttp3Util;
+import com.zl.way.amap.util.OkHttp3Util;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
