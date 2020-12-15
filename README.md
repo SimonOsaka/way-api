@@ -11,7 +11,7 @@
 > 系统环境变量
 ```shell script
 # API_TOKEN
-export API_TOKEN_SECRET='nmH0Nx4irTNIwSmp'
+export API_TOKEN_SECRET='45784C6585D6EDDF'
 
 # MYSQL
 export ONTHEWAY_MYSQL_USERNAME='root'
